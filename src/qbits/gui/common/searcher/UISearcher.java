@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package qbits.gui.common.crud;
+package qbits.gui.common.searcher;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -20,12 +20,14 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import qbits.db.MySQLDatabase;
 import qbits.db.QueryBuilder;
+import qbits.gui.common.crud.UICRUD;
 
 /**
  *
@@ -81,6 +83,7 @@ public class UISearcher extends javax.swing.JDialog {
 //        cmbSearchBy.setModel(new DefaultComboBoxModel(searchTerms));
         DefaultTableModel tableModel = (DefaultTableModel) tableRecords.getModel();
         tableModel.setColumnIdentifiers(searchTerms);
+        tableRecords.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         tableRecords.getColumnModel().getColumn(0).setPreferredWidth(50);
         tableRecords.getColumnModel().getColumn(0).setHeaderValue("SL#");
 
@@ -289,6 +292,7 @@ public class UISearcher extends javax.swing.JDialog {
 
     private void txfSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txfSearchKeyReleased
         // TODO add your handling code here:
+        filter();
     }//GEN-LAST:event_txfSearchKeyReleased
 
     /**

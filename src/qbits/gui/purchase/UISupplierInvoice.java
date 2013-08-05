@@ -5,7 +5,6 @@
 package qbits.gui.purchase;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,7 +20,6 @@ import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.management.Query;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JMenuItem;
@@ -31,7 +29,6 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.Caret;
 import qbits.configuration.Configuration;
 import qbits.configuration.Utilities;
 import qbits.db.MySQLDatabase;
@@ -41,8 +38,8 @@ import qbits.entity.ProductSearch;
 import qbits.entity.Supplier;
 import qbits.gui.account.UIGeneralTransaction;
 import qbits.gui.common.UIParentFrame;
-import qbits.gui.common.crud.SearcherListener;
-import qbits.gui.common.crud.UISearcher;
+import qbits.gui.common.searcher.SearcherListener;
+import qbits.gui.common.searcher.UISearcher;
 import qbits.gui.purchase.product.UIProductDamage;
 import qbitserp.common.Message;
 

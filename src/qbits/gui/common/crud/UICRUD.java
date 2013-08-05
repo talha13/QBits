@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -68,6 +69,7 @@ public class UICRUD extends javax.swing.JPanel {
         cmbSearchBy.setModel(new DefaultComboBoxModel(searchTerms));
         DefaultTableModel tableModel = (DefaultTableModel) tableRecords.getModel();
         tableModel.setColumnIdentifiers(searchTerms);
+        tableRecords.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         tableRecords.getColumnModel().getColumn(0).setPreferredWidth(50);
         tableRecords.getColumnModel().getColumn(0).setHeaderValue("SL#");
 
