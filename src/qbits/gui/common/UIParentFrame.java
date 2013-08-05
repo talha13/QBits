@@ -4,18 +4,15 @@
  */
 package qbits.gui.common;
 
-import qbits.gui.common.crud.UICRUD;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import qbits.configuration.Configuration;
-import qbits.db.QueryBuilder;
 import qbits.entity.User;
 import qbits.gui.account.UIAccount;
 import qbits.gui.account.UIAccountHead;

@@ -21,6 +21,7 @@ import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.management.Query;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JMenuItem;
@@ -34,11 +35,14 @@ import javax.swing.text.Caret;
 import qbits.configuration.Configuration;
 import qbits.configuration.Utilities;
 import qbits.db.MySQLDatabase;
+import qbits.db.QueryBuilder;
 import qbits.entity.Product;
 import qbits.entity.ProductSearch;
 import qbits.entity.Supplier;
 import qbits.gui.account.UIGeneralTransaction;
 import qbits.gui.common.UIParentFrame;
+import qbits.gui.common.crud.SearcherListener;
+import qbits.gui.common.crud.UISearcher;
 import qbits.gui.purchase.product.UIProductDamage;
 import qbitserp.common.Message;
 
@@ -46,7 +50,7 @@ import qbitserp.common.Message;
  *
  * @author Topu
  */
-public class UISupplierInvoice extends javax.swing.JPanel {
+public class UISupplierInvoice extends javax.swing.JPanel implements SearcherListener {
 
     private UIParentFrame parentFrame;
     private ProductSearch productSearch;
@@ -214,6 +218,11 @@ public class UISupplierInvoice extends javax.swing.JPanel {
         jLabel15.setText("Product Code");
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/qbits/resources/image/Search-icon.png"))); // NOI18N
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -884,6 +893,26 @@ public class UISupplierInvoice extends javax.swing.JPanel {
         // TODO add your handling code here:
         reset();
     }//GEN-LAST:event_btnResetActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        UISearcher searcher = new UISearcher(parentFrame, true);
+        searcher.addSearcherListener(this);
+
+        Vector terms = new Vector();
+        terms.add("All");
+        terms.add("Product Code");
+        terms.add("Product Desription");
+        terms.add("Product Price");
+        searcher.setColumns(terms);
+
+        QueryBuilder builder = new QueryBuilder();
+        builder.select("product.product_id, product.product_code, product.title, product.rate_per_unit");
+        builder.from("product");
+        searcher.setQueryBuilder(builder);
+
+        searcher.showWindow();
+    }//GEN-LAST:event_jButton2ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnReset;
@@ -1201,6 +1230,7 @@ public class UISupplierInvoice extends javax.swing.JPanel {
                     cmbProductName.setSelectedIndex(1);
                     shouldPerformActionForcmbCategory = false;
                     cmbCategory.setSelectedIndex(1);
+                    txfCode.setText(resultSet.getString("product.product_code"));
                 }
 
                 status = 1;
@@ -1472,6 +1502,11 @@ public class UISupplierInvoice extends javax.swing.JPanel {
 
         return status;
 
+    }
+
+    @Override
+    public void addRecord(int recordID) {
+        loadProduct(recordID);
     }
 
     private class ActionMenu extends JPopupMenu implements ActionListener {

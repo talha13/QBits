@@ -17,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
@@ -25,7 +24,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import qbits.db.MySQLDatabase;
 import qbits.db.QueryBuilder;
-import qbits.gui.common.UIParentFrame;
 
 /**
  *
@@ -62,27 +60,27 @@ public class UICRUD extends javax.swing.JPanel {
         pnlSubPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), subTitle));
     }
 
-    public void setColumns(Vector searchTerms) {
-
+    public void setColumns(Vector searchTerms) {       
+        
         actionMenu = new ActionMenu();
         columnNames = searchTerms;
         int i = 0;
         cmbSearchBy.setModel(new DefaultComboBoxModel(searchTerms));
-        DefaultTableModel tableModel = (DefaultTableModel) tableSuppliers.getModel();
+        DefaultTableModel tableModel = (DefaultTableModel) tableRecords.getModel();
         tableModel.setColumnIdentifiers(searchTerms);
-        tableSuppliers.getColumnModel().getColumn(0).setPreferredWidth(50);
-        tableSuppliers.getColumnModel().getColumn(0).setHeaderValue("SL#");
+        tableRecords.getColumnModel().getColumn(0).setPreferredWidth(50);
+        tableRecords.getColumnModel().getColumn(0).setHeaderValue("SL#");
 
         for (i = 1; i < searchTerms.size(); i++) {
-            tableSuppliers.getColumnModel().getColumn(i).setPreferredWidth(200);
+            tableRecords.getColumnModel().getColumn(i).setPreferredWidth(200);
         }
 
         rowSorter = new TableRowSorter(tableModel);
-        tableSuppliers.setRowSorter(rowSorter);
+        tableRecords.setRowSorter(rowSorter);
 
-        tableSuppliers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tableSuppliers.setComponentPopupMenu(actionMenu);
-        tableSuppliers.addMouseListener(new MouseAdapter() {
+        tableRecords.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tableRecords.setComponentPopupMenu(actionMenu);
+        tableRecords.addMouseListener(new MouseAdapter() {
             public void mouseReleased(MouseEvent e) {
                 popupSelectedPoint = e.getPoint();
             }
@@ -117,7 +115,7 @@ public class UICRUD extends javax.swing.JPanel {
     private void load() {
 
         MySQLDatabase database = new MySQLDatabase();
-        DefaultTableModel tableModel = (DefaultTableModel) tableSuppliers.getModel();
+        DefaultTableModel tableModel = (DefaultTableModel) tableRecords.getModel();
         Vector rowData;
         int count = 0;
         int i = 0;
@@ -174,15 +172,16 @@ public class UICRUD extends javax.swing.JPanel {
 
             itemRemove.addActionListener(this);
             itemUpdate.addActionListener(this);
-
-            add(itemRemove);
+            
             add(itemUpdate);
+            addSeparator();
+            add(itemRemove);
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            int selectedRow = tableSuppliers.convertRowIndexToModel(tableSuppliers.rowAtPoint(popupSelectedPoint));
+            int selectedRow = tableRecords.convertRowIndexToModel(tableRecords.rowAtPoint(popupSelectedPoint));
 
             if (itemRemove == e.getSource()) {
                 removeRecord(selectedRow);
@@ -211,7 +210,7 @@ public class UICRUD extends javax.swing.JPanel {
 
         pnlSubPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableSuppliers = new javax.swing.JTable();
+        tableRecords = new javax.swing.JTable();
         lblStatus = new javax.swing.JLabel();
         btnPrint = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -224,7 +223,7 @@ public class UICRUD extends javax.swing.JPanel {
 
         pnlSubPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "SubTitle"));
 
-        tableSuppliers.setModel(new javax.swing.table.DefaultTableModel(
+        tableRecords.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -232,7 +231,7 @@ public class UICRUD extends javax.swing.JPanel {
 
             }
         ));
-        jScrollPane1.setViewportView(tableSuppliers);
+        jScrollPane1.setViewportView(tableRecords);
 
         lblStatus.setForeground(new java.awt.Color(102, 0, 0));
         lblStatus.setText("Showing Records 500");
@@ -366,7 +365,7 @@ public class UICRUD extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblStatus;
     private javax.swing.JPanel pnlSubPanel;
-    private javax.swing.JTable tableSuppliers;
+    private javax.swing.JTable tableRecords;
     private javax.swing.JTextField txfSearch;
     // End of variables declaration//GEN-END:variables
 }
