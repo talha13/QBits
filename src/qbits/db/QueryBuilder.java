@@ -21,6 +21,7 @@ public class QueryBuilder {
     private ArrayList<String> orderParams;
     private ArrayList<String> groupParams;
     private HashMap<String, String> data;
+    private int limit;
 
     public QueryBuilder() {
 
@@ -32,6 +33,20 @@ public class QueryBuilder {
         groupParams = new ArrayList<>();
 
         data = new HashMap<>();
+        limit = -1;
+
+    }
+
+    public void clear() {
+
+        tables.clear();
+        selectParams.clear();
+        whereParams.clear();
+        joinParams.clear();
+        orderParams.clear();
+        groupParams.clear();
+        data.clear();
+        limit = -1;
     }
 
     public String insert(String tableName) {
@@ -126,7 +141,7 @@ public class QueryBuilder {
         int count = 0;
 
         if (joinParams.size() > 0) {
-            
+
             query += "\n";
 
             for (count = 0; count < joinParams.size(); count++) {
@@ -156,9 +171,9 @@ public class QueryBuilder {
             query += tables.get(count);
             query += tables.size() - 1 == count ? " " : ", ";
         }
-
-        query += getWhere();
+        
         query += getJoin();
+        query += getWhere();
 
         if (orderParams.size() > 0) {
 
@@ -180,6 +195,10 @@ public class QueryBuilder {
                 query += groupParams.get(count);
                 query += groupParams.size() - 1 == count ? " " : ", ";
             }
+        }
+
+        if (limit != -1) {
+            query += "\nLIMIT " + limit;
         }
 
         return query.trim();
@@ -251,26 +270,44 @@ public class QueryBuilder {
         orderParams.add(param);
     }
 
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
     public static void main(String[] args) {
 
-        QueryBuilder queryBuilder = new QueryBuilder();
+        QueryBuilder query = new QueryBuilder();
+        query.select("supplier_invoice_transaction.clear_on");
+        query.select("supplier_invoice_transaction.is_clear");
+        query.select("supplier_invoice_transaction.paid_amount");
+        query.select("supplier_invoice_transaction.account_id");
+        query.select("supplier_invoice_transaction.notes");
+        query.select("supplier_invoice_transaction.transaction_date");
+        query.select("account.type");
+        query.innerJoin("account", "account.id = supplier_invoice_transaction.account_id");
+        query.from("supplier_invoice_transaction");
+        query.where("supplier_invoice_transaction.supplier_invoice_id = ", "" + 1);
+        query.orderBy("supplier_invoice_transaction.transaction_date", "asc");
+        
+        System.out.println(query.get());
 
-        queryBuilder.set("id", null);
-        queryBuilder.setString("name", "myname");
-        queryBuilder.setString("email", "myemail");
-        queryBuilder.set("v1", "1");
-        queryBuilder.set("v2", "2");
-        queryBuilder.where("id > 5");
-        queryBuilder.where("id > 5");
-        queryBuilder.where("id > 5 OR cd < 5");
-        queryBuilder.whereOR("(id > 5 AND TD < 0)");
-        queryBuilder.whereOR("id > 5");
-        queryBuilder.whereOR("id > 5");
-        queryBuilder.innerJoin("in_table", "int_table.in = outtable.out");
-        queryBuilder.leftJoin("in_table", "int_table.in = outtable.out");
-        queryBuilder.rightJoin("in_table", "int_table.in = outtable.out");
 
-        System.out.println(queryBuilder.delete("bangladesh"));
+//        queryBuilder.set("id", null);
+//        queryBuilder.setString("name", "myname");
+//        queryBuilder.setString("email", "myemail");
+//        queryBuilder.set("v1", "1");
+//        queryBuilder.set("v2", "2");
+//        queryBuilder.where("id > 5");
+//        queryBuilder.where("id > 5");
+//        queryBuilder.where("id > 5 OR cd < 5");
+//        queryBuilder.whereOR("(id > 5 AND TD < 0)");
+//        queryBuilder.whereOR("id > 5");
+//        queryBuilder.whereOR("id > 5");
+//        queryBuilder.innerJoin("in_table", "int_table.in = outtable.out");
+//        queryBuilder.leftJoin("in_table", "int_table.in = outtable.out");
+//        queryBuilder.rightJoin("in_table", "int_table.in = outtable.out");
+//
+//        System.out.println(queryBuilder.delete("bangladesh"));
 
 //        queryBuilder.set("id", null);
 //        queryBuilder.setString("name", "myname");

@@ -36,6 +36,7 @@ import qbits.db.QueryBuilder;
 import qbits.entity.Product;
 import qbits.entity.ProductSearch;
 import qbits.entity.Supplier;
+import qbits.entity.SupplierInvoice;
 import qbits.gui.account.UIGeneralTransaction;
 import qbits.gui.common.UIParentFrame;
 import qbits.gui.common.searcher.SearcherListener;
@@ -65,6 +66,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
     private Point popupSelectedPoint;
     private boolean isUpdate;
     private ButtonGroup clearButtonGroup;
+    private SupplierInvoice supplierInvoice;
 
     /**
      * Creates new form UISupplierInvoice
@@ -99,6 +101,152 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 popupSelectedPoint = e.getPoint();
             }
         });
+
+    }
+
+    public void update(int invoiceID) {
+        isUpdate = true;
+        supplierInvoice = new SupplierInvoice();
+        supplierInvoice.setInvoiceID(invoiceID);
+        load();
+
+    }
+
+    private int load() {
+
+        MySQLDatabase database = new MySQLDatabase();
+        QueryBuilder query = new QueryBuilder();
+        int status = 0;
+        ResultSet resultSet;
+
+        if (database.connect()) {
+
+            try {
+                query.select("supplier_invoice.invoice_id, supplier_invoice.supplier_id, supplier_invoice.supplier_invoice_no, supplier_invoice.invoice_date, supplier_invoice.vat, supplier_invoice.subtotal, supplier_invoice.payable");
+                query.from("supplier_invoice");
+                query.where("supplier_invoice.invoice_id = ", "" + supplierInvoice.getInvoiceID());
+
+                resultSet = database.get(query.get());
+
+                if (resultSet.next()) {
+
+                    int supplierID = resultSet.getInt("supplier_invoice.supplier_id");
+
+                    status = -1;
+
+                    for (Integer cmbIndex : suppliers.keySet()) {
+
+                        if (supplierID == suppliers.get(cmbIndex).getSupplierID()) {
+                            cmbSupplier.setSelectedIndex(cmbIndex);
+                            status = 1;
+                            break;
+                        }
+                    }
+
+                    if (status != 1) {
+                        return -1;
+                    }
+
+                    subtotal = resultSet.getDouble("supplier_invoice.subtotal");
+                    vat = resultSet.getDouble("supplier_invoice.vat");
+                    netPayable = resultSet.getDouble("supplier_invoice.payable");
+                    paid = 0.00;
+
+                    txfInvoiceNo.setText("" + resultSet.getString("supplier_invoice.supplier_invoice_no"));
+                    dcDate.setSelectedDate(Utilities.getDateChosserDate(resultSet.getDate("supplier_invoice.invoice_date")));
+
+                    query.clear();
+
+                    query.select("supplier_invoice_transaction.clear_on");
+                    query.select("supplier_invoice_transaction.is_clear");
+                    query.select("supplier_invoice_transaction.paid_amount");
+                    query.select("supplier_invoice_transaction.account_id");
+                    query.select("supplier_invoice_transaction.notes");
+                    query.select("account.type");
+                    query.innerJoin("account", "account.id = supplier_invoice_transaction.account_id");
+                    query.from("supplier_invoice_transaction");
+                    query.where("supplier_invoice_id = ", "" + supplierInvoice.getInvoiceID());
+                    query.orderBy("transaction_date", "asc");
+
+                    resultSet = database.get(query.get());
+
+                    while (resultSet.next()) {
+
+                        dcClearDate.setSelectedDate(Utilities.getDateChosserDate(resultSet.getDate("clear_on")));
+
+                        if (resultSet.getBoolean("is_clear")) {
+                            rbClear.setSelected(true);
+                        } else {
+                            rbNotClear.setSelected(true);
+                        }
+
+                        paid += resultSet.getDouble("paid_amount");
+
+                        int accountID = resultSet.getInt("account_id");
+
+                        status = -1;
+
+                        for (int i = 1; i <= 3; i++) {
+                            if (cmbPaymentMode.getItemAt(i).toString().compareTo(resultSet.getString("account.type")) == 0) {
+                                cmbPaymentMode.setSelectedIndex(i);
+                                status = 1;
+                                break;
+                            }
+                        }
+
+                        if (status == -1) {
+                            return -1;
+                        }
+
+                        status = -1;
+                        
+                        loadAccounts(resultSet.getString("account.type"));
+                        
+//                        System.out.println("Accounts: "+ accounts.size());
+
+                        for (Integer cmbAccIndex : accounts.keySet()) {
+                            System.out.println(cmbAccIndex);
+                            if (accountID == accounts.get(cmbAccIndex)) {
+                                cmbAccounts.setSelectedIndex(cmbAccIndex);
+                                status = 1;
+                                break;
+                            }
+                        }
+
+                        if (status == -1) {
+                            return -1;
+                        }
+                        
+                        selectedProducts.clear();
+                        query.clear();
+                        
+                        query.select("product_stock.stock_id");
+                        query.select("product_stock.product_id");
+                        query.select("product_stock.supplier_invoice_id");
+                        query.select("product_stock.quantity");
+                        query.select("product_stock.cost_per_unit");
+                        query.select("product_stock.");
+                        query.select("product_stock.");
+
+                        taNotes.setText(resultSet.getString("notes"));
+                    }
+
+
+                    updatePaymentUI();
+
+                } else {
+                    status = -1;
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(UISupplierInvoice.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+
+        } else {
+            status = -1;
+        }
+
+        return status;
 
     }
 
@@ -984,6 +1132,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                     countAccount++;
                     accounts.put(countAccount, resultSet.getInt("id"));
                     accountTitles.add(resultSet.getString("title"));
+//                    System.out.println(resultSet.getString("title"));
                 }
 
                 cmbAccounts.setModel(new DefaultComboBoxModel(accountTitles));

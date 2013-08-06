@@ -21,6 +21,7 @@ import qbits.gui.account.UIGeneralTransaction;
 import qbits.gui.purchase.UISupplier;
 import qbits.gui.purchase.UISupplierCRUD;
 import qbits.gui.purchase.UISupplierInvoice;
+import qbits.gui.purchase.UISupplierInvoiceCRUD;
 import qbits.gui.purchase.UISupplierTransaction;
 import qbits.gui.purchase.product.UIProduct;
 import qbits.gui.purchase.product.UIProductDamage;
@@ -166,11 +167,10 @@ public class UIParentFrame extends JFrame implements WindowListener {
         addPanel(new UIGeneralTransaction(this), "new_general_transaction");
     }
 
-    void supplierList() {
+    void supplierCRUD() {
         
-        UISupplierCRUD supplierCRUD = new UISupplierCRUD(this);
-                
-        addPanel(supplierCRUD, "supplier_list");
+        UISupplierCRUD supplierCRUD = new UISupplierCRUD(this);                
+        addPanel(supplierCRUD, "supplier_crud");
     }
 
     public void newEmployee() {
@@ -195,5 +195,18 @@ public class UIParentFrame extends JFrame implements WindowListener {
 
     void newPurchaseReturn() {
         addPanel(new UIProductPurchaseReturn(this), "new_purchase_return");
+    }
+
+    public void updateSupplierInvoice(int invoiceID) {
+        
+        UISupplierInvoice supplierInvoice = new UISupplierInvoice(this);
+        supplierInvoice.update(invoiceID);
+        addPanel(supplierInvoice, "update_supplier_invoice");        
+    }
+    
+    public void supplierInvoiceCRUD(){
+        
+        UISupplierInvoiceCRUD supplierInvoiceCRUD = new UISupplierInvoiceCRUD(this);
+        addPanel(supplierInvoiceCRUD, "supplier_invoice_crud");
     }
 }
