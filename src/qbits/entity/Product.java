@@ -18,6 +18,25 @@ public class Product {
     private String code;
     private int categoryID;
     private double quantity;
+    private String category;
+
+    /**
+     * Get the value of category
+     *
+     * @return the value of category
+     */
+    public String getCategory() {
+        return category;
+    }
+
+    /**
+     * Set the value of category
+     *
+     * @param category new value of category
+     */
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     /**
      * Get the value of quantity

@@ -199,9 +199,9 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                         }
 
                         status = -1;
-                        
+
                         loadAccounts(resultSet.getString("account.type"));
-                        
+
 //                        System.out.println("Accounts: "+ accounts.size());
 
                         for (Integer cmbAccIndex : accounts.keySet()) {
@@ -216,19 +216,50 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                         if (status == -1) {
                             return -1;
                         }
-                        
-                        selectedProducts.clear();
-                        query.clear();
-                        
-                        query.select("product_stock.stock_id");
-                        query.select("product_stock.product_id");
-                        query.select("product_stock.supplier_invoice_id");
-                        query.select("product_stock.quantity");
-                        query.select("product_stock.cost_per_unit");
-                        query.select("product_stock.");
-                        query.select("product_stock.");
 
                         taNotes.setText(resultSet.getString("notes"));
+                    }
+
+                    selectedProducts.clear();
+                    query.clear();
+
+                    query.select("product_stock.stock_id");
+                    query.select("product_stock.product_id");
+                    query.select("product_stock.supplier_invoice_id");
+                    query.select("product_stock.quantity");
+                    query.select("product_stock.cost_per_unit");
+                    query.select("product_unit.title");
+                    query.select("product_brand.title");
+                    query.select("product_category.title");
+                    query.select("product.title");
+                    query.select("product.product_category_id");
+                    query.select("product.product_code");
+                    query.innerJoin("product", "product.product_id = product_stock.product_id");
+                    query.innerJoin("product_category", "product_category.category_id = product.product_category_id");
+                    query.leftJoin("product_unit", "product_unit.unit_id = product.product_unit_id");
+                    query.leftJoin("product_brand", "product_brand.brand_id = product.product_brand_id");
+                    query.where("product_stock.supplier_invoice_id = ", "" + supplierInvoice.getInvoiceID());
+                    query.from("product_stock");
+
+                    resultSet = database.get(query.get());
+                    Product product;
+                    DefaultTableModel model = (DefaultTableModel) tableProducts.getModel();
+
+                    while (resultSet.next()) {
+
+                        product = new Product();
+                        product.setBrand(resultSet.getString("product_brand.title"));
+                        product.setCategoryID(resultSet.getInt("product.product_category_id"));
+                        product.setCode(resultSet.getString("product.product_code"));
+                        product.setId(resultSet.getInt("product_stock.product_id"));
+                        product.setName(resultSet.getString("product.title"));
+                        product.setQuantity(resultSet.getDouble("product_stock.quantity"));
+                        product.setRpu(resultSet.getDouble("product_stock.cost_per_unit"));
+                        product.setUnit(resultSet.getString("product_unit.title"));
+                        product.setCategory(resultSet.getString("product_category.title"));
+
+                        selectedProducts.add(product);
+                        model.addRow(new Object[]{selectedProducts.size(), product.getName(), product.getCode(), product.getCategory(), product.getQuantity(), product.getRpu()});
                     }
 
 
