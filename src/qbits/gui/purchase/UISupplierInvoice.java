@@ -108,8 +108,19 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
         isUpdate = true;
         supplierInvoice = new SupplierInvoice();
         supplierInvoice.setInvoiceID(invoiceID);
+        changeStatusPaymentPanel(false);
         load();
+    }
 
+    private void changeStatusPaymentPanel(boolean status) {
+
+        txfPaid.setEditable(status);
+        cmbPaymentMode.setEnabled(status);
+        cmbAccounts.setEnabled(status);
+        taNotes.setEditable(status);
+        rbClear.setEnabled(status);
+        dcClearDate.setEnabled(status);
+        rbNotClear.setEnabled(status);
     }
 
     private int load() {
@@ -316,7 +327,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
         jLabel5 = new javax.swing.JLabel();
         dcDate = new datechooser.beans.DateChooserCombo();
         jLabel6 = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
+        pnlPayment = new javax.swing.JPanel();
         txfSubTotal = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
@@ -586,7 +597,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Payment Info"));
+        pnlPayment.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Payment Info"));
 
         txfSubTotal.setEditable(false);
         txfSubTotal.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
@@ -656,54 +667,54 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
         jLabel16.setForeground(new java.awt.Color(102, 0, 0));
         jLabel16.setText("Status*");
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
+        javax.swing.GroupLayout pnlPaymentLayout = new javax.swing.GroupLayout(pnlPayment);
+        pnlPayment.setLayout(pnlPaymentLayout);
+        pnlPaymentLayout.setHorizontalGroup(
+            pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlPaymentLayout.createSequentialGroup()
+                .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlPaymentLayout.createSequentialGroup()
+                        .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlPaymentLayout.createSequentialGroup()
                                 .addGap(23, 23, 23)
-                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(pnlPaymentLayout.createSequentialGroup()
                                         .addComponent(jLabel13)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(txfPayable, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                    .addGroup(pnlPaymentLayout.createSequentialGroup()
                                         .addComponent(jLabel12)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(txfVat, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                    .addGroup(pnlPaymentLayout.createSequentialGroup()
                                         .addComponent(jLabel11)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(txfSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                    .addGroup(pnlPaymentLayout.createSequentialGroup()
                                         .addComponent(jLabel14)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(txfPaid, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel4Layout.createSequentialGroup()
+                                    .addGroup(pnlPaymentLayout.createSequentialGroup()
                                         .addComponent(lblReturn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(txfDue, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(jPanel4Layout.createSequentialGroup()
+                            .addGroup(pnlPaymentLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jLabel3)))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
+                    .addGroup(pnlPaymentLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane2)
                             .addComponent(cmbAccounts, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmbPaymentMode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlPaymentLayout.createSequentialGroup()
                         .addGap(24, 24, 24)
                         .addComponent(lblReturn1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(dcClearDate, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
-            .addGroup(jPanel4Layout.createSequentialGroup()
+            .addGroup(pnlPaymentLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel16)
                 .addGap(16, 16, 16)
@@ -712,27 +723,27 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 .addComponent(rbNotClear)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        pnlPaymentLayout.setVerticalGroup(
+            pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlPaymentLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txfSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txfVat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txfPayable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txfPaid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txfDue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblReturn))
                 .addGap(18, 18, 18)
@@ -740,12 +751,12 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmbAccounts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rbClear)
                     .addComponent(rbNotClear)
                     .addComponent(jLabel16))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(dcClearDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblReturn1))
                 .addGap(3, 3, 3)
@@ -814,7 +825,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(pnlPayment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -829,7 +840,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pnlPayment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1050,6 +1061,11 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                     changeStatus(true);
 
                     if (get() == 1) {
+
+                        if (isUpdate) {
+                            changeStatusPaymentPanel(true);
+                        }
+
                         reset();
                         parentFrame.showMessage("Supplier invoice saved");
                     } else if (get() == -1) {
@@ -1119,13 +1135,13 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblReturn;
     private javax.swing.JLabel lblReturn1;
+    private javax.swing.JPanel pnlPayment;
     private javax.swing.JRadioButton rbClear;
     private javax.swing.JRadioButton rbNotClear;
     private javax.swing.JSpinner spPrice;
@@ -1334,6 +1350,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
 
     private void reset() {
 
+        isUpdate = false;
         subtotal = 0.0;
         paid = 0.0;
         netPayable = 0.0;
@@ -1468,21 +1485,22 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
             return false;
         }
 
-        if (paid > 0.00 && cmbPaymentMode.getSelectedIndex() == 0) {
-            parentFrame.showMessage("Please select payment mode");
-            return false;
-        }
+        if (!isUpdate) {
+            if (paid > 0.00 && cmbPaymentMode.getSelectedIndex() == 0) {
+                parentFrame.showMessage("Please select payment mode");
+                return false;
+            }
 
-        if (paid > 0.00 && cmbAccounts.getSelectedIndex() == 0) {
-            parentFrame.showMessage("Please select an account");
-            return false;
-        }
+            if (paid > 0.00 && cmbAccounts.getSelectedIndex() == 0) {
+                parentFrame.showMessage("Please select an account");
+                return false;
+            }
 
-        if (paid > 0.00 && cmbPaymentMode.getSelectedItem().toString().compareTo("Bank") == 0 && !rbClear.isSelected() && !rbNotClear.isSelected()) {
-            parentFrame.showMessage("Please select status");
-            return false;
+            if (paid > 0.00 && cmbPaymentMode.getSelectedItem().toString().compareTo("Bank") == 0 && !rbClear.isSelected() && !rbNotClear.isSelected()) {
+                parentFrame.showMessage("Please select status");
+                return false;
+            }
         }
-
         return true;
 
     }
@@ -1506,19 +1524,188 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
     }
 
     private int update() {
-        int status;
+
+        int status = 0;
         MySQLDatabase database = new MySQLDatabase();
         String query;
+        long supplierID;
+        QueryBuilder queryBuilder = new QueryBuilder();
 
         if (database.connect()) {
 
+            database.setAutoCommit(false);
 
+            if (cmbSupplier.getSelectedIndex() == -1) {
+
+                query = "INSERT INTO person VALUES("
+                        + "null, null, null, null, "
+                        + "null, null, -1"
+                        + ")";
+
+                long personID = database.insert(query);
+
+                if (personID == -1) {
+                    database.rollback();
+                    database.setAutoCommit(true);
+                    database.disconnectFromDatabase();
+                    return -1;
+                }
+
+                query = "INSERT INTO address VALUES("
+                        + "null, null, null, null"
+                        + ")";
+
+                long addressID = database.insert(query);
+
+                if (addressID == -1) {
+                    database.rollback();
+                    database.setAutoCommit(true);
+                    database.disconnectFromDatabase();
+                    return -1;
+                }
+
+                query = "INSERT INTO supplier VALUES("
+                        + "null, \"" + cmbSupplier.getSelectedItem().toString() + "\", " + personID + ", " + addressID + ", \"" + txfPhone.getText() + "\", "
+                        + "null, " + parentFrame.currentUser.getUserID() + ", NOW()"
+                        + ")";
+
+                supplierID = database.insert(query);
+
+                if (supplierID == -1) {
+                    database.rollback();
+                    database.setAutoCommit(true);
+                    database.disconnectFromDatabase();
+                    return -1;
+                }
+
+            } else {
+                supplierID = suppliers.get(cmbSupplier.getSelectedIndex()).getSupplierID();
+            }
+
+//            query = "INSERT INTO supplier_invoice VALUES(null, "
+//                    + "" + supplierID + ", \"" + txfInvoiceNo.getText() + "\", \"" + Utilities.dateForDB(dcDate.getSelectedDate().getTime()) + "\", " + vat + ""
+//                    + ", " + subtotal + ", " + netPayable + ", " + parentFrame.currentUser.getUserID() + ", NOW())";
+
+            queryBuilder.clear();
+            queryBuilder.set("supplier_id", "" + supplierID);
+            queryBuilder.setString("supplier_invoice_no", txfInvoiceNo.getText());
+            queryBuilder.setString("invoice_date", "" + Utilities.dateForDB(dcDate.getSelectedDate().getTime()));
+            queryBuilder.set("vat", "" + vat);
+            queryBuilder.set("subtotal", "" + subtotal);
+            queryBuilder.set("payable", "" + netPayable);
+            queryBuilder.set("last_updated_by", "" + parentFrame.currentUser.getUserID());
+            queryBuilder.set("last_updated_time", "NOW()");
+            queryBuilder.where("invoice_id = ", "" + supplierInvoice.getInvoiceID());
+
+            long affectedRow = database.update(queryBuilder.update("supplier_invoice"));
+
+            if (affectedRow == -1) {
+                database.rollback();
+                database.setAutoCommit(true);
+                database.disconnectFromDatabase();
+                return -1;
+            }
+
+            queryBuilder.clear();
+
+            queryBuilder.where("supplier_invoice_id = ", "" + supplierInvoice.getInvoiceID());
+            affectedRow = database.delete(queryBuilder.delete("product_stock"));
+
+            if (affectedRow == -1) {
+                database.rollback();
+                database.setAutoCommit(true);
+                database.disconnectFromDatabase();
+                return -1;
+            }
+
+            long stockID = 0;
+
+            for (Product product : selectedProducts) {
+
+                try {
+                    query = "INSERT INTO product_stock VALUES(null, " + product.getId() + ", " + supplierInvoice.getInvoiceID() + ", " + product.getQuantity() + ""
+                            + ", " + product.getRpu() + ", CURDATE(), " + parentFrame.currentUser.getUserID() + ", NOW())";
+
+                    stockID = database.insert(query);
+
+                    if (stockID == -1) {
+                        database.rollback();
+                        database.setAutoCommit(true);
+                        database.disconnectFromDatabase();
+                        return -1;
+                    }
+
+                    // calculating average cost for product
+//                    query = "SELECT use_average_cost FROM product WHERE product_id = " + product.getId();
+//
+//                    ResultSet resultSet = database.get(query);
+//
+//                    if (resultSet.next()) {
+//
+//                        if (resultSet.getBoolean("use_average_cost")) {
+//
+//                            query = "SELECT SUM(cost_per_unit*quantity)/SUM(quantity) AS avg_cost FROM product_stock WHERE product_id = " + product.getId();
+//                            ResultSet stockInfo = database.get(query);
+//                            double avgCost = 0;
+//
+//                            if (stockInfo.next()) {
+//                                avgCost = stockInfo.getDouble("avg_cost");
+//                            } else {
+//                                avgCost = product.getRpu();
+//                            }
+//
+//                            query = "UPDATE product SET rate_per_unit = " + Utilities.round(avgCost) + " WHERE product_id = " + product.getId();
+//
+//                            if (database.update(query) == -1) {
+//                                database.rollback();
+//                                database.setAutoCommit(true);
+//                                database.disconnectFromDatabase();
+//                                status = -1;
+//                                return status;
+//                            }
+//                        }
+//                    }
+
+                } catch (Exception ex) {
+                    Logger.getLogger(UISupplierInvoice.class.getName()).log(Level.SEVERE, null, ex);
+                    status = -1;
+                    break;
+                }
+
+                if (status == -1) {
+                    database.rollback();
+                    database.setAutoCommit(true);
+                    database.disconnectFromDatabase();
+                    return status;
+                }
+            }
+
+//            if (paid > 0) {
+//
+//                query = "INSERT INTO supplier_invoice_transaction VALUES(null,"
+//                        + "" + invoiceID + ", \"" + Utilities.dateForDB(dcDate.getSelectedDate().getTime()) + "\",\"" + Utilities.dateForDB(dcClearDate.getSelectedDate().getTime()) + "\", " + rbClear.isSelected() + ", " + paid + ", " + accounts.get(cmbAccounts.getSelectedIndex()) + ""
+//                        + ", \"Withdraw\", \"" + taNotes.getText() + "\", " + parentFrame.currentUser.getUserID() + ", NOW()"
+//                        + ")";
+//
+//                long txnID = database.insert(query);
+//
+//                if (txnID == -1) {
+//                    database.rollback();
+//                    database.setAutoCommit(true);
+//                    database.disconnectFromDatabase();
+//                    return -1;
+//                }
+//            }
+
+            database.setAutoCommit(true);
+            database.disconnectFromDatabase();
             status = 1;
         } else {
             status = -2;
         }
 
         return status;
+
     }
 
     private int save() {
@@ -1533,6 +1720,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
             database.setAutoCommit(false);
 
             if (cmbSupplier.getSelectedIndex() == -1) {
+
                 query = "INSERT INTO person VALUES("
                         + "null, null, null, null, "
                         + "null, null, -1"
