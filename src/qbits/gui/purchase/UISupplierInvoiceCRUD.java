@@ -14,29 +14,31 @@ import qbits.gui.common.crud.UICRUD;
  *
  * @author Pipilika
  */
-public class UISupplierInvoiceCRUD extends UICRUD implements CRUDListener{
-    
+public class UISupplierInvoiceCRUD extends UICRUD implements CRUDListener {
+
     private UIParentFrame parentFrame;
-    
-    public UISupplierInvoiceCRUD(UIParentFrame frame){
-        
+
+    public UISupplierInvoiceCRUD(UIParentFrame frame) {
+
         parentFrame = frame;
-        
+
         QueryBuilder query = new QueryBuilder();
-        query.select("supplier_invoice.invoice_id, supplier_invoice.supplier_id, supplier_invoice.supplier_invoice_no, supplier_invoice.invoice_date, supplier_invoice.payable");
+        query.select("supplier_invoice.invoice_id, supplier.name, supplier_invoice.supplier_invoice_no, supplier_invoice.invoice_date, supplier_invoice.payable");
         query.from("supplier_invoice");
-        
+        query.innerJoin("supplier", "supplier.supplier_id = supplier_invoice.supplier_id");
+
         Vector columns = new Vector();
         columns.add("All");
         columns.add("Supplier");
-        columns.add("Invoice No");        
+        columns.add("Invoice No");
         columns.add("Invoice Date");
         columns.add("Payable");
         
-        setColumns(columns); 
+
+        setColumns(columns);
         setQueryBuilder(query);
-            
-        
+
+
         addCRUDListener(this);
     }
 
@@ -52,12 +54,11 @@ public class UISupplierInvoiceCRUD extends UICRUD implements CRUDListener{
 
     @Override
     public void updateRecord(int recordID) {
-       parentFrame.updateSupplierInvoice(recordID);
+        parentFrame.updateSupplierInvoice(recordID);
     }
 
     @Override
     public void addRecord() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
 }

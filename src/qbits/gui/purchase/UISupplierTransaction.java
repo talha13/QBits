@@ -19,7 +19,9 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingWorker;
 import qbits.configuration.Utilities;
 import qbits.db.MySQLDatabase;
+import qbits.db.QueryBuilder;
 import qbits.entity.Supplier;
+import qbits.entity.SupplierInvoice;
 import qbits.gui.common.UIParentFrame;
 import qbitserp.common.Message;
 
@@ -34,6 +36,7 @@ public class UISupplierTransaction extends javax.swing.JPanel {
     private HashMap<String, Integer> accounts;
     private HashMap<String, Integer> accountHead;
     private HashMap<Integer, Supplier> suppliers;
+    private HashMap<Integer, SupplierInvoice> supplierInvoices;
 
     /**
      * Creates new form UIAccountTransaction
@@ -47,6 +50,7 @@ public class UISupplierTransaction extends javax.swing.JPanel {
         accounts = new HashMap<>();
         accountHead = new HashMap<>();
         suppliers = new HashMap<>();
+        supplierInvoices = new HashMap<>();
         reset();
     }
 
@@ -61,30 +65,40 @@ public class UISupplierTransaction extends javax.swing.JPanel {
 
         jRadioButton1 = new javax.swing.JRadioButton();
         jPanel1 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        dcClearOn = new datechooser.beans.DateChooserCombo();
+        jLabel5 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        taNotes = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
+        rbClear = new javax.swing.JRadioButton();
         cmbPaymentMode = new javax.swing.JComboBox();
+        rbNotClear = new javax.swing.JRadioButton();
         cmbAccount = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        spAmount = new javax.swing.JSpinner();
-        dcTxnDate = new datechooser.beans.DateChooserCombo();
-        jLabel5 = new javax.swing.JLabel();
-        dcClearOn = new datechooser.beans.DateChooserCombo();
-        jLabel6 = new javax.swing.JLabel();
-        rbClear = new javax.swing.JRadioButton();
-        rbNotClear = new javax.swing.JRadioButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        taNotes = new javax.swing.JTextArea();
         jLabel7 = new javax.swing.JLabel();
+        spAmount = new javax.swing.JSpinner();
         jLabel8 = new javax.swing.JLabel();
+        dcTxnDate = new datechooser.beans.DateChooserCombo();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel13 = new javax.swing.JLabel();
+        txfContactPerson = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        txfPhone = new javax.swing.JTextField();
+        txfAmountDue = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        txfTotalPaid = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        txfPayable = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
         txfVoucherNo = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        cmbInvoice = new javax.swing.JComboBox();
         jLabel11 = new javax.swing.JLabel();
         cmbSupplier = new javax.swing.JComboBox();
-        txfPhone = new javax.swing.JTextField();
-        jLabel12 = new javax.swing.JLabel();
-        txfContactPerson = new javax.swing.JTextField();
-        jLabel13 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         btnSave = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
@@ -95,9 +109,29 @@ public class UISupplierTransaction extends javax.swing.JPanel {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Transaction Infomartion"));
 
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 102), 1, true), "Payment", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+
+        jLabel6.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(102, 0, 0));
+        jLabel6.setText("Clear On*");
+
+        dcClearOn.setFieldFont(new java.awt.Font("Times New Roman", java.awt.Font.PLAIN, 14));
+
+        jLabel5.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(102, 0, 0));
+        jLabel5.setText("Date*");
+
+        taNotes.setColumns(20);
+        taNotes.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        taNotes.setRows(5);
+        jScrollPane1.setViewportView(taNotes);
+
         jLabel1.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(102, 0, 0));
         jLabel1.setText("Payment Mode*");
+
+        rbClear.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        rbClear.setText("Clear");
 
         cmbPaymentMode.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         cmbPaymentMode.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select Account Type", "Bank", "Cash", "Card" }));
@@ -106,6 +140,9 @@ public class UISupplierTransaction extends javax.swing.JPanel {
                 cmbPaymentModeActionPerformed(evt);
             }
         });
+
+        rbNotClear.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        rbNotClear.setText("Not Clear");
 
         cmbAccount.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
 
@@ -117,46 +154,148 @@ public class UISupplierTransaction extends javax.swing.JPanel {
         jLabel3.setForeground(new java.awt.Color(102, 0, 0));
         jLabel3.setText("Amount*");
 
-        spAmount.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        spAmount.setModel(new javax.swing.SpinnerNumberModel(Double.valueOf(0.0d), Double.valueOf(0.0d), null, Double.valueOf(0.5d)));
-
-        dcTxnDate.setFieldFont(new java.awt.Font("Times New Roman", java.awt.Font.PLAIN, 14));
-
-        jLabel5.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(102, 0, 0));
-        jLabel5.setText("Date*");
-
-        dcClearOn.setFieldFont(new java.awt.Font("Times New Roman", java.awt.Font.PLAIN, 14));
-
-        jLabel6.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(102, 0, 0));
-        jLabel6.setText("Clear On*");
-
-        rbClear.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        rbClear.setText("Clear");
-
-        rbNotClear.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        rbNotClear.setText("Not Clear");
-
-        taNotes.setColumns(20);
-        taNotes.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        taNotes.setRows(5);
-        jScrollPane1.setViewportView(taNotes);
-
         jLabel7.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(102, 0, 0));
         jLabel7.setText("Status*");
 
+        spAmount.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        spAmount.setModel(new javax.swing.SpinnerNumberModel(Double.valueOf(0.0d), Double.valueOf(0.0d), null, Double.valueOf(0.5d)));
+
         jLabel8.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel8.setText("Notes");
+
+        dcTxnDate.setFieldFont(new java.awt.Font("Times New Roman", java.awt.Font.PLAIN, 14));
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel7))
+                                .addGap(16, 16, 16)
+                                .addComponent(rbClear)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(rbNotClear))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(61, 61, 61)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(dcTxnDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(dcClearOn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel1))
+                                .addGap(3, 3, 3))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addGap(39, 39, 39)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(spAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbAccount, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmbPaymentMode, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(24, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(cmbPaymentMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(cmbAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(spAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dcTxnDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dcClearOn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rbClear)
+                    .addComponent(rbNotClear)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 102), 1, true), "Supplier Invoice", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+
+        jLabel13.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel13.setText("Contact Person");
+
+        txfContactPerson.setEditable(false);
+        txfContactPerson.setBackground(new java.awt.Color(255, 255, 255));
+        txfContactPerson.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+
+        jLabel12.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel12.setText("Phone");
+
+        txfPhone.setEditable(false);
+        txfPhone.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+
+        txfAmountDue.setEditable(false);
+        txfAmountDue.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+
+        jLabel17.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel17.setText("Amount Due");
+
+        txfTotalPaid.setEditable(false);
+        txfTotalPaid.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+
+        jLabel16.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel16.setText("Total Paid");
+
+        txfPayable.setEditable(false);
+        txfPayable.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+
+        jLabel14.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel14.setText("Invoice");
 
         txfVoucherNo.setEditable(false);
         txfVoucherNo.setBackground(new java.awt.Color(255, 255, 255));
         txfVoucherNo.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
 
+        jLabel15.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel15.setText("Payable");
+
         jLabel9.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(102, 0, 0));
         jLabel9.setText("Voucher No*");
+
+        cmbInvoice.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        cmbInvoice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbInvoiceActionPerformed(evt);
+            }
+        });
 
         jLabel11.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(102, 0, 0));
@@ -169,137 +308,103 @@ public class UISupplierTransaction extends javax.swing.JPanel {
             }
         });
 
-        txfPhone.setEditable(false);
-        txfPhone.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-
-        jLabel12.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        jLabel12.setText("Phone");
-
-        txfContactPerson.setEditable(false);
-        txfContactPerson.setBackground(new java.awt.Color(255, 255, 255));
-        txfContactPerson.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-
-        jLabel13.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        jLabel13.setText("Contact Person");
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(37, 37, 37)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel11)
+                                    .addComponent(jLabel12)))
+                            .addComponent(jLabel13))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txfPhone)
+                            .addComponent(cmbSupplier, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txfContactPerson, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cmbInvoice, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txfPayable)
+                                    .addComponent(txfTotalPaid)
+                                    .addComponent(txfAmountDue, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txfVoucherNo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(43, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txfVoucherNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txfPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txfContactPerson, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbInvoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txfPayable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txfTotalPaid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel16))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txfAmountDue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17))
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(30, 30, 30)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel6)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel5)
-                                            .addComponent(jLabel7))
-                                        .addGap(16, 16, 16)
-                                        .addComponent(rbClear)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(rbNotClear))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(61, 61, 61)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(dcTxnDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(dcClearOn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(21, 21, 21)
-                                        .addComponent(jLabel8)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jScrollPane1))))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel2)
-                                            .addComponent(jLabel1))
-                                        .addGap(3, 3, 3))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addGap(39, 39, 39)
-                                        .addComponent(jLabel3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(spAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cmbAccount, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(cmbPaymentMode, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGap(66, 66, 66)
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txfVoucherNo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(89, 89, 89)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel11)
-                                    .addComponent(jLabel12)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(52, 52, 52)
-                                .addComponent(jLabel13)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txfContactPerson)
-                            .addComponent(txfPhone)
-                            .addComponent(cmbSupplier, 0, 234, Short.MAX_VALUE))))
-                .addGap(56, 56, 56))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txfVoucherNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txfPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txfContactPerson, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(cmbPaymentMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(cmbAccount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(spAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dcTxnDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dcClearOn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rbClear)
-                    .addComponent(rbNotClear)
-                    .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 10, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true));
@@ -326,12 +431,12 @@ public class UISupplierTransaction extends javax.swing.JPanel {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(142, 142, 142)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnReset)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(268, 268, 268))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -351,16 +456,16 @@ public class UISupplierTransaction extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -378,6 +483,7 @@ public class UISupplierTransaction extends javax.swing.JPanel {
         btnReset.setEnabled(status);
         btnSave.setEnabled(status);
         spAmount.setEnabled(status);
+        cmbInvoice.setEnabled(status);
     }
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
@@ -462,21 +568,79 @@ public class UISupplierTransaction extends javax.swing.JPanel {
     private void cmbSupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbSupplierActionPerformed
         // TODO add your handling code here:
 
+        txfAmountDue.setText("0.00");
+        txfPayable.setText("0.00");
+        txfTotalPaid.setText("0.00");
+        spAmount.setValue(0.00);
+
+
         if (cmbSupplier.getSelectedIndex() == 0) {
             txfContactPerson.setText("");
             txfPhone.setText("");
+            cmbInvoice.removeAllItems();
             return;
+        } else if (cmbSupplier.getSelectedIndex() > 0) {
+
+            parentFrame.stausBar.startLoading("loading invoice...");
+
+            new SwingWorker<Object, Object>() {
+                @Override
+                protected Object doInBackground() throws Exception {
+                    txfPhone.setText(suppliers.get(cmbSupplier.getSelectedIndex()).getPhone());
+                    txfContactPerson.setText(suppliers.get(cmbSupplier.getSelectedIndex()).getContactFirstName() + " " + suppliers.get(cmbSupplier.getSelectedIndex()).getContactLastName());
+                    changeStatus(false);
+                    return loadInvoices(suppliers.get(cmbSupplier.getSelectedIndex()).getSupplierID());
+                }
+
+                protected void done() {
+                    try {
+
+                        parentFrame.stausBar.stopLoading();
+                        changeStatus(true);
+
+                        if (get() == 1) {
+                        } else if (get() == -1) {
+                            parentFrame.showMessage("Unable to load accounts");
+                        } else if (get() == -2) {
+                            Message.dbConnectFailed();
+                        }
+
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(UISupplierTransaction.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ExecutionException ex) {
+                        Logger.getLogger(UISupplierTransaction.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }.execute();
+
+
         }
 
-        txfPhone.setText(suppliers.get(cmbSupplier.getSelectedIndex()).getPhone());
-        txfContactPerson.setText(suppliers.get(cmbSupplier.getSelectedIndex()).getContactFirstName() + " " + suppliers.get(cmbSupplier.getSelectedIndex()).getContactLastName());
-
-
     }//GEN-LAST:event_cmbSupplierActionPerformed
+
+    private void cmbInvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbInvoiceActionPerformed
+        // TODO add your handling code here:
+
+        if (cmbInvoice.getSelectedIndex() == 0) {
+            txfAmountDue.setText("0.00");
+            txfPayable.setText("0.00");
+            txfTotalPaid.setText("0.00");
+            spAmount.setValue(0.00);
+            return;
+        } else if (cmbInvoice.getSelectedIndex() > 0) {
+            SupplierInvoice invoice = supplierInvoices.get(cmbInvoice.getSelectedIndex());
+            txfAmountDue.setText("" + Utilities.getFormattedNumber(invoice.getNetPayable() - invoice.getTotalPaid()));
+            txfPayable.setText("" + Utilities.getFormattedNumber(invoice.getNetPayable()));
+            txfTotalPaid.setText("" + Utilities.getFormattedNumber(invoice.getTotalPaid()));
+            spAmount.setValue((invoice.getNetPayable() - invoice.getTotalPaid()));
+        }
+
+    }//GEN-LAST:event_cmbInvoiceActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSave;
     private javax.swing.JComboBox cmbAccount;
+    private javax.swing.JComboBox cmbInvoice;
     private javax.swing.JComboBox cmbPaymentMode;
     private javax.swing.JComboBox cmbSupplier;
     private datechooser.beans.DateChooserCombo dcClearOn;
@@ -485,6 +649,10 @@ public class UISupplierTransaction extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
@@ -494,14 +662,19 @@ public class UISupplierTransaction extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JRadioButton rbClear;
     private javax.swing.JRadioButton rbNotClear;
     private javax.swing.JSpinner spAmount;
     private javax.swing.JTextArea taNotes;
+    private javax.swing.JTextField txfAmountDue;
     private javax.swing.JTextField txfContactPerson;
+    private javax.swing.JTextField txfPayable;
     private javax.swing.JTextField txfPhone;
+    private javax.swing.JTextField txfTotalPaid;
     private javax.swing.JTextField txfVoucherNo;
     // End of variables declaration//GEN-END:variables
 
@@ -539,6 +712,11 @@ public class UISupplierTransaction extends javax.swing.JPanel {
             return false;
         }
 
+        if (cmbInvoice.getSelectedIndex() == 0) {
+            parentFrame.showMessage("Please select invoice");
+            return false;
+        }
+
         if (cmbPaymentMode.getSelectedItem().toString().compareTo("Bank") == 0 && !rbClear.isSelected() && !rbNotClear.isSelected()) {
             parentFrame.showMessage("Please select status");
             return false;
@@ -552,13 +730,18 @@ public class UISupplierTransaction extends javax.swing.JPanel {
 
         MySQLDatabase database = new MySQLDatabase();
         String query = "";
+        int invoiceID = -1;
 
         if (database.connect()) {
 
             database.setAutoCommit(false);
 
+            if (cmbInvoice.getSelectedIndex() > 0) {
+                invoiceID = supplierInvoices.get(cmbInvoice.getSelectedIndex()).getInvoiceID();
+            }
+
             query = "INSERT INTO supplier_invoice_transaction VALUES(null,"
-                    + "" + -1 + ", \"" + Utilities.dateForDB(dcTxnDate.getSelectedDate().getTime()) + "\",\"" + Utilities.dateForDB(dcClearOn.getSelectedDate().getTime()) + "\", " + rbClear.isSelected() + ", " + spAmount.getValue() + ", " + accounts.get(cmbAccount.getSelectedItem().toString()) + ""
+                    + "" + invoiceID + ", \"" + Utilities.dateForDB(dcTxnDate.getSelectedDate().getTime()) + "\",\"" + Utilities.dateForDB(dcClearOn.getSelectedDate().getTime()) + "\", " + rbClear.isSelected() + ", " + spAmount.getValue() + ", " + accounts.get(cmbAccount.getSelectedItem().toString()) + ""
                     + ", \"Withdraw\", \"" + taNotes.getText() + "\", " + parentFrame.currentUser.getUserID() + ", NOW()"
                     + ")";
 
@@ -605,6 +788,13 @@ public class UISupplierTransaction extends javax.swing.JPanel {
                 dcClearOn.setSelectedDate(Calendar.getInstance());
                 rbClear.setSelected(true);
                 taNotes.setText("");
+                txfAmountDue.setText("0.00");
+                txfPayable.setText("0.00");
+                txfTotalPaid.setText("0.00");
+                spAmount.setValue(0.00);
+                cmbInvoice.removeAllItems();
+                txfPhone.setText("");
+                txfContactPerson.setText("");
 
 
                 parentFrame.stausBar.startLoading("generating voucher no");
@@ -786,6 +976,60 @@ public class UISupplierTransaction extends javax.swing.JPanel {
         } else {
             status = -2;
         }
+
+    }
+
+    private int loadInvoices(int supplierID) {
+
+        int count = 0;
+        int status = 0;
+        MySQLDatabase database = new MySQLDatabase();
+        QueryBuilder query = new QueryBuilder();
+        Vector<String> invoiceNo = new Vector<>();
+        supplierInvoices.clear();
+        invoiceNo.add("Select Invoice");
+
+        if (database.connect()) {
+
+            try {
+                query.select("supplier_invoice.invoice_id, supplier_invoice.supplier_invoice_no");
+                query.select("supplier_invoice.payable, SUM(supplier_invoice_transaction.paid_amount) AS total_paid");
+                query.from("supplier_invoice");
+                query.innerJoin("supplier_invoice_transaction", "supplier_invoice_transaction.supplier_invoice_id = supplier_invoice.invoice_id");
+                query.groupBy("supplier_invoice_transaction.supplier_invoice_id");
+                query.where("supplier_invoice.supplier_id = " + supplierID);
+
+                ResultSet resultSet = database.get(query.get());
+                count = 0;
+
+                while (resultSet.next()) {
+
+                    SupplierInvoice invoice = new SupplierInvoice();
+                    invoice.setInvoiceID(resultSet.getInt("supplier_invoice.invoice_id"));
+                    invoice.setInvoiceNo(resultSet.getString("supplier_invoice.supplier_invoice_no"));
+                    invoice.setTotalPaid(resultSet.getDouble("total_paid"));
+                    invoice.setNetPayable(resultSet.getDouble("supplier_invoice.payable"));
+
+                    if (invoice.getNetPayable() > invoice.getTotalPaid()) {
+                        invoiceNo.add(invoice.getInvoiceNo());
+                        supplierInvoices.put(++count, invoice);
+                    }
+                }
+
+                cmbInvoice.setModel(new DefaultComboBoxModel(invoiceNo));
+                status = 1;
+
+            } catch (SQLException ex) {
+                status = -1;
+                Logger.getLogger(UISupplierTransaction.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                database.disconnectFromDatabase();
+            }
+        } else {
+            status = -2;
+        }
+
+        return status;
 
     }
 }

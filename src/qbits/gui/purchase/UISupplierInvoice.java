@@ -1882,6 +1882,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
 
             super();
             itemDelete = new JMenuItem("Remove");
+            itemDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/qbits/resources/image/Delete-icon.png")));
 
             itemDelete.addActionListener(this);
 
