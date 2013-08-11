@@ -688,7 +688,7 @@ public class UIProductPurchaseReturn extends javax.swing.JPanel {
         return status;
     }
 
-    private void loadCategory() {
+                                                                                                                                                                                           private void loadCategory() {
 
         MySQLDatabase database = new MySQLDatabase();
         String query;

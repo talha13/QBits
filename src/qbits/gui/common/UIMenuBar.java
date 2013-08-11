@@ -17,12 +17,13 @@ import javax.swing.JMenuItem;
 public class UIMenuBar extends JMenuBar implements ActionListener {
 
     private UIParentFrame parentFrame;
-    private JMenu menuFile, menuPurchase, menuEmployee, menuSale, menuAccount, menuProduct;
+    private JMenu menuFile, menuPurchase, menuEmployee, menuSale, menuAccount, menuProduct, menuReport;
     private JMenuItem itemExit, itemChangePass;
     private JMenuItem itemNewSupplier, itemSupplierList, itemNewSupplierInvoice, itemNewSupplierTransaction, itemPurchaseReturn, itemsupplierInvoiceCRUD;
     private JMenuItem itemNewAccount, itemNewAccountTxn, itemNewAccountHead, itemNewGeneralTransaction;
     private JMenuItem itemNewEmployee;
     private JMenuItem itemNewProduct, itemNewDamageProduct;
+    private JMenuItem itemReportProductStock;
 
     public UIMenuBar(UIParentFrame pf) {
 
@@ -35,6 +36,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         menuAccount = new JMenu("Account");
         menuEmployee = new JMenu("Employee");
         menuProduct = new JMenu("Product");
+        menuReport = new JMenu("Report");
 
         itemChangePass = new JMenuItem("Change Password");
         itemExit = new JMenuItem("Exit");
@@ -56,6 +58,9 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         itemNewProduct = new JMenuItem("New Product");
         itemNewDamageProduct = new JMenuItem("New Damage Product");
 
+        itemReportProductStock = new JMenuItem("Product Stock");
+
+
         itemChangePass.addActionListener(this);
         itemExit.addActionListener(this);
 
@@ -75,6 +80,8 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
 
         itemNewProduct.addActionListener(this);
         itemNewDamageProduct.addActionListener(this);
+
+        itemReportProductStock.addActionListener(this);
 
         menuFile.add(itemChangePass);
         menuFile.addSeparator();
@@ -102,11 +109,14 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         menuProduct.add(itemNewProduct);
         menuProduct.add(itemNewDamageProduct);
 
+        menuReport.add(itemReportProductStock);
+
         add(menuFile);
         add(menuPurchase);
         add(menuAccount);
         add(menuEmployee);
         add(menuProduct);
+        add(menuReport);
     }
 
     @Override
@@ -140,8 +150,10 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
             parentFrame.newSupplierTransaction();
         } else if (itemPurchaseReturn == e.getSource()) {
             parentFrame.newPurchaseReturn();
-        }else if(itemsupplierInvoiceCRUD == e.getSource()){
+        } else if (itemsupplierInvoiceCRUD == e.getSource()) {
             parentFrame.supplierInvoiceCRUD();
+        }else if(itemReportProductStock == e.getSource()){
+            parentFrame.reportProductStock();
         }
     }
 }

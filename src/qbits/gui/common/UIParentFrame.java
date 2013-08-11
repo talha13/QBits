@@ -18,6 +18,7 @@ import qbits.gui.account.UIAccount;
 import qbits.gui.account.UIAccountHead;
 import qbits.gui.account.UIAccountTransaction;
 import qbits.gui.account.UIGeneralTransaction;
+import qbits.gui.purchase.UIReportProductStock;
 import qbits.gui.purchase.UISupplier;
 import qbits.gui.purchase.UISupplierCRUD;
 import qbits.gui.purchase.UISupplierInvoice;
@@ -208,5 +209,11 @@ public class UIParentFrame extends JFrame implements WindowListener {
         
         UISupplierInvoiceCRUD supplierInvoiceCRUD = new UISupplierInvoiceCRUD(this);
         addPanel(supplierInvoiceCRUD, "supplier_invoice_crud");
+    }
+
+    public void reportProductStock() {
+        
+        UIReportProductStock productStock = new UIReportProductStock(this);
+        addPanel(productStock, "report_product_stock");
     }
 }
