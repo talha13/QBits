@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package qbits.gui.purchase;
+package qbits.gui.sales;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -33,9 +33,9 @@ import qbits.configuration.Configuration;
 import qbits.configuration.Utilities;
 import qbits.db.MySQLDatabase;
 import qbits.db.QueryBuilder;
+import qbits.entity.Customer;
 import qbits.entity.Product;
 import qbits.entity.ProductSearch;
-import qbits.entity.Supplier;
 import qbits.entity.Invoice;
 import qbits.gui.account.UIGeneralTransaction;
 import qbits.gui.common.UIParentFrame;
@@ -48,11 +48,11 @@ import qbitserp.common.Message;
  *
  * @author Topu
  */
-public class UISupplierInvoice extends javax.swing.JPanel implements SearcherListener {
+public class UICustomerInvoice extends javax.swing.JPanel implements SearcherListener {
 
     private UIParentFrame parentFrame;
     private ProductSearch productSearch;
-    private HashMap<Integer, Supplier> suppliers;
+    private HashMap<Integer, Customer> customers;
     private HashMap<Integer, Integer> accounts;
     private HashMap<Integer, Integer> categories;
     private HashMap<Integer, Integer> products;
@@ -66,18 +66,18 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
     private Point popupSelectedPoint;
     private boolean isUpdate;
     private ButtonGroup clearButtonGroup;
-    private Invoice supplierInvoice;
+    private Invoice customerInvoice;
 
     /**
-     * Creates new form UISupplierInvoice
+     * Creates new form UICustomerInvoice
      */
-    public UISupplierInvoice(UIParentFrame frame) {
+    public UICustomerInvoice(UIParentFrame frame) {
         initComponents();
         clearButtonGroup = new ButtonGroup();
         clearButtonGroup.add(rbClear);
         clearButtonGroup.add(rbNotClear);
         this.parentFrame = frame;
-        suppliers = new HashMap<>();
+        customers = new HashMap<>();
         categories = new HashMap<>();
         products = new HashMap<>();
         accounts = new HashMap<>();
@@ -106,8 +106,8 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
 
     public void update(int invoiceID) {
         isUpdate = true;
-        supplierInvoice = new Invoice();
-        supplierInvoice.setInvoiceID(invoiceID);
+        customerInvoice = new Invoice();
+        customerInvoice.setInvoiceID(invoiceID);
         changeStatusPaymentPanel(false);
         load();
     }
@@ -133,50 +133,53 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
         if (database.connect()) {
 
             try {
-                query.select("supplier_invoice.invoice_id, supplier_invoice.supplier_id, supplier_invoice.supplier_invoice_no, supplier_invoice.invoice_date, supplier_invoice.vat, supplier_invoice.subtotal, supplier_invoice.payable");
-                query.from("supplier_invoice");
-                query.where("supplier_invoice.invoice_id = ", "" + supplierInvoice.getInvoiceID());
+                query.select("sales_invoice.id, sales_invoice.customer_id, sales_invoice.invoice_no, sales_invoice.invoice_date, sales_invoice.vat, sales_invoice.subtotal, sales_invoice.payable, sales_invoice.rounding_amount");
+                query.from("sales_invoice");
+                query.where("sales_invoice.id = ", "" + customerInvoice.getInvoiceID());
 
                 resultSet = database.get(query.get());
 
                 if (resultSet.next()) {
 
-                    int supplierID = resultSet.getInt("supplier_invoice.supplier_id");
+                    int customerID = resultSet.getInt("sales_invoice.id");
 
-                    status = -1;
+                    if (customerID != -1) {
 
-                    for (Integer cmbIndex : suppliers.keySet()) {
+                        status = -1;
 
-                        if (supplierID == suppliers.get(cmbIndex).getSupplierID()) {
-                            cmbSupplier.setSelectedIndex(cmbIndex);
-                            status = 1;
-                            break;
+                        for (Integer cmbIndex : customers.keySet()) {
+
+                            if (customerID == customers.get(cmbIndex).getCustomerID()) {
+                                cmbCustomer.setSelectedIndex(cmbIndex);
+                                status = 1;
+                                break;
+                            }
+                        }
+
+                        if (status != 1) {
+                            return -1;
                         }
                     }
 
-                    if (status != 1) {
-                        return -1;
-                    }
-
-                    subtotal = resultSet.getDouble("supplier_invoice.subtotal");
-                    vat = resultSet.getDouble("supplier_invoice.vat");
-                    netPayable = resultSet.getDouble("supplier_invoice.payable");
+                    subtotal = resultSet.getDouble("sales_invoice.subtotal");
+                    vat = resultSet.getDouble("sales_invoice.vat");
+                    netPayable = resultSet.getDouble("sales_invoice.payable");
                     paid = 0.00;
 
-                    txfInvoiceNo.setText("" + resultSet.getString("supplier_invoice.supplier_invoice_no"));
-                    dcDate.setSelectedDate(Utilities.getDateChosserDate(resultSet.getDate("supplier_invoice.invoice_date")));
+                    txfInvoiceNo.setText("" + resultSet.getString("sales_invoice.invoice_no"));
+                    dcDate.setSelectedDate(Utilities.getDateChosserDate(resultSet.getDate("sales_invoice.invoice_date")));
 
                     query.clear();
 
-                    query.select("supplier_invoice_transaction.clear_on");
-                    query.select("supplier_invoice_transaction.is_clear");
-                    query.select("supplier_invoice_transaction.paid_amount");
-                    query.select("supplier_invoice_transaction.account_id");
-                    query.select("supplier_invoice_transaction.notes");
+                    query.select("sale_invoice_transaction.clear_on");
+                    query.select("sale_invoice_transaction.is_clear");
+                    query.select("sale_invoice_transaction.paid_amount");
+                    query.select("sale_invoice_transaction.account_id");
+                    query.select("sale_invoice_transaction.notes");
                     query.select("account.type");
-                    query.innerJoin("account", "account.id = supplier_invoice_transaction.account_id");
-                    query.from("supplier_invoice_transaction");
-                    query.where("supplier_invoice_id = ", "" + supplierInvoice.getInvoiceID());
+                    query.innerJoin("account", "account.id = sale_invoice_transaction.account_id");
+                    query.from("sale_invoice_transaction");
+                    query.where("sales_invoice_id = ", "" + customerInvoice.getInvoiceID());
                     query.orderBy("transaction_date", "asc");
 
                     resultSet = database.get(query.get());
@@ -234,23 +237,23 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                     selectedProducts.clear();
                     query.clear();
 
-                    query.select("product_stock.stock_id");
-                    query.select("product_stock.product_id");
-                    query.select("product_stock.supplier_invoice_id");
-                    query.select("product_stock.quantity");
-                    query.select("product_stock.cost_per_unit");
+                    query.select("sales_invoice_product.sales_product_id");
+                    query.select("sales_invoice_product.product_id");
+                    query.select("sales_invoice_product.sales_invoice_id");
+                    query.select("sales_invoice_product.quantity");
+                    query.select("sales_invoice_product.rate_per_unit");
                     query.select("product_unit.title");
                     query.select("product_brand.title");
                     query.select("product_category.title");
                     query.select("product.title");
                     query.select("product.product_category_id");
                     query.select("product.product_code");
-                    query.innerJoin("product", "product.product_id = product_stock.product_id");
+                    query.innerJoin("product", "product.product_id = sales_invoice_product.product_id");
                     query.innerJoin("product_category", "product_category.category_id = product.product_category_id");
                     query.leftJoin("product_unit", "product_unit.unit_id = product.product_unit_id");
                     query.leftJoin("product_brand", "product_brand.brand_id = product.product_brand_id");
-                    query.where("product_stock.supplier_invoice_id = ", "" + supplierInvoice.getInvoiceID());
-                    query.from("product_stock");
+                    query.where("sales_invoice_product.sales_invoice_id = ", "" + customerInvoice.getInvoiceID());
+                    query.from("sales_invoice_product");
 
                     resultSet = database.get(query.get());
                     Product product;
@@ -262,10 +265,10 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                         product.setBrand(resultSet.getString("product_brand.title"));
                         product.setCategoryID(resultSet.getInt("product.product_category_id"));
                         product.setCode(resultSet.getString("product.product_code"));
-                        product.setId(resultSet.getInt("product_stock.product_id"));
+                        product.setId(resultSet.getInt("sales_invoice_product.product_id"));
                         product.setName(resultSet.getString("product.title"));
-                        product.setQuantity(resultSet.getDouble("product_stock.quantity"));
-                        product.setRpu(resultSet.getDouble("product_stock.cost_per_unit"));
+                        product.setQuantity(resultSet.getDouble("sales_invoice_product.quantity"));
+                        product.setRpu(resultSet.getDouble("sales_invoice_product.rate_per_unit"));
                         product.setUnit(resultSet.getString("product_unit.title"));
                         product.setCategory(resultSet.getString("product_category.title"));
 
@@ -280,7 +283,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                     status = -1;
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(UISupplierInvoice.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UICustomerInvoice.class.getName()).log(Level.SEVERE, null, ex);
             }
 
 
@@ -316,7 +319,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
         jButton2 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        cmbSupplier = new javax.swing.JComboBox();
+        cmbCustomer = new javax.swing.JComboBox();
         txfPhone = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -352,7 +355,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
         btnReset = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Supplier Invoice", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Customer Invoice", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Product"));
 
@@ -470,19 +473,18 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 .addContainerGap())
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Supplier"));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Customer"));
 
-        jLabel1.setBackground(new java.awt.Color(102, 0, 0));
+        jLabel1.setBackground(new java.awt.Color(0, 0, 0));
         jLabel1.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(102, 0, 0));
-        jLabel1.setText("Suplier*");
+        jLabel1.setText("Customer");
 
-        cmbSupplier.setEditable(true);
-        cmbSupplier.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        cmbSupplier.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cmbSupplier.addActionListener(new java.awt.event.ActionListener() {
+        cmbCustomer.setEditable(true);
+        cmbCustomer.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        cmbCustomer.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbCustomer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbSupplierActionPerformed(evt);
+                cmbCustomerActionPerformed(evt);
             }
         });
 
@@ -502,7 +504,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(cmbSupplier, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmbCustomer, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txfPhone, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
@@ -511,7 +513,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(cmbSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txfPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -889,17 +891,17 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
 
     }//GEN-LAST:event_btnAddActionPerformed
 
-    private void cmbSupplierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbSupplierActionPerformed
+    private void cmbCustomerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCustomerActionPerformed
         // TODO add your handling code here:
 
-        if (cmbSupplier.getSelectedIndex() <= 0) {
+        if (cmbCustomer.getSelectedIndex() <= 0) {
             txfPhone.setText("");
             return;
         }
 
-        txfPhone.setText(suppliers.get(cmbSupplier.getSelectedIndex()).getPhone());
+        txfPhone.setText(customers.get(cmbCustomer.getSelectedIndex()).getContactNo());
 
-    }//GEN-LAST:event_cmbSupplierActionPerformed
+    }//GEN-LAST:event_cmbCustomerActionPerformed
 
     private void cmbCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCategoryActionPerformed
         // TODO add your handling code here:
@@ -938,7 +940,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
         cmbCategory.setEnabled(status);
         cmbPaymentMode.setEnabled(status);
         cmbProductName.setEnabled(status);
-        cmbSupplier.setEnabled(status);
+        cmbCustomer.setEnabled(status);
 
         txfCode.setEnabled(status);
         txfDue.setEnabled(status);
@@ -1044,7 +1046,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
             @Override
             protected Object doInBackground() throws Exception {
 
-                parentFrame.stausBar.startLoading("saving supplier invoice");
+                parentFrame.stausBar.startLoading("saving sales invoice");
                 changeStatus(false);
 
                 if (isUpdate) {
@@ -1067,14 +1069,14 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                         }
 
                         reset();
-                        parentFrame.showMessage("Supplier invoice saved");
+                        parentFrame.showMessage("Sales invoice saved");
                     } else if (get() == -1) {
                         parentFrame.showMessage("Unable to save invoice info");
                     }
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(UISupplierInvoice.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(UICustomerInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ExecutionException ex) {
-                    Logger.getLogger(UISupplierInvoice.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(UICustomerInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }.execute();
@@ -1111,9 +1113,9 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
     private javax.swing.JButton btnSave;
     private javax.swing.JComboBox cmbAccounts;
     private javax.swing.JComboBox cmbCategory;
+    private javax.swing.JComboBox cmbCustomer;
     private javax.swing.JComboBox cmbPaymentMode;
     private javax.swing.JComboBox cmbProductName;
-    private javax.swing.JComboBox cmbSupplier;
     private datechooser.beans.DateChooserCombo dcClearDate;
     private datechooser.beans.DateChooserCombo dcDate;
     private javax.swing.JButton jButton2;
@@ -1200,40 +1202,45 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
         return status;
     }
 
-    private void loadSuppliers() {
+    private void loadCustomers() {
 
         MySQLDatabase database = new MySQLDatabase();
         String query;
-        Vector<String> supplierNames = new Vector<>();
-        suppliers.clear();
+        Vector<String> customerNames = new Vector<>();
+        customers.clear();
         int status = 0;
-        int supplierCount = 0;
+        int customerCount = 0;
+        QueryBuilder builder = new QueryBuilder();
 
-        supplierNames.add("Select Supplier");
+        customerNames.add("Select Customer");
 
         if (database.connect()) {
             try {
-                query = "SELECT supplier_id, name, phone FROM supplier";
 
-                ResultSet resultSet = database.get(query);
+                builder.select("id, person.first_name, person.last_name, person.contact_no");
+                builder.innerJoin("person", "person.person_id = customer.person_id");
+                builder.from("customer");
+
+                ResultSet resultSet = database.get(builder.get());
 
                 while (resultSet.next()) {
 
-                    Supplier supplier = new Supplier();
-                    supplier.setSupplierID(resultSet.getInt("supplier_id"));
-                    supplier.setName(resultSet.getString("name"));
-                    supplier.setPhone(resultSet.getString("phone"));
-                    supplierNames.add(supplier.getName());
+                    Customer customer = new Customer();
+                    customer.setCustomerID(resultSet.getInt("id"));
+                    customer.setFirstName(resultSet.getString("person.first_name"));
+                    customer.setLastName(resultSet.getString("person.last_name"));
+                    customer.setContactNo(resultSet.getString("person.contact_no"));
+                    customerNames.add(customer.getFirstName() + " " + customer.getLastName());
 
-                    supplierCount++;
-                    suppliers.put(supplierCount, supplier);
+                    customerCount++;
+                    customers.put(customerCount, customer);
                 }
 
-                cmbSupplier.setModel(new DefaultComboBoxModel(supplierNames));
+                cmbCustomer.setModel(new DefaultComboBoxModel(customerNames));
                 status = 1;
 
             } catch (SQLException ex) {
-                Logger.getLogger(UISupplierInvoice.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UICustomerInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
                 database.disconnect();
@@ -1272,7 +1279,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 status = 1;
 
             } catch (SQLException ex) {
-                Logger.getLogger(UISupplierInvoice.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UICustomerInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
                 database.disconnect();
@@ -1316,7 +1323,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 status = 1;
 
             } catch (Exception ex) {
-                Logger.getLogger(UISupplierInvoice.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UICustomerInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
                 database.disconnect();
@@ -1358,13 +1365,13 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
 
         updatePaymentUI();
 
-        loadSuppliers();
+        loadCustomers();
         loadCategory();
         selectedProducts.clear();
         cmbAccounts.removeAllItems();
         accounts.clear();
         shouldPerformActionForcmbCategory = true;
-        loadSuppliers();
+        loadCustomers();
         txfInvoiceNo.setText("");
         txfPhone.setText("");
         txfCode.setText("");
@@ -1470,10 +1477,10 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
 
     private boolean check() {
 
-        if (cmbSupplier.getSelectedIndex() == 0) {
-            parentFrame.showMessage("Please select supplier");
-            return false;
-        }
+//        if (cmbCustomer.getSelectedIndex() == 0) {
+//            parentFrame.showMessage("Please select supplier");
+//            return false;
+//        }
 
         if (!Utilities.isValidString(txfInvoiceNo.getText())) {
             parentFrame.showMessage("Please enter invoice no");
@@ -1528,28 +1535,15 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
         int status = 0;
         MySQLDatabase database = new MySQLDatabase();
         String query;
-        long supplierID;
+        long customerID;
         QueryBuilder queryBuilder = new QueryBuilder();
 
         if (database.connect()) {
 
             database.setAutoCommit(false);
 
-            if (cmbSupplier.getSelectedIndex() == -1) {
+            if (cmbCustomer.getSelectedIndex() == -1) {
 
-                query = "INSERT INTO person VALUES("
-                        + "null, null, null, null, "
-                        + "null, null, -1"
-                        + ")";
-
-                long personID = database.insert(query);
-
-                if (personID == -1) {
-                    database.rollback();
-                    database.setAutoCommit(true);
-                    database.disconnect();
-                    return -1;
-                }
 
                 query = "INSERT INTO address VALUES("
                         + "null, null, null, null"
@@ -1564,22 +1558,44 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                     return -1;
                 }
 
-                query = "INSERT INTO supplier VALUES("
-                        + "null, \"" + cmbSupplier.getSelectedItem().toString() + "\", " + personID + ", " + addressID + ", \"" + txfPhone.getText() + "\", "
-                        + "null, " + parentFrame.currentUser.getUserID() + ", NOW()"
+                query = "INSERT INTO person VALUES("
+                        + "null, null, null, null, "
+                        + "null, null, " + addressID + ""
                         + ")";
 
-                supplierID = database.insert(query);
+                long personID = database.insert(query);
 
-                if (supplierID == -1) {
+                if (personID == -1) {
                     database.rollback();
                     database.setAutoCommit(true);
                     database.disconnect();
                     return -1;
                 }
 
+
+//                query = "INSERT INTO supplier VALUES("
+//                        + "null, \"" + cmbCustomer.getSelectedItem().toString() + "\", " + personID + ", " + addressID + ", \"" + txfPhone.getText() + "\", "
+//                        + "null, " + parentFrame.currentUser.getUserID() + ", NOW()"
+//                        + ")";
+
+                queryBuilder.clear();
+                queryBuilder.set("person_id", "" + personID);
+                queryBuilder.set("last_updated_by", "" + parentFrame.currentUser.getUserID());
+                queryBuilder.set("last_updated_time", "NOW()");
+
+                customerID = database.insert(queryBuilder.insert("customer"));
+
+                if (customerID == -1) {
+                    database.rollback();
+                    database.setAutoCommit(true);
+                    database.disconnect();
+                    return -1;
+                }
+
+            } else if (cmbCustomer.getSelectedIndex() == 0) {
+                customerID = -1;
             } else {
-                supplierID = suppliers.get(cmbSupplier.getSelectedIndex()).getSupplierID();
+                customerID = customers.get(cmbCustomer.getSelectedIndex()).getCustomerID();
             }
 
 //            query = "INSERT INTO supplier_invoice VALUES(null, "
@@ -1587,17 +1603,18 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
 //                    + ", " + subtotal + ", " + netPayable + ", " + parentFrame.currentUser.getUserID() + ", NOW())";
 
             queryBuilder.clear();
-            queryBuilder.set("supplier_id", "" + supplierID);
-            queryBuilder.setString("supplier_invoice_no", txfInvoiceNo.getText());
+            queryBuilder.set("customer_id", "" + customerID);
+            queryBuilder.setString("invoice_no", txfInvoiceNo.getText());
             queryBuilder.setString("invoice_date", "" + Utilities.dateForDB(dcDate.getSelectedDate().getTime()));
             queryBuilder.set("vat", "" + vat);
             queryBuilder.set("subtotal", "" + subtotal);
             queryBuilder.set("payable", "" + netPayable);
+            queryBuilder.set("rounding_amount", "0.00");
             queryBuilder.set("last_updated_by", "" + parentFrame.currentUser.getUserID());
             queryBuilder.set("last_updated_time", "NOW()");
-            queryBuilder.where("invoice_id = ", "" + supplierInvoice.getInvoiceID());
+            queryBuilder.where("id = ", "" + customerInvoice.getInvoiceID());
 
-            long affectedRow = database.update(queryBuilder.update("supplier_invoice"));
+            long affectedRow = database.update(queryBuilder.update("sales_invoice"));
 
             if (affectedRow == -1) {
                 database.rollback();
@@ -1608,8 +1625,8 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
 
             queryBuilder.clear();
 
-            queryBuilder.where("supplier_invoice_id = ", "" + supplierInvoice.getInvoiceID());
-            affectedRow = database.delete(queryBuilder.delete("product_stock"));
+            queryBuilder.where("id = ", "" + customerInvoice.getInvoiceID());
+            affectedRow = database.delete(queryBuilder.delete("sales_invoice_product"));
 
             if (affectedRow == -1) {
                 database.rollback();
@@ -1618,17 +1635,23 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 return -1;
             }
 
-            long stockID = 0;
+            long salesLProductID = 0;
 
             for (Product product : selectedProducts) {
 
                 try {
-                    query = "INSERT INTO product_stock VALUES(null, " + product.getId() + ", " + supplierInvoice.getInvoiceID() + ", " + product.getQuantity() + ""
-                            + ", " + product.getRpu() + ", CURDATE(), " + parentFrame.currentUser.getUserID() + ", NOW())";
+//                    query = "INSERT INTO sales_invoice_product VALUES(null, " + product.getId() + ", " + customerInvoice.getInvoiceID() + ", " + product.getQuantity() + ""
+//                            + ", " + product.getRpu() + ", CURDATE(), " + parentFrame.currentUser.getUserID() + ", NOW())";
 
-                    stockID = database.insert(query);
+                    queryBuilder.clear();
+                    queryBuilder.set("sales_invoice_id", "" + customerInvoice.getInvoiceID());
+                    queryBuilder.set("product_id", "" + product.getId());
+                    queryBuilder.set("quantity", "" + product.getQuantity());
+                    queryBuilder.set("rate_per_unit", "" + product.getRpu());
 
-                    if (stockID == -1) {
+                    salesLProductID = database.insert(queryBuilder.insert("sales_invoice_product"));
+
+                    if (salesLProductID == -1) {
                         database.rollback();
                         database.setAutoCommit(true);
                         database.disconnect();
@@ -1667,7 +1690,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
 //                    }
 
                 } catch (Exception ex) {
-                    Logger.getLogger(UISupplierInvoice.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(UICustomerInvoice.class.getName()).log(Level.SEVERE, null, ex);
                     status = -1;
                     break;
                 }
@@ -1713,27 +1736,14 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
         int status = 0;
         MySQLDatabase database = new MySQLDatabase();
         String query;
-        long supplierID;
+        long customerID;
+        QueryBuilder queryBuilder = new QueryBuilder();
 
         if (database.connect()) {
 
             database.setAutoCommit(false);
 
-            if (cmbSupplier.getSelectedIndex() == -1) {
-
-                query = "INSERT INTO person VALUES("
-                        + "null, null, null, null, "
-                        + "null, null, -1"
-                        + ")";
-
-                long personID = database.insert(query);
-
-                if (personID == -1) {
-                    database.rollback();
-                    database.setAutoCommit(true);
-                    database.disconnect();
-                    return -1;
-                }
+            if (cmbCustomer.getSelectedIndex() == -1) {
 
                 query = "INSERT INTO address VALUES("
                         + "null, null, null, null"
@@ -1748,29 +1758,58 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                     return -1;
                 }
 
-                query = "INSERT INTO supplier VALUES("
-                        + "null, \"" + cmbSupplier.getSelectedItem().toString() + "\", " + personID + ", " + addressID + ", \"" + txfPhone.getText() + "\", "
-                        + "null, " + parentFrame.currentUser.getUserID() + ", NOW()"
+                query = "INSERT INTO person VALUES("
+                        + "null, null, null, null, "
+                        + "null, null, " + addressID + ""
                         + ")";
 
-                supplierID = database.insert(query);
+                long personID = database.insert(query);
 
-                if (supplierID == -1) {
+                if (personID == -1) {
                     database.rollback();
                     database.setAutoCommit(true);
                     database.disconnect();
                     return -1;
                 }
 
+                query = "INSERT INTO customer VALUES("
+                        + "null, \"" + cmbCustomer.getSelectedItem().toString() + "\", " + personID + ","
+                        + "" + parentFrame.currentUser.getUserID() + ", NOW()"
+                        + ")";
+
+                customerID = database.insert(query);
+
+                if (customerID == -1) {
+                    database.rollback();
+                    database.setAutoCommit(true);
+                    database.disconnect();
+                    return -1;
+                }
+
+            } else if (cmbCustomer.getSelectedIndex() == 0) {
+                customerID = -1;
             } else {
-                supplierID = suppliers.get(cmbSupplier.getSelectedIndex()).getSupplierID();
+                customerID = customers.get(cmbCustomer.getSelectedIndex()).getCustomerID();
             }
 
-            query = "INSERT INTO supplier_invoice VALUES(null, "
-                    + "" + supplierID + ", \"" + txfInvoiceNo.getText() + "\", \"" + Utilities.dateForDB(dcDate.getSelectedDate().getTime()) + "\", " + vat + ""
-                    + ", " + subtotal + ", " + netPayable + ", " + parentFrame.currentUser.getUserID() + ", NOW())";
+//            query = "INSERT INTO sales_invoice VALUES(null, "
+//                    + "" + customerID + ", \"" + txfInvoiceNo.getText() + "\", \"" + Utilities.dateForDB(dcDate.getSelectedDate().getTime()) + "\", " + vat + ""
+//                    + ", " + subtotal + ", " + netPayable + ", " + parentFrame.currentUser.getUserID() + ", NOW())";
 
-            long invoiceID = database.insert(query);
+            queryBuilder.clear();
+            queryBuilder.setString("invoice_no", txfInvoiceNo.getText());
+            queryBuilder.set("customer_id", "" + customerID);
+            queryBuilder.setString("invoice_date", Utilities.dateForDB(dcDate.getSelectedDate().getTime()));
+            queryBuilder.set("subtotal", "" + subtotal);
+            queryBuilder.set("vat", "" + vat);
+            queryBuilder.set("discount", "0.00");
+            queryBuilder.set("rounding_amount", "0.00");
+            queryBuilder.set("payable", "" + netPayable);
+            queryBuilder.set("last_update_by", "" + parentFrame.currentUser.getUserID());
+            queryBuilder.set("last_update_time", "NOW()");
+
+
+            long invoiceID = database.insert(queryBuilder.insert("sales_invoice"));
 
             if (invoiceID == -1) {
                 database.rollback();
@@ -1779,17 +1818,23 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 return -1;
             }
 
-            long stockID = 0;
+            long salesProductID = 0;
 
             for (Product product : selectedProducts) {
 
                 try {
-                    query = "INSERT INTO product_stock VALUES(null, " + product.getId() + ", " + invoiceID + ", " + product.getQuantity() + ""
-                            + ", " + product.getRpu() + ", CURDATE(), " + parentFrame.currentUser.getUserID() + ", NOW())";
+//                    query = "INSERT INTO sales_invoice_product VALUES(null, " + product.getId() + ", " + invoiceID + ", " + product.getQuantity() + ""
+//                            + ", " + product.getRpu() + ", CURDATE(), " + parentFrame.currentUser.getUserID() + ", NOW())";
 
-                    stockID = database.insert(query);
+                    queryBuilder.clear();
+                    queryBuilder.set("sales_invoice_id", "" + customerInvoice.getInvoiceID());
+                    queryBuilder.set("product_id", "" + product.getId());
+                    queryBuilder.set("quantity", "" + product.getQuantity());
+                    queryBuilder.set("rate_per_unit", "" + product.getRpu());
 
-                    if (stockID == -1) {
+                    salesProductID = database.insert(queryBuilder.insert("sales_invoice_product"));
+
+                    if (salesProductID == -1) {
                         database.rollback();
                         database.setAutoCommit(true);
                         database.disconnect();
@@ -1828,7 +1873,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
 //                    }
 
                 } catch (Exception ex) {
-                    Logger.getLogger(UISupplierInvoice.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(UICustomerInvoice.class.getName()).log(Level.SEVERE, null, ex);
                     status = -1;
                     break;
                 }
@@ -1843,9 +1888,9 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
 
             if (paid > 0) {
 
-                query = "INSERT INTO supplier_invoice_transaction VALUES(null,"
+                query = "INSERT INTO sale_invoice_transaction VALUES(null,"
                         + "" + invoiceID + ", \"" + Utilities.dateForDB(dcDate.getSelectedDate().getTime()) + "\",\"" + Utilities.dateForDB(dcClearDate.getSelectedDate().getTime()) + "\", " + rbClear.isSelected() + ", " + paid + ", " + accounts.get(cmbAccounts.getSelectedIndex()) + ""
-                        + ", \"Withdraw\", \"" + taNotes.getText() + "\", " + parentFrame.currentUser.getUserID() + ", NOW()"
+                        + ", \"Deposit\", \"" + taNotes.getText() + "\", " + parentFrame.currentUser.getUserID() + ", NOW()"
                         + ")";
 
                 long txnID = database.insert(query);

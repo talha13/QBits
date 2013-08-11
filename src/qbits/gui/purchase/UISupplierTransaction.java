@@ -21,7 +21,7 @@ import qbits.configuration.Utilities;
 import qbits.db.MySQLDatabase;
 import qbits.db.QueryBuilder;
 import qbits.entity.Supplier;
-import qbits.entity.SupplierInvoice;
+import qbits.entity.Invoice;
 import qbits.gui.common.UIParentFrame;
 import qbitserp.common.Message;
 
@@ -36,7 +36,7 @@ public class UISupplierTransaction extends javax.swing.JPanel {
     private HashMap<String, Integer> accounts;
     private HashMap<String, Integer> accountHead;
     private HashMap<Integer, Supplier> suppliers;
-    private HashMap<Integer, SupplierInvoice> supplierInvoices;
+    private HashMap<Integer, Invoice> supplierInvoices;
 
     /**
      * Creates new form UIAccountTransaction
@@ -628,7 +628,7 @@ public class UISupplierTransaction extends javax.swing.JPanel {
             spAmount.setValue(0.00);
             return;
         } else if (cmbInvoice.getSelectedIndex() > 0) {
-            SupplierInvoice invoice = supplierInvoices.get(cmbInvoice.getSelectedIndex());
+            Invoice invoice = supplierInvoices.get(cmbInvoice.getSelectedIndex());
             txfAmountDue.setText("" + Utilities.getFormattedNumber(invoice.getNetPayable() - invoice.getTotalPaid()));
             txfPayable.setText("" + Utilities.getFormattedNumber(invoice.getNetPayable()));
             txfTotalPaid.setText("" + Utilities.getFormattedNumber(invoice.getTotalPaid()));
@@ -1004,7 +1004,7 @@ public class UISupplierTransaction extends javax.swing.JPanel {
 
                 while (resultSet.next()) {
 
-                    SupplierInvoice invoice = new SupplierInvoice();
+                    Invoice invoice = new Invoice();
                     invoice.setInvoiceID(resultSet.getInt("supplier_invoice.invoice_id"));
                     invoice.setInvoiceNo(resultSet.getString("supplier_invoice.supplier_invoice_no"));
                     invoice.setTotalPaid(resultSet.getDouble("total_paid"));

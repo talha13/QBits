@@ -8,7 +8,7 @@ package qbits.entity;
  *
  * @author Pipilika
  */
-public class SupplierInvoice {
+public class Invoice {
 
     private int invoiceID;
     private double totalPaid;

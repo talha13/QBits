@@ -29,6 +29,7 @@ import qbits.gui.purchase.product.UIProductDamage;
 import qbits.gui.purchase.product.UIProductPurchaseReturn;
 import qbits.gui.sales.UICustomer;
 import qbits.gui.sales.UICustomerCRUD;
+import qbits.gui.sales.UICustomerInvoice;
 
 /**
  *
@@ -236,5 +237,10 @@ public class UIParentFrame extends JFrame implements WindowListener {
         UICustomer customer = new UICustomer(this);
         customer.update(customerID);
         addPanel(customer, "update_customer");
+    }
+
+    public void newSalesInvoice() {
+        UICustomerInvoice customerInvoice = new UICustomerInvoice(this);
+        addPanel(customerInvoice, "new_sales_invoice");
     }
 }
