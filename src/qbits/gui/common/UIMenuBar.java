@@ -24,6 +24,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
     private JMenuItem itemNewEmployee;
     private JMenuItem itemNewProduct, itemNewDamageProduct;
     private JMenuItem itemReportProductStock;
+    private JMenuItem itemNewCustomer, itemCustomerList;
 
     public UIMenuBar(UIParentFrame pf) {
 
@@ -48,6 +49,9 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         itemPurchaseReturn = new JMenuItem("Purchase Return");
         itemsupplierInvoiceCRUD = new JMenuItem("Supplier Invoice List");
 
+        itemNewCustomer = new JMenuItem("New Customer");
+        itemCustomerList = new JMenuItem("Customer List");
+
         itemNewAccount = new JMenuItem("New Account");
         itemNewAccountTxn = new JMenuItem("New Account Transaction");
         itemNewAccountHead = new JMenuItem("New Account Head");
@@ -60,7 +64,6 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
 
         itemReportProductStock = new JMenuItem("Product Stock");
 
-
         itemChangePass.addActionListener(this);
         itemExit.addActionListener(this);
 
@@ -70,6 +73,9 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         itemNewSupplierTransaction.addActionListener(this);
         itemPurchaseReturn.addActionListener(this);
         itemsupplierInvoiceCRUD.addActionListener(this);
+
+        itemNewCustomer.addActionListener(this);
+        itemCustomerList.addActionListener(this);
 
         itemNewAccount.addActionListener(this);
         itemNewAccountTxn.addActionListener(this);
@@ -97,6 +103,9 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         menuPurchase.addSeparator();
         menuPurchase.add(itemPurchaseReturn);
 
+        menuSale.add(itemNewCustomer);
+        menuSale.addSeparator();
+        menuSale.add(itemCustomerList);
 
         menuAccount.add(itemNewAccount);
         menuAccount.add(itemNewAccountHead);
@@ -113,6 +122,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
 
         add(menuFile);
         add(menuPurchase);
+        add(menuSale);
         add(menuAccount);
         add(menuEmployee);
         add(menuProduct);
@@ -152,8 +162,12 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
             parentFrame.newPurchaseReturn();
         } else if (itemsupplierInvoiceCRUD == e.getSource()) {
             parentFrame.supplierInvoiceCRUD();
-        }else if(itemReportProductStock == e.getSource()){
+        } else if (itemReportProductStock == e.getSource()) {
             parentFrame.reportProductStock();
+        } else if (itemNewCustomer == e.getSource()) {
+            parentFrame.newCustomer();
+        }else if(itemCustomerList == e.getSource()){
+            parentFrame.customerList();
         }
     }
 }

@@ -271,7 +271,7 @@ public class UIAccount extends javax.swing.JPanel {
             long accountID = database.insert(query);
 
             if (accountID != -1) {
-                database.disconnectFromDatabase();
+                database.disconnect();
                 return 1;
             } else {
                 return -1;

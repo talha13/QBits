@@ -27,6 +27,8 @@ import qbits.gui.purchase.UISupplierTransaction;
 import qbits.gui.purchase.product.UIProduct;
 import qbits.gui.purchase.product.UIProductDamage;
 import qbits.gui.purchase.product.UIProductPurchaseReturn;
+import qbits.gui.sales.UICustomer;
+import qbits.gui.sales.UICustomerCRUD;
 
 /**
  *
@@ -169,8 +171,8 @@ public class UIParentFrame extends JFrame implements WindowListener {
     }
 
     void supplierCRUD() {
-        
-        UISupplierCRUD supplierCRUD = new UISupplierCRUD(this);                
+
+        UISupplierCRUD supplierCRUD = new UISupplierCRUD(this);
         addPanel(supplierCRUD, "supplier_crud");
     }
 
@@ -183,7 +185,7 @@ public class UIParentFrame extends JFrame implements WindowListener {
     }
 
     public void newDamageProduct() {
-       addPanel(new UIProductDamage(this), "new_damage_product");
+        addPanel(new UIProductDamage(this), "new_damage_product");
     }
 
     void newSupplierInvoice() {
@@ -199,21 +201,40 @@ public class UIParentFrame extends JFrame implements WindowListener {
     }
 
     public void updateSupplierInvoice(int invoiceID) {
-        
+
         UISupplierInvoice supplierInvoice = new UISupplierInvoice(this);
         supplierInvoice.update(invoiceID);
-        addPanel(supplierInvoice, "update_supplier_invoice");        
+        addPanel(supplierInvoice, "update_supplier_invoice");
     }
-    
-    public void supplierInvoiceCRUD(){
-        
+
+    public void supplierInvoiceCRUD() {
+
         UISupplierInvoiceCRUD supplierInvoiceCRUD = new UISupplierInvoiceCRUD(this);
         addPanel(supplierInvoiceCRUD, "supplier_invoice_crud");
     }
 
     public void reportProductStock() {
-        
+
         UIReportProductStock productStock = new UIReportProductStock(this);
         addPanel(productStock, "report_product_stock");
+    }
+
+    public void newCustomer() {
+
+        UICustomer customer = new UICustomer(this);
+        addPanel(customer, "new_customer");
+    }
+
+    public void customerList() {
+
+        UICustomerCRUD customerCRUD = new UICustomerCRUD(this);
+        addPanel(customerCRUD, "customer_crud");
+    }
+
+    public void updateCustomer(int customerID) {
+
+        UICustomer customer = new UICustomer(this);
+        customer.update(customerID);
+        addPanel(customer, "update_customer");
     }
 }

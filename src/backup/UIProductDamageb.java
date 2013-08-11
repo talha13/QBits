@@ -462,7 +462,7 @@ public class UIProductDamageb extends javax.swing.JPanel {
             long damageProductID = database.insert(query);
 
             status = damageProductID == -1 ? -1 : 1;
-            database.disconnectFromDatabase();
+            database.disconnect();
 
         } else {
             status = -2;
@@ -529,7 +529,7 @@ public class UIProductDamageb extends javax.swing.JPanel {
                 Logger.getLogger(UIProductDamage.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -589,7 +589,7 @@ public class UIProductDamageb extends javax.swing.JPanel {
                 Logger.getLogger(UIProductDamage.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -622,7 +622,7 @@ public class UIProductDamageb extends javax.swing.JPanel {
             } catch (SQLException ex) {
                 Logger.getLogger(UIProductDamage.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
         }
     }

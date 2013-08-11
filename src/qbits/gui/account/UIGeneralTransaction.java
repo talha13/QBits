@@ -572,7 +572,7 @@ public class UIGeneralTransaction extends javax.swing.JPanel {
             if (txnID == -1) {
                 database.rollback();
                 database.setAutoCommit(true);
-                database.disconnectFromDatabase();
+                database.disconnect();
                 return -1;
             }
 
@@ -581,13 +581,13 @@ public class UIGeneralTransaction extends javax.swing.JPanel {
             if (database.update(query) <= 0) {
                 database.rollback();
                 database.setAutoCommit(true);
-                database.disconnectFromDatabase();
+                database.disconnect();
                 return -1;
             }
 
             database.commit();
             database.setAutoCommit(true);
-            database.disconnectFromDatabase();
+            database.disconnect();
             return 1;
 
         } else {
@@ -657,7 +657,7 @@ public class UIGeneralTransaction extends javax.swing.JPanel {
                 accounts.clear();
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -696,7 +696,7 @@ public class UIGeneralTransaction extends javax.swing.JPanel {
                 accounts.clear();
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -732,7 +732,7 @@ public class UIGeneralTransaction extends javax.swing.JPanel {
                 txfVoucherNo.setEditable(true);
                 return "";
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {

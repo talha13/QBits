@@ -750,7 +750,7 @@ public class UISupplierTransaction extends javax.swing.JPanel {
             if (txnID == -1) {
                 database.rollback();
                 database.setAutoCommit(true);
-                database.disconnectFromDatabase();
+                database.disconnect();
                 return -1;
             }
 
@@ -759,13 +759,13 @@ public class UISupplierTransaction extends javax.swing.JPanel {
             if (database.update(query) <= 0) {
                 database.rollback();
                 database.setAutoCommit(true);
-                database.disconnectFromDatabase();
+                database.disconnect();
                 return -1;
             }
 
             database.commit();
             database.setAutoCommit(true);
-            database.disconnectFromDatabase();
+            database.disconnect();
             return 1;
 
         } else {
@@ -843,7 +843,7 @@ public class UISupplierTransaction extends javax.swing.JPanel {
                 accounts.clear();
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -882,7 +882,7 @@ public class UISupplierTransaction extends javax.swing.JPanel {
                 accounts.clear();
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -919,7 +919,7 @@ public class UISupplierTransaction extends javax.swing.JPanel {
                 txfVoucherNo.setEditable(true);
                 voucherNo = "";
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
             return voucherNo;
@@ -970,7 +970,7 @@ public class UISupplierTransaction extends javax.swing.JPanel {
                 Logger.getLogger(UISupplierInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -1023,7 +1023,7 @@ public class UISupplierTransaction extends javax.swing.JPanel {
                 status = -1;
                 Logger.getLogger(UISupplierTransaction.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
         } else {
             status = -2;

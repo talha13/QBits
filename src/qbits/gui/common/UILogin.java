@@ -333,7 +333,7 @@ public class UILogin extends javax.swing.JDialog implements WindowListener {
                 } finally {
 
                     database.setAutoCommit(true);
-                    database.disconnectFromDatabase();
+                    database.disconnect();
                 }
 
             } else {

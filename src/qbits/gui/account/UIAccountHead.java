@@ -300,7 +300,7 @@ public class UIAccountHead extends javax.swing.JPanel {
             builder.set("status", rbActive.isSelected());
 
             if (database.insert(builder.insert("account_head")) > 0) {
-                database.disconnectFromDatabase();
+                database.disconnect();
                 return 1;
             } else {
                 return -1;

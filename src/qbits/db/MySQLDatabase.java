@@ -60,7 +60,7 @@ public class MySQLDatabase {
         return true;
     }
 
-    public void disconnectFromDatabase() {
+    public void disconnect() {
 
         try {
             connection.close();

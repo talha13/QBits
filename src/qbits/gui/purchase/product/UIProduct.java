@@ -468,7 +468,7 @@ public class UIProduct extends javax.swing.JPanel {
 
                 if (catID == -1) {
                     database.setAutoCommit(true);
-                    database.disconnectFromDatabase();
+                    database.disconnect();
                     return -1;
                 }
             }
@@ -483,7 +483,7 @@ public class UIProduct extends javax.swing.JPanel {
                 if (unitID == -1) {
                     database.rollback();
                     database.setAutoCommit(true);
-                    database.disconnectFromDatabase();
+                    database.disconnect();
                     return -1;
                 }
             }
@@ -499,7 +499,7 @@ public class UIProduct extends javax.swing.JPanel {
                 if (brandID == -1) {
                     database.rollback();
                     database.setAutoCommit(true);
-                    database.disconnectFromDatabase();
+                    database.disconnect();
                     return -1;
                 }
             }
@@ -514,7 +514,7 @@ public class UIProduct extends javax.swing.JPanel {
             if (productID == -1) {
                 database.rollback();
                 database.setAutoCommit(true);
-                database.disconnectFromDatabase();
+                database.disconnect();
                 return -1;
             }
 
@@ -534,7 +534,7 @@ public class UIProduct extends javax.swing.JPanel {
             }
 
             database.setAutoCommit(true);
-            database.disconnectFromDatabase();
+            database.disconnect();
 
         } else {
             status = -2;
@@ -591,7 +591,7 @@ public class UIProduct extends javax.swing.JPanel {
             } catch (SQLException ex) {
                 Logger.getLogger(UIProduct.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
         }
     }
@@ -619,7 +619,7 @@ public class UIProduct extends javax.swing.JPanel {
             } catch (SQLException ex) {
                 Logger.getLogger(UIProduct.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
         }
     }
@@ -647,7 +647,7 @@ public class UIProduct extends javax.swing.JPanel {
             } catch (SQLException ex) {
                 Logger.getLogger(UIProduct.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
         }
     }
@@ -677,7 +677,7 @@ public class UIProduct extends javax.swing.JPanel {
             } catch (SQLException ex) {
                 Logger.getLogger(UIProduct.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
             return -1;

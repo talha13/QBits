@@ -761,7 +761,7 @@ public class UISupplierInvoice extends javax.swing.JPanel {
                 accounts.clear();
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -807,7 +807,7 @@ public class UISupplierInvoice extends javax.swing.JPanel {
                 Logger.getLogger(UISupplierInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -846,7 +846,7 @@ public class UISupplierInvoice extends javax.swing.JPanel {
                 Logger.getLogger(UISupplierInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -890,7 +890,7 @@ public class UISupplierInvoice extends javax.swing.JPanel {
                 Logger.getLogger(UISupplierInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -988,7 +988,7 @@ public class UISupplierInvoice extends javax.swing.JPanel {
                 Logger.getLogger(UIProductDamage.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {

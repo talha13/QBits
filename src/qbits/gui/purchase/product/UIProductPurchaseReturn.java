@@ -549,7 +549,7 @@ public class UIProductPurchaseReturn extends javax.swing.JPanel {
             long retrunID = database.insert(builder.insert("product_purchase_return"));
 
             status = retrunID == -1 ? -1 : 1;
-            database.disconnectFromDatabase();
+            database.disconnect();
 
         } else {
             status = -2;
@@ -618,7 +618,7 @@ public class UIProductPurchaseReturn extends javax.swing.JPanel {
                 Logger.getLogger(UIProductPurchaseReturn.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -678,7 +678,7 @@ public class UIProductPurchaseReturn extends javax.swing.JPanel {
                 Logger.getLogger(UIProductPurchaseReturn.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -711,7 +711,7 @@ public class UIProductPurchaseReturn extends javax.swing.JPanel {
             } catch (SQLException ex) {
                 Logger.getLogger(UIProductPurchaseReturn.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
         }
     }
@@ -755,7 +755,7 @@ public class UIProductPurchaseReturn extends javax.swing.JPanel {
                 Logger.getLogger(UIProductPurchaseReturn.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {

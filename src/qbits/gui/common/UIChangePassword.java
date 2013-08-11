@@ -156,10 +156,10 @@ public class UIChangePassword extends javax.swing.JPanel {
                 if (database.update(query) > 0) {
                     JOptionPane.showMessageDialog(parentFrame, "Password changed");
                     clear();
-                    database.disconnectFromDatabase();
+                    database.disconnect();
                     return 1;
                 } else {
-                    database.disconnectFromDatabase();
+                    database.disconnect();
                     parentFrame.showMessage("Unable to change password");
                     return 0;
                 }

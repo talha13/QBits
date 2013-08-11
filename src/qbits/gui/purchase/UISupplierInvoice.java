@@ -1190,7 +1190,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 accounts.clear();
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -1236,7 +1236,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 Logger.getLogger(UISupplierInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -1275,7 +1275,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 Logger.getLogger(UISupplierInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -1319,7 +1319,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 Logger.getLogger(UISupplierInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -1433,7 +1433,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 Logger.getLogger(UIProductDamage.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
         } else {
@@ -1547,7 +1547,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 if (personID == -1) {
                     database.rollback();
                     database.setAutoCommit(true);
-                    database.disconnectFromDatabase();
+                    database.disconnect();
                     return -1;
                 }
 
@@ -1560,7 +1560,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 if (addressID == -1) {
                     database.rollback();
                     database.setAutoCommit(true);
-                    database.disconnectFromDatabase();
+                    database.disconnect();
                     return -1;
                 }
 
@@ -1574,7 +1574,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 if (supplierID == -1) {
                     database.rollback();
                     database.setAutoCommit(true);
-                    database.disconnectFromDatabase();
+                    database.disconnect();
                     return -1;
                 }
 
@@ -1602,7 +1602,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
             if (affectedRow == -1) {
                 database.rollback();
                 database.setAutoCommit(true);
-                database.disconnectFromDatabase();
+                database.disconnect();
                 return -1;
             }
 
@@ -1614,7 +1614,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
             if (affectedRow == -1) {
                 database.rollback();
                 database.setAutoCommit(true);
-                database.disconnectFromDatabase();
+                database.disconnect();
                 return -1;
             }
 
@@ -1631,7 +1631,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                     if (stockID == -1) {
                         database.rollback();
                         database.setAutoCommit(true);
-                        database.disconnectFromDatabase();
+                        database.disconnect();
                         return -1;
                     }
 
@@ -1675,7 +1675,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 if (status == -1) {
                     database.rollback();
                     database.setAutoCommit(true);
-                    database.disconnectFromDatabase();
+                    database.disconnect();
                     return status;
                 }
             }
@@ -1698,7 +1698,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
 //            }
 
             database.setAutoCommit(true);
-            database.disconnectFromDatabase();
+            database.disconnect();
             status = 1;
         } else {
             status = -2;
@@ -1731,7 +1731,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 if (personID == -1) {
                     database.rollback();
                     database.setAutoCommit(true);
-                    database.disconnectFromDatabase();
+                    database.disconnect();
                     return -1;
                 }
 
@@ -1744,7 +1744,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 if (addressID == -1) {
                     database.rollback();
                     database.setAutoCommit(true);
-                    database.disconnectFromDatabase();
+                    database.disconnect();
                     return -1;
                 }
 
@@ -1758,7 +1758,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 if (supplierID == -1) {
                     database.rollback();
                     database.setAutoCommit(true);
-                    database.disconnectFromDatabase();
+                    database.disconnect();
                     return -1;
                 }
 
@@ -1775,7 +1775,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
             if (invoiceID == -1) {
                 database.rollback();
                 database.setAutoCommit(true);
-                database.disconnectFromDatabase();
+                database.disconnect();
                 return -1;
             }
 
@@ -1792,7 +1792,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                     if (stockID == -1) {
                         database.rollback();
                         database.setAutoCommit(true);
-                        database.disconnectFromDatabase();
+                        database.disconnect();
                         return -1;
                     }
 
@@ -1836,7 +1836,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 if (status == -1) {
                     database.rollback();
                     database.setAutoCommit(true);
-                    database.disconnectFromDatabase();
+                    database.disconnect();
                     return status;
                 }
             }
@@ -1853,13 +1853,13 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 if (txnID == -1) {
                     database.rollback();
                     database.setAutoCommit(true);
-                    database.disconnectFromDatabase();
+                    database.disconnect();
                     return -1;
                 }
             }
 
             database.setAutoCommit(true);
-            database.disconnectFromDatabase();
+            database.disconnect();
             status = 1;
         } else {
             status = -2;

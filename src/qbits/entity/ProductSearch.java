@@ -37,7 +37,7 @@ public class ProductSearch {
             } catch (SQLException ex) {
                 Logger.getLogger(ProductSearch.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-                database.disconnectFromDatabase();
+                database.disconnect();
             }
 
             return -1;
