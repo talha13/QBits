@@ -62,6 +62,7 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
     private double vat;
     private double netPayable;
     private double paid;
+    private double discount;
     private boolean shouldPerformActionForcmbCategory;
     private ActionMenu actionMenu;
     private Point popupSelectedPoint;
@@ -116,6 +117,7 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
     private void changeStatusPaymentPanel(boolean status) {
 
         txfPaid.setEditable(status);
+        txfDiscount.setEditable(status);
         cmbPaymentMode.setEnabled(status);
         cmbAccounts.setEnabled(status);
         taNotes.setEditable(status);
@@ -134,7 +136,7 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
         if (database.connect()) {
 
             try {
-                query.select("sales_invoice.id, sales_invoice.customer_id, sales_invoice.invoice_no, sales_invoice.invoice_date, sales_invoice.vat, sales_invoice.subtotal, sales_invoice.payable, sales_invoice.rounding_amount");
+                query.select("sales_invoice.id, sales_invoice.customer_id, sales_invoice.invoice_no, sales_invoice.invoice_date, sales_invoice.vat, sales_invoice.subtotal, sales_invoice.payable, sales_invoice.rounding_amount, sales_invoice.discount");
                 query.from("sales_invoice");
                 query.where("sales_invoice.id = ", "" + customerInvoice.getInvoiceID());
 
@@ -166,6 +168,7 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
                     vat = resultSet.getDouble("sales_invoice.vat");
                     netPayable = resultSet.getDouble("sales_invoice.payable");
                     paid = 0.00;
+                    discount = resultSet.getDouble("sales_invoice.discount");
 
                     txfInvoiceNo.setText("" + resultSet.getString("sales_invoice.invoice_no"));
                     dcDate.setSelectedDate(Utilities.getDateChosserDate(resultSet.getDate("sales_invoice.invoice_date")));
@@ -684,6 +687,11 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
         jLabel17.setText("Discount");
 
         txfDiscount.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        txfDiscount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txfDiscountActionPerformed(evt);
+            }
+        });
 
         lblDisplay.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         lblDisplay.setForeground(new java.awt.Color(0, 0, 204));
@@ -909,7 +917,7 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
 
         subtotal += product.getQuantity() * product.getRpu();
         vat = subtotal * (Configuration.VAT * .01);
-        netPayable = subtotal + vat;
+        netPayable = subtotal + vat - (discount * .01);
         updatePaymentUI();
 
         shouldPerformActionForcmbCategory = true;
@@ -956,12 +964,12 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
 
         if (Utilities.isOnlyNumber(txfPaid.getText())) {
             paid = Double.parseDouble(txfPaid.getText());
-            updatePaymentUI();
-
         } else {
-            txfPaid.setText("0.00");
+//            txfPaid.setText("0.00");
             parentFrame.showMessage("Please enter valid paid amount");
         }
+
+        updatePaymentUI();
 
     }//GEN-LAST:event_txfPaidActionPerformed
 
@@ -1151,6 +1159,36 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
             spPrice.setValue(product.getRpu());
         }
     }//GEN-LAST:event_cmbProductNameActionPerformed
+
+    private void txfDiscountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txfDiscountActionPerformed
+        // TODO add your handling code here:
+
+        if (Utilities.isOnlyNumber(txfDiscount.getText())) {
+
+            double tmpDiscount = Double.parseDouble(txfDiscount.getText());
+
+            if (tmpDiscount <= 0 || tmpDiscount > 100) {
+//                txfDiscount.setText("0.00");
+                parentFrame.showMessage("Please enter valid discount amount");
+            } else {
+
+                discount = tmpDiscount;
+                netPayable = subtotal + vat - (discount * .01);
+
+                if (subtotal == 0) {
+                    netPayable = 0.00;
+                }
+            }
+
+        } else {
+//            txfDiscount.setText("0.00");
+            parentFrame.showMessage("Please enter valid discount amount");
+        }
+
+        updatePaymentUI();
+
+
+    }//GEN-LAST:event_txfDiscountActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnReset;
@@ -1392,9 +1430,10 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
 
         DecimalFormat decimalFormat = new DecimalFormat("#.###");
         txfDue.setText("" + decimalFormat.format(Math.abs(paid - netPayable)));
-        txfPaid.setText("" + paid);
-        txfPayable.setText("" + netPayable);
-        txfSubTotal.setText("" + subtotal);
+        txfPaid.setText("" + decimalFormat.format(paid));
+        txfDiscount.setText("" + decimalFormat.format(discount));
+        txfPayable.setText("" + decimalFormat.format(netPayable));
+        txfSubTotal.setText("" + decimalFormat.format(subtotal));
         txfVat.setText("" + decimalFormat.format(vat));
         lblDisplay.setText(Utilities.getFormattedNumber(Math.abs(paid - netPayable)));
 
@@ -1417,6 +1456,7 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
         paid = 0.0;
         netPayable = 0.0;
         vat = 0.0;
+        discount = 0.0;
 
         updatePaymentUI();
 
@@ -1555,6 +1595,7 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
         }
 
         if (!isUpdate) {
+
             if (paid > 0.00 && cmbPaymentMode.getSelectedIndex() == 0) {
                 parentFrame.showMessage("Please select payment mode");
                 return false;
@@ -1580,7 +1621,8 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
 
         subtotal -= selectedProducts.get(selectedRow).getRpu() * selectedProducts.get(selectedRow).getQuantity();
         vat = subtotal * (Configuration.VAT * .01);
-        netPayable = subtotal + vat;
+//        netPayable = subtotal + vat;
+        netPayable = subtotal + vat - (discount * .01);
         updatePaymentUI();
 
         selectedProducts.remove(selectedRow);

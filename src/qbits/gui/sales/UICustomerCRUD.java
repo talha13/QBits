@@ -22,6 +22,8 @@ public class UICustomerCRUD extends UICRUD implements CRUDListener {
         super();
         this.parentFrame = frame;
 
+        setTitle("Customer List");
+
         Vector terms = new Vector();
         terms.add("All");
         terms.add("Customer Name");
@@ -32,7 +34,7 @@ public class UICustomerCRUD extends UICRUD implements CRUDListener {
         builder.select("id, CONCAT(person.first_name, ' ', person.last_name), person.contact_no");
         builder.innerJoin("person", "person.person_id = customer.person_id");
         builder.from("customer");
-        
+
         setColumns(terms);
         setQueryBuilder(builder);
 

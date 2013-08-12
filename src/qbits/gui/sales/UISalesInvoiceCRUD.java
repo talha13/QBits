@@ -22,6 +22,8 @@ public class UISalesInvoiceCRUD extends UICRUD implements CRUDListener {
         super();
         parentFrame = frame;
         
+        setTitle("Sales Invoice");
+        
         Vector columns = new Vector();
         columns.add("All");
         columns.add("Invoice No");

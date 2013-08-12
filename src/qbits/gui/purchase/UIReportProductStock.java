@@ -21,6 +21,7 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
 
         super();
         this.parentFrame = frame;
+        setTitle("Product Stock");
         addDateRangeListener(this);
     }
 

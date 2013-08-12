@@ -27,6 +27,11 @@ public class UIDateRangePicker extends javax.swing.JPanel {
         this.dateRangeListener = listener;
     }
 
+    public void setTitle(String title) {
+        this.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), title, javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
