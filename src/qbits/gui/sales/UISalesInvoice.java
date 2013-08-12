@@ -37,6 +37,7 @@ import qbits.entity.Customer;
 import qbits.entity.Product;
 import qbits.entity.ProductSearch;
 import qbits.entity.Invoice;
+import qbits.gui.account.UIAccountTransaction;
 import qbits.gui.account.UIGeneralTransaction;
 import qbits.gui.common.UIParentFrame;
 import qbits.gui.common.searcher.SearcherListener;
@@ -48,14 +49,14 @@ import qbitserp.common.Message;
  *
  * @author Topu
  */
-public class UICustomerInvoice extends javax.swing.JPanel implements SearcherListener {
+public class UISalesInvoice extends javax.swing.JPanel implements SearcherListener {
 
     private UIParentFrame parentFrame;
     private ProductSearch productSearch;
     private HashMap<Integer, Customer> customers;
     private HashMap<Integer, Integer> accounts;
     private HashMap<Integer, Integer> categories;
-    private HashMap<Integer, Integer> products;
+    private HashMap<Integer, Product> products;
     private ArrayList<Product> selectedProducts;
     private double subtotal;
     private double vat;
@@ -71,7 +72,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
     /**
      * Creates new form UICustomerInvoice
      */
-    public UICustomerInvoice(UIParentFrame frame) {
+    public UISalesInvoice(UIParentFrame frame) {
         initComponents();
         clearButtonGroup = new ButtonGroup();
         clearButtonGroup.add(rbClear);
@@ -141,7 +142,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
 
                 if (resultSet.next()) {
 
-                    int customerID = resultSet.getInt("sales_invoice.id");
+                    int customerID = resultSet.getInt("sales_invoice.customer_id");
 
                     if (customerID != -1) {
 
@@ -179,7 +180,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
                     query.select("account.type");
                     query.innerJoin("account", "account.id = sale_invoice_transaction.account_id");
                     query.from("sale_invoice_transaction");
-                    query.where("sales_invoice_id = ", "" + customerInvoice.getInvoiceID());
+                    query.where("sale_invoice_id = ", "" + customerInvoice.getInvoiceID());
                     query.orderBy("transaction_date", "asc");
 
                     resultSet = database.get(query.get());
@@ -283,7 +284,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
                     status = -1;
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(UICustomerInvoice.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UISalesInvoice.class.getName()).log(Level.SEVERE, null, ex);
             }
 
 
@@ -316,7 +317,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
         btnAdd = new javax.swing.JButton();
         txfCode = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        btnSearch = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         cmbCustomer = new javax.swing.JComboBox();
@@ -351,11 +352,14 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
         rbClear = new javax.swing.JRadioButton();
         rbNotClear = new javax.swing.JRadioButton();
         jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        txfDiscount = new javax.swing.JTextField();
+        lblDisplay = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         btnReset = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Customer Invoice", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Sales Invoice", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Product"));
 
@@ -371,6 +375,11 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
         jLabel7.setText("Category*");
 
         cmbProductName.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        cmbProductName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbProductNameActionPerformed(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(102, 0, 0));
@@ -407,10 +416,10 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
         jLabel15.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel15.setText("Product Code");
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/qbits/resources/image/Search-icon.png"))); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnSearch.setIcon(new javax.swing.ImageIcon(getClass().getResource("/qbits/resources/image/Search-icon.png"))); // NOI18N
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnSearchActionPerformed(evt);
             }
         });
 
@@ -440,7 +449,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(spPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -460,7 +469,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
                                 .addComponent(jLabel15)
                                 .addComponent(jLabel7)
                                 .addComponent(cmbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
@@ -548,7 +557,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 650, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -561,6 +570,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Invoice Info"));
 
+        txfInvoiceNo.setEditable(false);
         txfInvoiceNo.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
 
         jLabel5.setBackground(new java.awt.Color(102, 0, 0));
@@ -615,6 +625,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
 
         txfPayable.setEditable(false);
         txfPayable.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        txfPayable.setToolTipText("");
 
         jLabel13.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel13.setText("Net Payable");
@@ -669,61 +680,78 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
         jLabel16.setForeground(new java.awt.Color(102, 0, 0));
         jLabel16.setText("Status*");
 
+        jLabel17.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel17.setText("Discount");
+
+        txfDiscount.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+
+        lblDisplay.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
+        lblDisplay.setForeground(new java.awt.Color(0, 0, 204));
+        lblDisplay.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblDisplay.setText("1234567890");
+
         javax.swing.GroupLayout pnlPaymentLayout = new javax.swing.GroupLayout(pnlPayment);
         pnlPayment.setLayout(pnlPaymentLayout);
         pnlPaymentLayout.setHorizontalGroup(
             pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlPaymentLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlPaymentLayout.createSequentialGroup()
                         .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlPaymentLayout.createSequentialGroup()
-                                .addGap(23, 23, 23)
-                                .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(pnlPaymentLayout.createSequentialGroup()
-                                        .addComponent(jLabel13)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(txfPayable, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(pnlPaymentLayout.createSequentialGroup()
-                                        .addComponent(jLabel12)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(txfVat, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(pnlPaymentLayout.createSequentialGroup()
-                                        .addComponent(jLabel11)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(txfSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(pnlPaymentLayout.createSequentialGroup()
-                                        .addComponent(jLabel14)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(txfPaid, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(pnlPaymentLayout.createSequentialGroup()
-                                        .addComponent(lblReturn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(txfDue, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(pnlPaymentLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel3)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(pnlPaymentLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel3)
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(jScrollPane2)
                             .addComponent(cmbAccounts, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmbPaymentMode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(cmbPaymentMode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlPaymentLayout.createSequentialGroup()
+                                .addGap(14, 14, 14)
+                                .addComponent(lblReturn1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dcClearDate, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(3, 3, 3))
+                    .addGroup(pnlPaymentLayout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addGap(16, 16, 16)
+                        .addComponent(rbClear)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(rbNotClear)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlPaymentLayout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(lblReturn1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dcClearDate, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel17)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txfDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(8, 8, 8))))
+            .addGroup(pnlPaymentLayout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(pnlPaymentLayout.createSequentialGroup()
+                        .addComponent(jLabel13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txfPayable, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlPaymentLayout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txfVat, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlPaymentLayout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txfSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlPaymentLayout.createSequentialGroup()
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txfPaid, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlPaymentLayout.createSequentialGroup()
+                        .addComponent(lblReturn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txfDue, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(pnlPaymentLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel16)
-                .addGap(16, 16, 16)
-                .addComponent(rbClear)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(rbNotClear)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(lblDisplay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         pnlPaymentLayout.setVerticalGroup(
             pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -733,6 +761,10 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
                     .addComponent(txfSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txfDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17))
+                .addGap(10, 10, 10)
                 .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txfVat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel12))
@@ -748,7 +780,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
                 .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txfDue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblReturn))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmbPaymentMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmbAccounts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -765,7 +797,9 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblDisplay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(2, 2, 2))
         );
 
         jPanel7.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true));
@@ -797,7 +831,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
                 .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnReset)
-                .addGap(356, 356, 356))
+                .addGap(252, 252, 252))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -815,25 +849,23 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnlPayment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlPayment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(pnlPayment, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -841,10 +873,9 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
                         .addGap(1, 1, 1)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(pnlPayment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(16, 16, 16)
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -868,7 +899,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
             product.setId(-1);
 
         } else {
-            product.setId(products.get(cmbProductName.getSelectedIndex()));
+            product.setId(products.get(cmbProductName.getSelectedIndex()).getId());
         }
 
         selectedProducts.add(product);
@@ -1074,9 +1105,9 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
                         parentFrame.showMessage("Unable to save invoice info");
                     }
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(UICustomerInvoice.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(UISalesInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ExecutionException ex) {
-                    Logger.getLogger(UICustomerInvoice.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(UISalesInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }.execute();
@@ -1088,7 +1119,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
         reset();
     }//GEN-LAST:event_btnResetActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         // TODO add your handling code here:
         UISearcher searcher = new UISearcher(parentFrame, true);
         searcher.addSearcherListener(this);
@@ -1106,11 +1137,25 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
         searcher.setQueryBuilder(builder);
 
         searcher.showWindow();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void cmbProductNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbProductNameActionPerformed
+        // TODO add your handling code here:
+
+        if (cmbProductName.getSelectedIndex() == 0) {
+            spPrice.setValue(0);
+            spQuantity.setValue(0);
+            return;
+        } else if (cmbProductName.getSelectedIndex() > 0) {
+            Product product = products.get(cmbProductName.getSelectedIndex());
+            spPrice.setValue(product.getRpu());
+        }
+    }//GEN-LAST:event_cmbProductNameActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnSearch;
     private javax.swing.JComboBox cmbAccounts;
     private javax.swing.JComboBox cmbCategory;
     private javax.swing.JComboBox cmbCustomer;
@@ -1118,7 +1163,6 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
     private javax.swing.JComboBox cmbProductName;
     private datechooser.beans.DateChooserCombo dcClearDate;
     private datechooser.beans.DateChooserCombo dcDate;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1127,6 +1171,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
@@ -1141,6 +1186,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblDisplay;
     private javax.swing.JLabel lblReturn;
     private javax.swing.JLabel lblReturn1;
     private javax.swing.JPanel pnlPayment;
@@ -1151,6 +1197,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
     private javax.swing.JTextArea taNotes;
     private javax.swing.JTable tableProducts;
     private javax.swing.JTextField txfCode;
+    private javax.swing.JTextField txfDiscount;
     private javax.swing.JTextField txfDue;
     private javax.swing.JTextField txfInvoiceNo;
     private javax.swing.JTextField txfPaid;
@@ -1240,7 +1287,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
                 status = 1;
 
             } catch (SQLException ex) {
-                Logger.getLogger(UICustomerInvoice.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UISalesInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
                 database.disconnect();
@@ -1279,7 +1326,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
                 status = 1;
 
             } catch (SQLException ex) {
-                Logger.getLogger(UICustomerInvoice.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UISalesInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
                 database.disconnect();
@@ -1299,12 +1346,13 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
         products.clear();
         int status = 0;
         int countProduct = 0;
+        Product product;
 
         productTitle.add("Select Product");
 
         if (database.connect()) {
             try {
-                query = "SELECT product.product_id, product.title, product_brand.title"
+                query = "SELECT product.product_id, product.title, product_brand.title, product.rate_per_unit"
                         + " FROM product"
                         + " INNER JOIN product_brand ON product_brand.brand_id = product.product_brand_id"
                         + " WHERE product.product_category_id = " + catID;
@@ -1313,17 +1361,21 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
 
                 while (resultSet.next()) {
 
+                    product = new Product();
                     String productName = resultSet.getString("product.title") + "-" + resultSet.getString("product_brand.title");
                     productTitle.add(productName);
                     countProduct++;
-                    products.put(countProduct, resultSet.getInt("product.product_id"));
+                    product.setName(resultSet.getString("product.title"));
+                    product.setId(resultSet.getInt("product.product_id"));
+                    product.setRpu(resultSet.getDouble("product.rate_per_unit"));
+                    products.put(countProduct, product);
                 }
 
                 cmbProductName.setModel(new DefaultComboBoxModel(productTitle));
                 status = 1;
 
             } catch (Exception ex) {
-                Logger.getLogger(UICustomerInvoice.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UISalesInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
                 database.disconnect();
@@ -1344,13 +1396,16 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
         txfPayable.setText("" + netPayable);
         txfSubTotal.setText("" + subtotal);
         txfVat.setText("" + decimalFormat.format(vat));
+        lblDisplay.setText(Utilities.getFormattedNumber(Math.abs(paid - netPayable)));
 
         if (paid > netPayable) {
             lblReturn.setText("Return");
             lblReturn.setForeground(Color.red);
+            lblDisplay.setForeground(Color.red);
         } else {
             lblReturn.setText("Due");
             lblReturn.setForeground(Color.BLUE);
+            lblDisplay.setForeground(Color.BLUE);
         }
 
     }
@@ -1377,15 +1432,17 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
         txfCode.setText("");
         dcDate.setSelectedDate(Calendar.getInstance());
         cmbPaymentMode.setSelectedIndex(0);
+        cmbCategory.setSelectedIndex(0);
+        spPrice.setValue(0);
+        spQuantity.setValue(0);
         isUpdate = false;
+        txfInvoiceNo.setText(getVoucherNo());
 
         DefaultTableModel model = (DefaultTableModel) tableProducts.getModel();
 
         while (model.getRowCount() > 0) {
             model.removeRow(0);
         }
-
-
     }
 
     private int loadProduct(int productID) {
@@ -1396,6 +1453,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
         products.clear();
         categories.clear();
         int status = 0;
+        Product product;
 
         productTitle.add("Select Product");
 
@@ -1420,9 +1478,13 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
 //                    product.setRpu(resultSet.getDouble("product.rate_per_unit"));
 //                    product.setUnit(resultSet.getString("product_unit.title"));
 
+                    product = new Product();
                     String productName = resultSet.getString("product.title") + "-" + resultSet.getString("product_brand.title");
                     productTitle.add(productName);
-                    products.put(1, productID);
+                    product.setName(resultSet.getString("product.title"));
+                    product.setId(resultSet.getInt("product.product_id"));
+                    product.setRpu(resultSet.getDouble("product.rate_per_unit"));
+                    products.put(1, product);
 
                     cmbProductName.setModel(new DefaultComboBoxModel(productTitle));
                     cmbCategory.setModel(new DefaultComboBoxModel(new String[]{"Select Category", resultSet.getString("product_category.title")}));
@@ -1437,7 +1499,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
                 status = 1;
 
             } catch (Exception ex) {
-                Logger.getLogger(UIProductDamage.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UISalesInvoice.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
                 database.disconnect();
@@ -1610,8 +1672,8 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
             queryBuilder.set("subtotal", "" + subtotal);
             queryBuilder.set("payable", "" + netPayable);
             queryBuilder.set("rounding_amount", "0.00");
-            queryBuilder.set("last_updated_by", "" + parentFrame.currentUser.getUserID());
-            queryBuilder.set("last_updated_time", "NOW()");
+            queryBuilder.set("last_update_by", "" + parentFrame.currentUser.getUserID());
+            queryBuilder.set("last_update_time", "NOW()");
             queryBuilder.where("id = ", "" + customerInvoice.getInvoiceID());
 
             long affectedRow = database.update(queryBuilder.update("sales_invoice"));
@@ -1625,7 +1687,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
 
             queryBuilder.clear();
 
-            queryBuilder.where("id = ", "" + customerInvoice.getInvoiceID());
+            queryBuilder.where("sales_invoice_id = ", "" + customerInvoice.getInvoiceID());
             affectedRow = database.delete(queryBuilder.delete("sales_invoice_product"));
 
             if (affectedRow == -1) {
@@ -1690,7 +1752,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
 //                    }
 
                 } catch (Exception ex) {
-                    Logger.getLogger(UICustomerInvoice.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(UISalesInvoice.class.getName()).log(Level.SEVERE, null, ex);
                     status = -1;
                     break;
                 }
@@ -1808,7 +1870,6 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
             queryBuilder.set("last_update_by", "" + parentFrame.currentUser.getUserID());
             queryBuilder.set("last_update_time", "NOW()");
 
-
             long invoiceID = database.insert(queryBuilder.insert("sales_invoice"));
 
             if (invoiceID == -1) {
@@ -1827,7 +1888,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
 //                            + ", " + product.getRpu() + ", CURDATE(), " + parentFrame.currentUser.getUserID() + ", NOW())";
 
                     queryBuilder.clear();
-                    queryBuilder.set("sales_invoice_id", "" + customerInvoice.getInvoiceID());
+                    queryBuilder.set("sales_invoice_id", "" + invoiceID);
                     queryBuilder.set("product_id", "" + product.getId());
                     queryBuilder.set("quantity", "" + product.getQuantity());
                     queryBuilder.set("rate_per_unit", "" + product.getRpu());
@@ -1873,7 +1934,7 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
 //                    }
 
                 } catch (Exception ex) {
-                    Logger.getLogger(UICustomerInvoice.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(UISalesInvoice.class.getName()).log(Level.SEVERE, null, ex);
                     status = -1;
                     break;
                 }
@@ -1903,6 +1964,15 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
                 }
             }
 
+            query = "UPDATE voucher_tracker SET count = count + 1 WHERE title =\"sales_voucher\"";
+
+            if (database.update(query) <= 0) {
+                database.rollback();
+                database.setAutoCommit(true);
+                database.disconnect();
+                return -1;
+            }
+
             database.setAutoCommit(true);
             database.disconnect();
             status = 1;
@@ -1912,6 +1982,48 @@ public class UICustomerInvoice extends javax.swing.JPanel implements SearcherLis
 
         return status;
 
+    }
+
+    private String getVoucherNo() {
+
+        String voucherType = "sales_voucher";
+        String query;
+        QueryBuilder builder = new QueryBuilder();
+
+        MySQLDatabase database = new MySQLDatabase();
+
+        if (database.connect()) {
+
+//            query = "SELECT count FROM voucher_tracker WHERE title = \"" + voucherType + "\"";
+
+            builder.select("count");
+            builder.from("voucher_tracker");
+            builder.whereString("title = ", voucherType);
+
+            ResultSet resultSet = database.get(builder.get());
+
+            try {
+                if (resultSet.next()) {
+                    return "" + (resultSet.getInt("count") + 1);
+                } else {
+                    parentFrame.showMessage("Unable to generate voucher no");
+                    txfInvoiceNo.setEditable(true);
+                    return "";
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(UIAccountTransaction.class.getName()).log(Level.SEVERE, null, ex);
+                parentFrame.showMessage("Unable to generate voucher no");
+                txfInvoiceNo.setEditable(true);
+                return "";
+            } finally {
+                database.disconnect();
+            }
+
+        } else {
+            parentFrame.showMessage("Unable to connect with database");
+            txfInvoiceNo.setEditable(true);
+            return "";
+        }
     }
 
     @Override

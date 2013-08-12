@@ -19,7 +19,7 @@ public class Configuration {
     public final static String DEPOSITE = "Deposit";
     public final static String PRINCIPAL_INCOME = "Income";
     public final static String PRINCIPAL_EXPENSE = "Expense";
-    public final static String CURRENCY_FORMAT_DEFAULT = "###,##,##,###.## BDT";
+    public final static String CURRENCY_FORMAT_DEFAULT = "###,##,##,###.##";
     public final static String DATE_FORMAT_DEFAULT = "dd-MM-yyyy";
     public final static String DATE_FORMAT_DB = "yyyy-MM-dd";
     public final static String APP_TITLE = "QBits";

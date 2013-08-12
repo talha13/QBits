@@ -24,7 +24,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
     private JMenuItem itemNewEmployee;
     private JMenuItem itemNewProduct, itemNewDamageProduct;
     private JMenuItem itemReportProductStock;
-    private JMenuItem itemNewCustomer, itemCustomerList, itemSalesInvoice;
+    private JMenuItem itemNewCustomer, itemCustomerList, itemSalesInvoice, itemSalesInvoiceCRUD;
 
     public UIMenuBar(UIParentFrame pf) {
 
@@ -52,6 +52,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         itemNewCustomer = new JMenuItem("New Customer");
         itemCustomerList = new JMenuItem("Customer List");
         itemSalesInvoice = new JMenuItem("Sales Invoice");
+        itemSalesInvoiceCRUD = new JMenuItem("Sales Invoice List");
 
         itemNewAccount = new JMenuItem("New Account");
         itemNewAccountTxn = new JMenuItem("New Account Transaction");
@@ -78,6 +79,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         itemNewCustomer.addActionListener(this);
         itemCustomerList.addActionListener(this);
         itemSalesInvoice.addActionListener(this);
+        itemSalesInvoiceCRUD.addActionListener(this);
 
         itemNewAccount.addActionListener(this);
         itemNewAccountTxn.addActionListener(this);
@@ -108,6 +110,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         menuSale.add(itemNewCustomer);
         menuSale.addSeparator();
         menuSale.add(itemSalesInvoice);
+        menuSale.add(itemSalesInvoiceCRUD);
         menuSale.addSeparator();
         menuSale.add(itemCustomerList);
 
@@ -174,6 +177,8 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
             parentFrame.customerList();
         }else if(itemSalesInvoice == e.getSource()){
             parentFrame.newSalesInvoice();
+        }else if(itemSalesInvoiceCRUD == e.getSource()){
+            parentFrame.salesInvoiceCRUD();
         }
     }
 }

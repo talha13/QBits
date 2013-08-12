@@ -29,7 +29,8 @@ import qbits.gui.purchase.product.UIProductDamage;
 import qbits.gui.purchase.product.UIProductPurchaseReturn;
 import qbits.gui.sales.UICustomer;
 import qbits.gui.sales.UICustomerCRUD;
-import qbits.gui.sales.UICustomerInvoice;
+import qbits.gui.sales.UISalesInvoice;
+import qbits.gui.sales.UISalesInvoiceCRUD;
 
 /**
  *
@@ -240,7 +241,18 @@ public class UIParentFrame extends JFrame implements WindowListener {
     }
 
     public void newSalesInvoice() {
-        UICustomerInvoice customerInvoice = new UICustomerInvoice(this);
+        UISalesInvoice customerInvoice = new UISalesInvoice(this);
         addPanel(customerInvoice, "new_sales_invoice");
+    }
+
+    public void updateSalesInvoice(int recordID) {
+        UISalesInvoice salesInvoice = new UISalesInvoice(this);
+        salesInvoice.update(recordID);
+        addPanel(salesInvoice, "update_sales_invoice");
+    }
+
+    public void salesInvoiceCRUD() {
+        UISalesInvoiceCRUD salesInvoiceCRUD = new UISalesInvoiceCRUD(this);
+        addPanel(salesInvoiceCRUD, "sales_invoice_crud");
     }
 }
