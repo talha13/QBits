@@ -25,6 +25,7 @@ import qbits.gui.purchase.UISupplierInvoice;
 import qbits.gui.purchase.UISupplierInvoiceCRUD;
 import qbits.gui.purchase.UISupplierTransaction;
 import qbits.gui.purchase.product.UIProduct;
+import qbits.gui.purchase.product.UIProductBarcode;
 import qbits.gui.purchase.product.UIProductDamage;
 import qbits.gui.purchase.product.UIProductPurchaseReturn;
 import qbits.gui.sales.UICustomer;
@@ -254,5 +255,10 @@ public class UIParentFrame extends JFrame implements WindowListener {
     public void salesInvoiceCRUD() {
         UISalesInvoiceCRUD salesInvoiceCRUD = new UISalesInvoiceCRUD(this);
         addPanel(salesInvoiceCRUD, "sales_invoice_crud");
+    }
+
+    public void generateBarcode() {
+        UIProductBarcode uIProductBarcode = new UIProductBarcode(this);
+        addPanel(uIProductBarcode, "generate_barcode");
     }
 }
