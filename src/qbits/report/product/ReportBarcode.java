@@ -4,10 +4,8 @@
  */
 package qbits.report.product;
 
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.sf.dynamicreports.examples.Templates;
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 import static net.sf.dynamicreports.report.builder.DynamicReports.bcode;
 import static net.sf.dynamicreports.report.builder.DynamicReports.cmp;
@@ -15,10 +13,7 @@ import static net.sf.dynamicreports.report.builder.DynamicReports.stl;
 import static net.sf.dynamicreports.report.builder.DynamicReports.template;
 import net.sf.dynamicreports.report.builder.component.HorizontalListBuilder;
 import net.sf.dynamicreports.report.builder.component.ComponentBuilder;
-import net.sf.dynamicreports.report.builder.component.MultiPageListBuilder;
 import net.sf.dynamicreports.report.builder.component.VerticalListBuilder;
-import net.sf.dynamicreports.report.builder.grid.VerticalColumnGridListBuilder;
-import net.sf.dynamicreports.report.builder.style.ReportStyleBuilder;
 import net.sf.dynamicreports.report.builder.style.StyleBuilder;
 import net.sf.dynamicreports.report.constant.HorizontalAlignment;
 import net.sf.dynamicreports.report.constant.PageType;
@@ -32,8 +27,6 @@ import net.sf.dynamicreports.report.exception.DRException;
  */
 public class ReportBarcode {
 
-    private float barcodeWidth;
-    private float barcodeHeight;
     private JasperReportBuilder reportBuilder;
 
     public ReportBarcode(String barcode, String label, int quantity) {

@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import qbits.db.MySQLDatabase;
-import qbits.gui.purchase.product.UIProduct;
 
 /**
  *
@@ -31,7 +30,7 @@ public class ProductSearch {
                 if (resultSet.next()) {
                     return resultSet.getInt("product_id");
                 } else {
-                    return 0;
+                    return -1;
                 }
 
             } catch (SQLException ex) {
@@ -43,7 +42,7 @@ public class ProductSearch {
             return -1;
 
         } else {
-            return -2;
+            return -1;
         }
 
     }

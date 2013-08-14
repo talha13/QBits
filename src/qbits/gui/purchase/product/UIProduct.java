@@ -15,8 +15,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingWorker;
+import qbits.configuration.Configuration;
 import qbits.configuration.Utilities;
 import qbits.db.MySQLDatabase;
+import qbits.db.QueryBuilder;
+import qbits.entity.ProductSearch;
 import qbits.gui.common.UIParentFrame;
 import qbitserp.common.Message;
 
@@ -90,12 +93,22 @@ public class UIProduct extends javax.swing.JPanel {
         jLabel1.setText("Product Name*");
 
         txfName.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        txfName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txfNameActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(102, 0, 0));
         jLabel2.setText("Product Code*");
 
         txfCode.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        txfCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txfCodeActionPerformed(evt);
+            }
+        });
 
         cmbCategory.setEditable(true);
         cmbCategory.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
@@ -393,6 +406,22 @@ public class UIProduct extends javax.swing.JPanel {
         // TODO add your handling code here:
         txfCode.setText(generateProductCode());
     }//GEN-LAST:event_btnGenerateProductCodeActionPerformed
+
+    private void txfNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txfNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txfNameActionPerformed
+
+    private void txfCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txfCodeActionPerformed
+        // TODO add your handling code here:
+        ProductSearch productSearch = new ProductSearch();
+
+        int productID = productSearch.getProductByCode(txfCode.getText().trim());
+
+        if (productID != -1) {
+            parentFrame.showMessage("This product already exists. Please provide different product code or leave this field system will generate product code for this product");
+            txfCode.setText("");
+        }
+    }//GEN-LAST:event_txfCodeActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGenerateProductCode;
     private javax.swing.JButton btnReset;
@@ -440,24 +469,26 @@ public class UIProduct extends javax.swing.JPanel {
         if (Double.parseDouble(spCostPerUnit.getValue().toString()) <= 0.00 && Message.warning("Cost per unit: " + spCostPerUnit.getValue() + ". Do you want to continue?") == 1) {
             return false;
         }
-        
+
         return true;
     }
 
     private int save() {
 
+        QueryBuilder queryBuilder = new QueryBuilder();
         MySQLDatabase database = new MySQLDatabase();
         String query;
         int status = -1;
         long catID = 0, brandID = 0, unitID = 0;
+        String productCode;
 
         if (database.connect()) {
 
             database.setAutoCommit(false);
 
-            System.out.println(cmbBrand.getSelectedIndex() + " " + cmbBrand.getSelectedItem().toString());
-            System.out.println(cmbCategory.getSelectedIndex() + " " + cmbCategory.getSelectedItem().toString());
-            System.out.println(cmbUnit.getSelectedIndex() + " " + cmbUnit.getSelectedItem().toString());
+//            System.out.println(cmbBrand.getSelectedIndex() + " " + cmbBrand.getSelectedItem().toString());
+//            System.out.println(cmbCategory.getSelectedIndex() + " " + cmbCategory.getSelectedItem().toString());
+//            System.out.println(cmbUnit.getSelectedIndex() + " " + cmbUnit.getSelectedItem().toString());
 
             if (categories.containsKey(cmbCategory.getSelectedItem().toString())) {
                 catID = categories.get(cmbCategory.getSelectedItem().toString());
@@ -467,6 +498,18 @@ public class UIProduct extends javax.swing.JPanel {
                 catID = database.insert(query);
 
                 if (catID == -1) {
+                    database.setAutoCommit(true);
+                    database.disconnect();
+                    return -1;
+                }
+
+                queryBuilder.clear();
+                queryBuilder.set("category_id", "" + catID);
+                queryBuilder.set("category_code", "" + (catID + Configuration.BASE_CATEGORY_CODE));
+                queryBuilder.set("total_product", "" + 0);
+
+                if (database.insert(queryBuilder.insert("product_code")) == -1) {
+                    database.rollback();
                     database.setAutoCommit(true);
                     database.disconnect();
                     return -1;
@@ -504,8 +547,79 @@ public class UIProduct extends javax.swing.JPanel {
                 }
             }
 
+            if (!Utilities.isValidString(txfCode.getText())) {
+
+                queryBuilder.clear();
+                queryBuilder.select("total_product");
+                queryBuilder.where("category_id = " + catID);
+                queryBuilder.from("product_code");
+
+                ResultSet resultSet = database.get(queryBuilder.get());
+
+                try {
+
+                    if (resultSet.next()) {
+
+                        productCode = "";
+                        int totalProduct = resultSet.getInt("total_product");
+                        ProductSearch productSearch = new ProductSearch();
+                        int maxCheck = 20;
+                        int checkCount = 0;
+
+                        while (checkCount < maxCheck) {
+
+                            checkCount++;
+                            productCode = "" + (catID + Configuration.BASE_CATEGORY_CODE) + "" + ((totalProduct + 1) + Configuration.BASE_PRODUCT_CODE);
+
+                            if (productSearch.getProductByCode(productCode) == -1) {
+                                break;
+                            }
+
+                            totalProduct++;
+                            System.out.println(totalProduct);
+                        }
+
+                        if (checkCount >= maxCheck) {
+                            database.rollback();
+                            database.setAutoCommit(true);
+                            database.disconnect();
+                            return -1;
+                        }
+
+                        queryBuilder.clear();
+                        queryBuilder.set("total_product", "total_product + " + totalProduct);
+                        queryBuilder.where("category_id = " + catID);
+
+                        if (database.update(queryBuilder.update("product_code")) == -1) {
+                            database.rollback();
+                            database.setAutoCommit(true);
+                            database.disconnect();
+                            return -1;
+                        }
+
+                    } else {
+                        database.rollback();
+                        database.setAutoCommit(true);
+                        database.disconnect();
+                        return -1;
+                    }
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(UIProduct.class.getName()).log(Level.SEVERE, null, ex);
+                    database.rollback();
+                    database.setAutoCommit(true);
+                    database.disconnect();
+                    return -1;
+                }
+
+                txfCode.setText(productCode);
+
+            } else {
+                productCode = txfCode.getText();
+            }
+
             query = "INSERT INTO product VALUES("
-                    + "null, \"" + txfName.getText() + "\", \"" + txfCode.getText() + "\", \"" + catID + "\", \"" + brandID + "\", \"" + unitID + "\""
+                    + "null, \"" + txfName.getText() + "\", \"" + productCode + "\", \"" + catID + "\", \"" + brandID + "\", \"" + unitID + "\""
                     + ", \"" + spRPU.getValue() + "\", \"" + spNotifyQuantity.getValue() + "\", " + chkAvgCost.isSelected() + ", " + parentFrame.currentUser.getUserID() + ", NOW()"
                     + ")";
 

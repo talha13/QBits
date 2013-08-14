@@ -34,7 +34,7 @@ import qbitserp.common.Message;
  * @author Topu
  */
 public class UIProductBarcode extends javax.swing.JPanel {
-    
+
     private UIParentFrame parentFrame;
     private boolean isUpdate;
     private HashMap<String, Integer> categories;
@@ -82,7 +82,7 @@ public class UIProductBarcode extends javax.swing.JPanel {
         btnPrint = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Damage Product", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Product Barcode", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Product Information"));
 
@@ -262,7 +262,7 @@ public class UIProductBarcode extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void changeStatus(boolean status) {
-        
+
         txfCode.setEnabled(status);
         cmbCategory.setEnabled(status);
         cmbName.setEnabled(status);
@@ -271,43 +271,43 @@ public class UIProductBarcode extends javax.swing.JPanel {
         cmbName.setEnabled(status);
         btnReset.setEnabled(status);
         btnPrint.setEnabled(status);
-        
+
     }
-    
+
     private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
         // TODO add your handling code here:
         if (!check()) {
             return;
         }
-        
+
         ReportBarcode reportBarcode = new ReportBarcode(txfCode.getText(), "TK: " + txfRPU.getText(), Integer.parseInt(spQuantity.getValue().toString()));
-        
+
     }//GEN-LAST:event_btnPrintActionPerformed
-    
+
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
         // TODO add your handling code here:
         reset();
     }//GEN-LAST:event_btnResetActionPerformed
-    
+
     private void cmbCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCategoryActionPerformed
         // TODO add your handling code here:
 
         if (!shouldPerformActionForcmbCategory) {
             return;
         }
-        
+
         if (cmbCategory.getSelectedIndex() == 0) {
             return;
         }
-        
+
         new SwingWorker<Object, Object>() {
             @Override
             protected Object doInBackground() throws Exception {
-                
+
                 parentFrame.stausBar.startLoading("loading product");
                 return loadProducts(categories.get(cmbCategory.getSelectedItem().toString()));
             }
-            
+
             protected void done() {
                 parentFrame.stausBar.stopLoading();
                 try {
@@ -324,9 +324,9 @@ public class UIProductBarcode extends javax.swing.JPanel {
                 }
             }
         }.execute();
-        
+
     }//GEN-LAST:event_cmbCategoryActionPerformed
-    
+
     private void cmbNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbNameActionPerformed
         // TODO add your handling code here:
 
@@ -352,9 +352,9 @@ public class UIProductBarcode extends javax.swing.JPanel {
 //            }
 
         }
-        
+
     }//GEN-LAST:event_cmbNameActionPerformed
-    
+
     private void txfCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txfCodeActionPerformed
         // TODO add your handling code here:
 
@@ -363,9 +363,9 @@ public class UIProductBarcode extends javax.swing.JPanel {
         cmbCategory.removeAllItems();
         cmbName.removeAllItems();
         spQuantity.setValue(0);
-        
+
         int productID = productSearch.getProductByCode(txfCode.getText());
-        
+
         if (productID <= 0) {
             parentFrame.showMessage("No product found");
             reset();
@@ -373,7 +373,7 @@ public class UIProductBarcode extends javax.swing.JPanel {
             loadProduct(productID);
         }
     }//GEN-LAST:event_txfCodeActionPerformed
-    
+
     private void txfRPUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txfRPUActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txfRPUActionPerformed
@@ -395,27 +395,27 @@ public class UIProductBarcode extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private boolean check() {
-        
+
         if (cmbCategory.getSelectedIndex() == 0) {
             parentFrame.showMessage("Please select category");
             return false;
         }
-        
+
         if (cmbName.getSelectedIndex() == 0) {
             parentFrame.showMessage("Please select product");
             return false;
         }
-        
+
         if (Double.parseDouble(spQuantity.getValue().toString()) < -1) {
             parentFrame.showMessage("Please select valid quantity");
             return false;
         }
-        
+
         return true;
     }
-    
+
     private void reset() {
-        
+
         loadCategory();
         products.clear();
         txfCode.setText("");
@@ -424,22 +424,22 @@ public class UIProductBarcode extends javax.swing.JPanel {
         spQuantity.setValue(0);
         shouldPerformActionForcmbCategory = true;
     }
-    
+
     private boolean update() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     private int loadProducts(int catID) {
-        
+
         MySQLDatabase database = new MySQLDatabase();
         String query;
         Vector<String> productTitle = new Vector<>();
         products.clear();
         int status = 0;
         int countProduct = 0;
-        
+
         productTitle.add("Select Product");
-        
+
         if (database.connect()) {
             try {
                 query = "SELECT product.product_id, product.title, product.product_code, product_brand.title, product_unit.title, product.rate_per_unit "
@@ -447,11 +447,11 @@ public class UIProductBarcode extends javax.swing.JPanel {
                         + " INNER JOIN product_brand ON product_brand.brand_id = product.product_brand_id"
                         + " INNER JOIN product_unit ON product_unit.unit_id = product.product_unit_id"
                         + " WHERE product.product_category_id = " + catID;
-                
+
                 ResultSet resultSet = database.get(query);
-                
+
                 while (resultSet.next()) {
-                    
+
                     Product product = new Product();
                     product.setBrand(resultSet.getString("product_brand.title"));
                     product.setId(resultSet.getInt("product.product_id"));
@@ -459,41 +459,41 @@ public class UIProductBarcode extends javax.swing.JPanel {
                     product.setRpu(resultSet.getDouble("product.rate_per_unit"));
                     product.setUnit(resultSet.getString("product_unit.title"));
                     product.setCode(resultSet.getString("product.product_code"));
-                    
+
                     String productName = resultSet.getString("product.title") + "-" + resultSet.getString("product_brand.title");
                     productTitle.add(productName);
                     countProduct++;
                     products.put(countProduct, product);
                 }
-                
+
                 cmbName.setModel(new DefaultComboBoxModel(productTitle));
                 status = 1;
-                
+
             } catch (Exception ex) {
                 Logger.getLogger(UIProductBarcode.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
                 database.disconnect();
             }
-            
+
         } else {
             status = -2;
         }
-        
+
         return status;
     }
-    
+
     private int loadProduct(int productID) {
-        
+
         MySQLDatabase database = new MySQLDatabase();
         String query;
         Vector<String> productTitle = new Vector<>();
         products.clear();
         categories.clear();
         int status = 0;
-        
+
         productTitle.add("Select Product");
-        
+
         if (database.connect()) {
             try {
                 query = "SELECT product.product_id, product.title, product.product_code, product_brand.title, product_unit.title, product.rate_per_unit, "
@@ -503,66 +503,68 @@ public class UIProductBarcode extends javax.swing.JPanel {
                         + " INNER JOIN product_unit ON product_unit.unit_id = product.product_unit_id"
                         + " INNER JOIN product_category ON product_category.category_id = product.product_category_id"
                         + " WHERE product.product_id = " + productID + " LIMIT 1";
-                
+
                 ResultSet resultSet = database.get(query);
-                
+
                 if (resultSet.next()) {
-                    
+
                     Product product = new Product();
                     product.setBrand(resultSet.getString("product_brand.title"));
                     product.setId(resultSet.getInt("product.product_id"));
                     product.setName(resultSet.getString("product.title"));
                     product.setRpu(resultSet.getDouble("product.rate_per_unit"));
                     product.setUnit(resultSet.getString("product_unit.title"));
-                    
+                    product.setCode(resultSet.getString("product.product_code"));
+
                     String productName = resultSet.getString("product.title") + "-" + resultSet.getString("product_brand.title");
                     productTitle.add(productName);
                     products.put(1, product);
-                    
+
                     cmbName.setModel(new DefaultComboBoxModel(productTitle));
                     cmbCategory.setModel(new DefaultComboBoxModel(new String[]{"Select Category", resultSet.getString("product_category.title")}));
-                    
+
                     cmbName.setSelectedIndex(1);
                     shouldPerformActionForcmbCategory = false;
                     cmbCategory.setSelectedIndex(1);
+                    txfCode.setText(product.getCode());
                 }
-                
+
                 status = 1;
-                
+
             } catch (Exception ex) {
                 Logger.getLogger(UIProductBarcode.class.getName()).log(Level.SEVERE, null, ex);
                 status = -1;
             } finally {
                 database.disconnect();
             }
-            
+
         } else {
             status = -2;
         }
-        
+
         return status;
     }
-    
+
     private void loadCategory() {
-        
+
         MySQLDatabase database = new MySQLDatabase();
         String query;
         Vector<String> categoryTitles = new Vector<>();
         categories.clear();
         categoryTitles.add("Select Category");
-        
+
         if (database.connect()) {
             try {
                 query = "SELECT * FROM product_category WHERE status = 1";
                 ResultSet resultSet = database.get(query);
-                
+
                 while (resultSet.next()) {
                     categories.put(resultSet.getString("title"), resultSet.getInt("category_id"));
                     categoryTitles.add(resultSet.getString("title"));
                 }
-                
+
                 cmbCategory.setModel(new DefaultComboBoxModel(categoryTitles));
-                
+
             } catch (SQLException ex) {
                 Logger.getLogger(UIProductBarcode.class.getName()).log(Level.SEVERE, null, ex);
             } finally {

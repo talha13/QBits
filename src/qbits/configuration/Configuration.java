@@ -30,4 +30,6 @@ public class Configuration {
     public final static String MYSQL_BIN_LOCATION = "E:/xampp/mysql/bin/"; // must ends with '/'
     public final static String COPYRIGHT_TEXT = "QBits";
     public final static double VAT = 5.0;
+    public final static int BASE_CATEGORY_CODE = 1000;
+    public final static int BASE_PRODUCT_CODE = 1000;
 }
