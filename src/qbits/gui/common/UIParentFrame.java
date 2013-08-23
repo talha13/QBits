@@ -18,6 +18,7 @@ import qbits.gui.account.UIAccount;
 import qbits.gui.account.UIAccountHead;
 import qbits.gui.account.UIAccountTransaction;
 import qbits.gui.account.UIGeneralTransaction;
+import qbits.gui.employee.UIEmployee;
 import qbits.gui.purchase.UIReportProductStock;
 import qbits.gui.purchase.UISupplier;
 import qbits.gui.purchase.UISupplierCRUD;
@@ -30,6 +31,7 @@ import qbits.gui.purchase.product.UIProductDamage;
 import qbits.gui.purchase.product.UIProductPurchaseReturn;
 import qbits.gui.sales.UICustomer;
 import qbits.gui.sales.UICustomerCRUD;
+import qbits.gui.sales.UICustomerTransaction;
 import qbits.gui.sales.UISalesInvoice;
 import qbits.gui.sales.UISalesInvoiceCRUD;
 
@@ -180,7 +182,7 @@ public class UIParentFrame extends JFrame implements WindowListener {
     }
 
     public void newEmployee() {
-//        addPanel(new UIEmployee(this), "new_employee");
+        addPanel(new UIEmployee(this), "new_employee");
     }
 
     void newProduct() {
@@ -260,5 +262,15 @@ public class UIParentFrame extends JFrame implements WindowListener {
     public void generateBarcode() {
         UIProductBarcode uIProductBarcode = new UIProductBarcode(this);
         addPanel(uIProductBarcode, "generate_barcode");
+    }
+
+    public void customerReceivable() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void customerTransaction() {
+        
+        UICustomerTransaction customerTransaction = new UICustomerTransaction(this);
+        addPanel(customerTransaction, "new_customer_transaction");
     }
 }

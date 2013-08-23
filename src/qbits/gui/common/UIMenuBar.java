@@ -24,7 +24,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
     private JMenuItem itemNewEmployee;
     private JMenuItem itemNewProduct, itemNewDamageProduct, itemGenerateBarcode;
     private JMenuItem itemReportProductStock;
-    private JMenuItem itemNewCustomer, itemCustomerList, itemSalesInvoice, itemSalesInvoiceCRUD;
+    private JMenuItem itemNewCustomer, itemCustomerList, itemSalesInvoice, itemSalesInvoiceCRUD, itemCustomerTransaction, itemCustomerReceivable;
 
     public UIMenuBar(UIParentFrame pf) {
 
@@ -53,6 +53,8 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         itemCustomerList = new JMenuItem("Customer List");
         itemSalesInvoice = new JMenuItem("Sales Invoice");
         itemSalesInvoiceCRUD = new JMenuItem("Sales Invoice List");
+        itemCustomerReceivable = new JMenuItem("Receivable");
+        itemCustomerTransaction = new JMenuItem("Customer Transaction");
 
         itemNewAccount = new JMenuItem("New Account");
         itemNewAccountTxn = new JMenuItem("New Account Transaction");
@@ -81,6 +83,8 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         itemCustomerList.addActionListener(this);
         itemSalesInvoice.addActionListener(this);
         itemSalesInvoiceCRUD.addActionListener(this);
+        itemCustomerReceivable.addActionListener(this);
+        itemCustomerTransaction.addActionListener(this);
 
         itemNewAccount.addActionListener(this);
         itemNewAccountTxn.addActionListener(this);
@@ -110,6 +114,8 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         menuPurchase.add(itemPurchaseReturn);
 
         menuSale.add(itemNewCustomer);
+        menuSale.add(itemCustomerReceivable);
+        menuSale.add(itemCustomerTransaction);
         menuSale.addSeparator();
         menuSale.add(itemSalesInvoice);
         menuSale.add(itemSalesInvoiceCRUD);
@@ -183,9 +189,13 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
             parentFrame.newSalesInvoice();
         } else if (itemSalesInvoiceCRUD == e.getSource()) {
             parentFrame.salesInvoiceCRUD();
-        }else if(itemGenerateBarcode == e.getSource()){
+        } else if (itemGenerateBarcode == e.getSource()) {
             parentFrame.generateBarcode();
+        } else if (itemCustomerReceivable == e.getSource()) {
+            parentFrame.customerReceivable();
+        } else if (itemCustomerTransaction == e.getSource()) {
+            parentFrame.customerTransaction();
         }
-            
+
     }
 }

@@ -59,6 +59,8 @@ public class ReportBarcode {
 
         StyleBuilder labelStyle = stl.style();
         labelStyle.setAlignment(HorizontalAlignment.CENTER, VerticalAlignment.TOP);
+        verticalListBuilder.add(cmp.vListCell(cmp.text("Taradin Super Shop").setStyle(labelStyle)));
+        verticalListBuilder.add(cmp.verticalGap(1));
         verticalListBuilder.add(cmp.vListCell(cmp.text(label).setStyle(labelStyle)));
         verticalListBuilder.add(cmp.verticalGap(1));
         verticalListBuilder.add(barcode.setStyle(labelStyle));
@@ -68,6 +70,6 @@ public class ReportBarcode {
     }
 
     public static void main(String[] args) {
-        new ReportBarcode("123456789012345", "12121212221", 148);
+        new ReportBarcode("123456789012345", "Windows Seven", 100);
     }
 }

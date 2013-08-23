@@ -39,6 +39,7 @@ public class UICRUD extends javax.swing.JPanel {
     private ActionMenu actionMenu;
     private Point popupSelectedPoint;
     private ArrayList<Integer> primaryKeys;
+    private boolean showPopup;
 
     /**
      * Creates new form UICRUD
@@ -46,6 +47,15 @@ public class UICRUD extends javax.swing.JPanel {
     public UICRUD() {
         initComponents();
         primaryKeys = new ArrayList<>();
+        showPopup = true;
+    }
+
+    public boolean isShowPopup() {
+        return showPopup;
+    }
+
+    public void setShowPopup(boolean showPopup) {
+        this.showPopup = showPopup;
     }
 
     public void addCRUDListener(CRUDListener listener) {
@@ -61,8 +71,8 @@ public class UICRUD extends javax.swing.JPanel {
         pnlSubPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), subTitle));
     }
 
-    public void setColumns(Vector searchTerms) {       
-        
+    public void setColumns(Vector searchTerms) {
+
         actionMenu = new ActionMenu();
         columnNames = searchTerms;
         int i = 0;
@@ -81,12 +91,15 @@ public class UICRUD extends javax.swing.JPanel {
         tableRecords.setRowSorter(rowSorter);
 
         tableRecords.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tableRecords.setComponentPopupMenu(actionMenu);
-        tableRecords.addMouseListener(new MouseAdapter() {
-            public void mouseReleased(MouseEvent e) {
-                popupSelectedPoint = e.getPoint();
-            }
-        });
+
+        if (isShowPopup()) {
+            tableRecords.setComponentPopupMenu(actionMenu);
+            tableRecords.addMouseListener(new MouseAdapter() {
+                public void mouseReleased(MouseEvent e) {
+                    popupSelectedPoint = e.getPoint();
+                }
+            });
+        }
     }
 
     public void setQueryBuilder(QueryBuilder queryBuilder) {
@@ -168,13 +181,13 @@ public class UICRUD extends javax.swing.JPanel {
             super();
             itemRemove = new JMenuItem("Remove");
             itemUpdate = new JMenuItem("Update");
-            
+
             itemRemove.setIcon(new javax.swing.ImageIcon(getClass().getResource("/qbits/resources/image/Close-icon.png")));
             itemUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/qbits/resources/image/Edit-icon.png")));
 
             itemRemove.addActionListener(this);
             itemUpdate.addActionListener(this);
-            
+
             add(itemUpdate);
             addSeparator();
             add(itemRemove);
@@ -357,7 +370,6 @@ public class UICRUD extends javax.swing.JPanel {
         // TODO add your handling code here:
         filter();
     }//GEN-LAST:event_cmbSearchByActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnPrint;
