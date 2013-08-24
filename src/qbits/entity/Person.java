@@ -8,7 +8,7 @@ package qbits.entity;
  *
  * @author Pipilika
  */
-public class Customer {
+public class Person {
 
     private String firstName;
     private String lastName;

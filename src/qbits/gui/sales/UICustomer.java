@@ -14,7 +14,7 @@ import javax.swing.SwingWorker;
 import qbits.configuration.Utilities;
 import qbits.db.MySQLDatabase;
 import qbits.db.QueryBuilder;
-import qbits.entity.Customer;
+import qbits.entity.Person;
 import qbits.gui.common.UIParentFrame;
 import qbitserp.common.Message;
 
@@ -26,7 +26,7 @@ public class UICustomer extends javax.swing.JPanel {
 
     private UIParentFrame parentFrame;
     private boolean isUpdate;
-    private Customer customer;
+    private Person customer;
 
     /**
      * Creates new form Sample
@@ -41,7 +41,7 @@ public class UICustomer extends javax.swing.JPanel {
     public void update(int customerID) {
 
         isUpdate = true;
-        customer = new Customer();
+        customer = new Person();
         customer.setCustomerID(customerID);
 
         new SwingWorker<Object, Object>() {

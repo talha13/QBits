@@ -21,7 +21,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
     private JMenuItem itemExit, itemChangePass;
     private JMenuItem itemNewSupplier, itemSupplierList, itemNewSupplierInvoice, itemNewSupplierTransaction, itemPurchaseReturn, itemsupplierInvoiceCRUD;
     private JMenuItem itemNewAccount, itemNewAccountTxn, itemNewAccountHead, itemNewGeneralTransaction;
-    private JMenuItem itemNewEmployee;
+    private JMenuItem itemNewEmployee, itemEmployeeCRUD;
     private JMenuItem itemNewProduct, itemNewDamageProduct, itemGenerateBarcode;
     private JMenuItem itemReportProductStock;
     private JMenuItem itemNewCustomer, itemCustomerList, itemSalesInvoice, itemSalesInvoiceCRUD, itemCustomerTransaction, itemCustomerReceivable;
@@ -62,6 +62,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         itemNewGeneralTransaction = new JMenuItem("New General Transaction");
 
         itemNewEmployee = new JMenuItem("New Employee");
+        itemEmployeeCRUD = new JMenuItem("Employee List");
 
         itemNewProduct = new JMenuItem("New Product");
         itemNewDamageProduct = new JMenuItem("New Damage Product");
@@ -92,6 +93,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         itemNewGeneralTransaction.addActionListener(this);
 
         itemNewEmployee.addActionListener(this);
+        itemEmployeeCRUD.addActionListener(this);
 
         itemNewProduct.addActionListener(this);
         itemNewDamageProduct.addActionListener(this);
@@ -129,6 +131,8 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         menuAccount.add(itemNewGeneralTransaction);
 
         menuEmployee.add(itemNewEmployee);
+        menuEmployee.addSeparator();
+        menuEmployee.add(itemEmployeeCRUD);
 
         menuProduct.add(itemNewProduct);
         menuProduct.add(itemNewDamageProduct);
@@ -194,7 +198,9 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         } else if (itemCustomerReceivable == e.getSource()) {
             parentFrame.customerReceivable();
         } else if (itemCustomerTransaction == e.getSource()) {
-            parentFrame.customerTransaction();
+            parentFrame.customerTransaction();        
+        } else if (itemEmployeeCRUD == e.getSource()) {
+            parentFrame.employeeCRUD();
         }
 
     }

@@ -33,7 +33,7 @@ import qbits.configuration.Configuration;
 import qbits.configuration.Utilities;
 import qbits.db.MySQLDatabase;
 import qbits.db.QueryBuilder;
-import qbits.entity.Customer;
+import qbits.entity.Person;
 import qbits.entity.Product;
 import qbits.entity.ProductSearch;
 import qbits.entity.Invoice;
@@ -53,7 +53,7 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
 
     private UIParentFrame parentFrame;
     private ProductSearch productSearch;
-    private HashMap<Integer, Customer> customers;
+    private HashMap<Integer, Person> customers;
     private HashMap<Integer, Integer> accounts;
     private HashMap<Integer, Integer> categories;
     private HashMap<Integer, Product> products;
@@ -1310,7 +1310,7 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
 
                 while (resultSet.next()) {
 
-                    Customer customer = new Customer();
+                    Person customer = new Person();
                     customer.setCustomerID(resultSet.getInt("id"));
                     customer.setFirstName(resultSet.getString("person.first_name"));
                     customer.setLastName(resultSet.getString("person.last_name"));

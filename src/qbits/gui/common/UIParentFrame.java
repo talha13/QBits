@@ -19,6 +19,7 @@ import qbits.gui.account.UIAccountHead;
 import qbits.gui.account.UIAccountTransaction;
 import qbits.gui.account.UIGeneralTransaction;
 import qbits.gui.employee.UIEmployee;
+import qbits.gui.employee.UIEmployeeCRUD;
 import qbits.gui.purchase.UIReportProductStock;
 import qbits.gui.purchase.UISupplier;
 import qbits.gui.purchase.UISupplierCRUD;
@@ -269,8 +270,19 @@ public class UIParentFrame extends JFrame implements WindowListener {
     }
 
     public void customerTransaction() {
-        
+
         UICustomerTransaction customerTransaction = new UICustomerTransaction(this);
         addPanel(customerTransaction, "new_customer_transaction");
+    }
+
+    public void employeeCRUD() {
+        UIEmployeeCRUD employeeCRUD = new UIEmployeeCRUD(this);
+        addPanel(employeeCRUD, "employee_crud");
+    }
+
+    public void updateEmployee(int recordID) {
+       UIEmployee employee = new UIEmployee(this);
+       employee.update(recordID);
+       addPanel(employee, "update_employee");
     }
 }

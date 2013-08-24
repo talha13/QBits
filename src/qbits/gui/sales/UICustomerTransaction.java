@@ -20,7 +20,7 @@ import javax.swing.SwingWorker;
 import qbits.configuration.Utilities;
 import qbits.db.MySQLDatabase;
 import qbits.db.QueryBuilder;
-import qbits.entity.Customer;
+import qbits.entity.Person;
 import qbits.entity.Supplier;
 import qbits.entity.Invoice;
 import qbits.gui.common.UIParentFrame;
@@ -36,7 +36,7 @@ public class UICustomerTransaction extends javax.swing.JPanel {
     private ButtonGroup clearButtonGroup;
     private HashMap<String, Integer> accounts;
     private HashMap<String, Integer> accountHead;
-    private HashMap<Integer, Customer> customers;
+    private HashMap<Integer, Person> customers;
     private HashMap<Integer, Invoice> customerInvoices;
 
     /**
@@ -943,7 +943,7 @@ public class UICustomerTransaction extends javax.swing.JPanel {
 
                 while (resultSet.next()) {
 
-                    Customer customer = new Customer();
+                    Person customer = new Person();
                     customer.setCustomerID(resultSet.getInt("id"));
                     customer.setFirstName(resultSet.getString("person.first_name"));
                     customer.setLastName(resultSet.getString("person.last_name"));

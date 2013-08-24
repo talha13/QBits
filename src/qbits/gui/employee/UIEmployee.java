@@ -4,7 +4,6 @@
  */
 package qbits.gui.employee;
 
-import qbits.gui.sales.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
@@ -18,7 +17,8 @@ import javax.swing.SwingWorker;
 import qbits.configuration.Utilities;
 import qbits.db.MySQLDatabase;
 import qbits.db.QueryBuilder;
-import qbits.entity.Customer;
+import qbits.entity.Employee;
+import qbits.entity.Person;
 import qbits.gui.common.UIParentFrame;
 import qbitserp.common.Message;
 
@@ -30,7 +30,7 @@ public class UIEmployee extends javax.swing.JPanel {
 
     private UIParentFrame parentFrame;
     private boolean isUpdate;
-    private Customer employee;
+    private Employee employee;
     private HashMap<Integer, Integer> departments;
     private HashMap<Integer, Integer> designations;
 
@@ -45,16 +45,16 @@ public class UIEmployee extends javax.swing.JPanel {
         reset();
     }
 
-    public void update(int customerID) {
+    public void update(int employeeID) {
 
         isUpdate = true;
-        employee = new Customer();
-        employee.setCustomerID(customerID);
+        employee = new Employee();
+        employee.setCustomerID(employeeID);
 
         new SwingWorker<Object, Object>() {
             @Override
             protected Object doInBackground() throws Exception {
-                parentFrame.stausBar.startLoading("getting customer information");
+                parentFrame.stausBar.startLoading("getting employee information");
                 return load();
             }
 
@@ -65,7 +65,7 @@ public class UIEmployee extends javax.swing.JPanel {
                     if (get() == 1) {
                     } else if (get() == -1) {
                         reset();
-                        parentFrame.showMessage("Unable to load customer information");
+                        parentFrame.showMessage("Unable to load employee information");
 
                     } else if (get() == -2) {
                         Message.dbConnectFailed();
@@ -89,13 +89,15 @@ public class UIEmployee extends javax.swing.JPanel {
         if (database.connect()) {
             try {
 
-                query = "SELECT customer.id,"
+                query = "SELECT employee.employee_id,"
                         + " person.person_id, person.first_name, person.last_name, person.gender, person.date_of_birth, person.contact_no,"
-                        + " address.address_id, address.address, address.city, address.district"
-                        + " FROM customer"
-                        + " INNER JOIN person ON person.person_id = customer.person_id"
+                        + " address.address_id, address.address, address.city, address.district,"
+                        + " employee.salary_id, employee_salary.basic, employee_salary.house_rent_allowance, employee_salary.medical_allowance, employee_salary.conveyance_allowance, employee_salary.income_tax, employee_salary.provident_fund"
+                        + " FROM employee"
+                        + " INNER JOIN person ON person.person_id = employee.person_id"
                         + " INNER JOIN address ON address.address_id = person.address_id"
-                        + " WHERE customer.id = " + employee.getCustomerID();
+                        + " INNER JOIN employee_salary ON employee_salary.employee_salary_id = employee.salary_id"
+                        + " WHERE employee.employee_id = " + employee.getCustomerID();
 
                 ResultSet resultSet = database.get(query);
 
@@ -110,8 +112,16 @@ public class UIEmployee extends javax.swing.JPanel {
                     cmbGender.setSelectedIndex(resultSet.getString("person.gender").compareTo("Male") == 0 ? 1 : 2);
                     dcDOB.setSelectedDate(Utilities.getDateChosserDate(resultSet.getDate("person.date_of_birth")));
 
+                    spBasic.setValue(resultSet.getDouble("employee_salary.basic"));
+                    spConveyance.setValue(resultSet.getDouble("employee_salary.conveyance_allowance"));
+                    spHouseRent.setValue(resultSet.getDouble("employee_salary.house_rent_allowance"));
+                    spIncomeTax.setValue(resultSet.getDouble("employee_salary.income_tax"));
+                    spMedical.setValue(resultSet.getDouble("employee_salary.medical_allowance"));
+                    spProvidentFund.setValue(resultSet.getDouble("employee_salary.provident_fund"));
+
                     employee.setAddressID(resultSet.getInt("address.address_id"));
                     employee.setPersonID(resultSet.getInt("person.person_id"));
+                    employee.getSalary().setSalaryID(resultSet.getInt("employee.salary_id"));
 
                     status = 1;
                 } else {
@@ -552,7 +562,7 @@ public class UIEmployee extends javax.swing.JPanel {
         new SwingWorker<Object, Object>() {
             @Override
             protected Object doInBackground() throws Exception {
-                parentFrame.stausBar.startLoading("saving customer");
+                parentFrame.stausBar.startLoading("saving employee");
                 changeStatus(false);
 
                 if (isUpdate) {
@@ -568,9 +578,9 @@ public class UIEmployee extends javax.swing.JPanel {
                     changeStatus(true);
                     if (get() == 1) {
                         reset();
-                        parentFrame.showMessage("Customer information saved");
+                        parentFrame.showMessage("Employee information saved");
                     } else if (get() == -1) {
-                        parentFrame.showMessage("Unable to save Customer info");
+                        parentFrame.showMessage("Unable to save Employee info");
                     }
                 } catch (InterruptedException ex) {
                     Logger.getLogger(UIEmployee.class.getName()).log(Level.SEVERE, null, ex);
@@ -603,6 +613,12 @@ public class UIEmployee extends javax.swing.JPanel {
 
     private void reset() {
 
+        spBasic.setValue(0);
+        spConveyance.setValue(0);
+        spHouseRent.setValue(0);
+        spIncomeTax.setValue(0);
+        spMedical.setValue(0);
+        spProvidentFund.setValue(0);
         taAddress.setText("");
         txfCity.setText("");
         txfDistrict.setText("");
@@ -646,6 +662,26 @@ public class UIEmployee extends javax.swing.JPanel {
                     + " WHERE address.address_id = " + employee.getAddressID();
 
             affactedRows = database.update(query);
+
+            if (affactedRows <= 0) {
+                database.rollback();
+                database.setAutoCommit(true);
+                database.disconnect();
+                return -1;
+            } else {
+                status = 1;
+            }
+
+            queryBuilder.clear();
+            queryBuilder.set("employee_salary.basic", "" + spBasic.getValue());
+            queryBuilder.set("employee_salary.conveyance_allowance", "" + spConveyance.getValue());
+            queryBuilder.set("employee_salary.house_rent_allowance", "" + spHouseRent.getValue());
+            queryBuilder.set("employee_salary.income_tax", "" + spIncomeTax.getValue());
+            queryBuilder.set("employee_salary.medical_allowance", "" + spMedical.getValue());
+            queryBuilder.set("employee_salary.provident_fund", "" + spProvidentFund.getValue());
+            queryBuilder.where("employee_salary.employee_salary_id = " + employee.getSalary().getSalaryID());
+
+            affactedRows = database.update(queryBuilder.update("employee_salary"));
 
             if (affactedRows <= 0) {
                 database.rollback();
@@ -829,20 +865,20 @@ public class UIEmployee extends javax.swing.JPanel {
     private boolean check() {
 
         if (!Utilities.isValidString(txfPhone.getText())) {
-            parentFrame.showMessage("Customer phone no Required");
+            parentFrame.showMessage("Employee phone no Required");
             return false;
         }
         if (!Utilities.isValidString(txfFirstName.getText())) {
-            parentFrame.showMessage("Customer first name required");
+            parentFrame.showMessage("Employee first name required");
             return false;
         }
         if (!Utilities.isValidString(txfLastName.getText())) {
-            parentFrame.showMessage("Customer last name required");
+            parentFrame.showMessage("Employee last name required");
             return false;
         }
 
         if (cmbGender.getSelectedIndex() == 0) {
-            parentFrame.showMessage("Select Customer gender");
+            parentFrame.showMessage("Select Employee gender");
             return false;
         }
 
