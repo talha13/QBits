@@ -21,7 +21,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
     private JMenuItem itemExit, itemChangePass;
     private JMenuItem itemNewSupplier, itemSupplierList, itemNewSupplierInvoice, itemNewSupplierTransaction, itemPurchaseReturn, itemsupplierInvoiceCRUD;
     private JMenuItem itemNewAccount, itemNewAccountTxn, itemNewAccountHead, itemNewGeneralTransaction;
-    private JMenuItem itemNewEmployee, itemEmployeeCRUD;
+    private JMenuItem itemNewEmployee, itemEmployeeCRUD, itemEmployeeTransaction;
     private JMenuItem itemNewProduct, itemNewDamageProduct, itemGenerateBarcode;
     private JMenuItem itemReportProductStock;
     private JMenuItem itemNewCustomer, itemCustomerList, itemSalesInvoice, itemSalesInvoiceCRUD, itemCustomerTransaction, itemCustomerReceivable;
@@ -63,6 +63,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
 
         itemNewEmployee = new JMenuItem("New Employee");
         itemEmployeeCRUD = new JMenuItem("Employee List");
+        itemEmployeeTransaction = new JMenuItem("Employee Transaction");
 
         itemNewProduct = new JMenuItem("New Product");
         itemNewDamageProduct = new JMenuItem("New Damage Product");
@@ -94,6 +95,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
 
         itemNewEmployee.addActionListener(this);
         itemEmployeeCRUD.addActionListener(this);
+        itemEmployeeTransaction.addActionListener(this);
 
         itemNewProduct.addActionListener(this);
         itemNewDamageProduct.addActionListener(this);
@@ -133,6 +135,8 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         menuEmployee.add(itemNewEmployee);
         menuEmployee.addSeparator();
         menuEmployee.add(itemEmployeeCRUD);
+        menuEmployee.addSeparator();
+        menuEmployee.add(itemEmployeeTransaction);
 
         menuProduct.add(itemNewProduct);
         menuProduct.add(itemNewDamageProduct);
@@ -198,9 +202,11 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         } else if (itemCustomerReceivable == e.getSource()) {
             parentFrame.customerReceivable();
         } else if (itemCustomerTransaction == e.getSource()) {
-            parentFrame.customerTransaction();        
+            parentFrame.customerTransaction();
         } else if (itemEmployeeCRUD == e.getSource()) {
             parentFrame.employeeCRUD();
+        } else if (itemEmployeeTransaction == e.getSource()) {
+            parentFrame.employeeTransaction();
         }
 
     }
