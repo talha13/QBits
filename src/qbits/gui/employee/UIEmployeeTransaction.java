@@ -4,7 +4,6 @@
  */
 package qbits.gui.employee;
 
-import qbits.gui.sales.*;
 import qbits.gui.purchase.*;
 import qbits.gui.account.*;
 import java.sql.ResultSet;
@@ -22,8 +21,6 @@ import qbits.configuration.Utilities;
 import qbits.db.MySQLDatabase;
 import qbits.db.QueryBuilder;
 import qbits.entity.Employee;
-import qbits.entity.Person;
-import qbits.entity.Invoice;
 import qbits.entity.Salary;
 import qbits.gui.common.UIParentFrame;
 import qbitserp.common.Message;
@@ -557,7 +554,7 @@ public class UIEmployeeTransaction extends javax.swing.JPanel {
         spDeduction.setEnabled(status);
         spBonus.setEnabled(status);
         spYear.setEnabled(status);
-        
+
         spAmount.setEnabled(!status);
     }
 
@@ -653,7 +650,7 @@ public class UIEmployeeTransaction extends javax.swing.JPanel {
 
             new SwingWorker<Object, Object>() {
                 @Override
-                protected Object doInBackground() throws Exception {                    
+                protected Object doInBackground() throws Exception {
                     changeStatus(false);
                     return loadEmployees(departments.get(cmbDepartment.getSelectedIndex()));
                 }
@@ -686,9 +683,9 @@ public class UIEmployeeTransaction extends javax.swing.JPanel {
 
     private void cmbEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEmployeeActionPerformed
         // TODO add your handling code here:
-        if(cmbEmployee.getSelectedIndex() > 0){
+        if (cmbEmployee.getSelectedIndex() > 0) {
             txfPhone.setText(employees.get(cmbEmployee.getSelectedIndex()).getContactNo());
-        }else{            
+        } else {
             txfPhone.setText("");
         }
     }//GEN-LAST:event_cmbEmployeeActionPerformed
@@ -731,7 +728,6 @@ public class UIEmployeeTransaction extends javax.swing.JPanel {
 
     private void cmbMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbMonthActionPerformed
         // TODO add your handling code here:
-        
     }//GEN-LAST:event_cmbMonthActionPerformed
 
     private void spBonusStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spBonusStateChanged
@@ -833,7 +829,6 @@ public class UIEmployeeTransaction extends javax.swing.JPanel {
             return false;
         }
 
-
         return true;
     }
 
@@ -841,7 +836,7 @@ public class UIEmployeeTransaction extends javax.swing.JPanel {
 
         MySQLDatabase database = new MySQLDatabase();
         String query = "";
-        int employeeID = -1;
+        Employee employee;
         QueryBuilder queryBuilder = new QueryBuilder();
 
         if (database.connect()) {
@@ -849,27 +844,52 @@ public class UIEmployeeTransaction extends javax.swing.JPanel {
             database.setAutoCommit(false);
 
             if (cmbEmployee.getSelectedIndex() > 0) {
-                employeeID = employees.get(cmbEmployee.getSelectedIndex()).getCustomerID();
+                employee = employees.get(cmbEmployee.getSelectedIndex());
+            } else {
+                return -1;
             }
 
-//            query = "INSERT INTO supplier_invoice_transaction VALUES(null,"
-//                    + "" + invoiceID + ", \"" + Utilities.dateForDB(dcTxnDate.getSelectedDate().getTime()) + "\",\"" + Utilities.dateForDB(dcClearOn.getSelectedDate().getTime()) + "\", " + rbClear.isSelected() + ", " + spAmount.getValue() + ", " + accounts.get(cmbAccount.getSelectedItem().toString()) + ""
-//                    + ", \"Withdraw\", \"" + taNotes.getText() + "\", " + parentFrame.currentUser.getUserID() + ", NOW()"
-//                    + ")";
-            queryBuilder.clear();
+            long txnID = 1;
 
-            queryBuilder.set("sale_invoice_id", "" + employeeID);
-            queryBuilder.setString("transaction_date", Utilities.dateForDB(dcTxnDate.getSelectedDate().getTime()));
-            queryBuilder.setString("clear_on", Utilities.dateForDB(dcClearOn.getSelectedDate().getTime()));
-            queryBuilder.set("is_clear", "" + rbClear.isSelected());
-            queryBuilder.set("paid_amount", "" + spAmount.getValue());
-            queryBuilder.set("account_id", "" + spAmount.getValue());
-            queryBuilder.setString("transaction_type", "Deposit");
-            queryBuilder.setString("notes", taNotes.getText());
-            queryBuilder.set("last_update_by", "" + parentFrame.currentUser.getUserID());
-            queryBuilder.set("last_update_time", "NOW()");
+            if (cmbTransactionType.getSelectedIndex() == 1) {
 
-            long txnID = database.insert(queryBuilder.insert("sale_invoice_transaction"));
+                queryBuilder.clear();
+                queryBuilder.set("employee_id", "" + employee.getCustomerID());
+                queryBuilder.set("salary_id", "" + employee.getSalary().getSalaryID());
+                queryBuilder.setString("voucher_no", "" + txfVoucherNo.getText());
+                queryBuilder.setString("transaction_date", "" + Utilities.dateForDB(dcTxnDate.getSelectedDate().getTime()));
+                queryBuilder.setString("clear_on", "" + Utilities.dateForDB(dcClearOn.getSelectedDate().getTime()));
+                queryBuilder.set("is_clear", "" + rbClear.isSelected());
+                queryBuilder.setString("month", cmbMonth.getSelectedItem().toString());
+                queryBuilder.set("year", "" + spYear.getValue());
+                queryBuilder.set("gross_salary", "" + spAmount.getValue());
+                queryBuilder.set("income_tax", "" + employee.getSalary().getBasic() * .01 * employee.getSalary().getIncomeTax());
+                queryBuilder.set("provident_fund", "" + employee.getSalary().getBasic() * .01 * employee.getSalary().getProvidentFund());
+                queryBuilder.set("bonus", "" + spBonus.getValue());
+                queryBuilder.set("deduction", "" + spDeduction.getValue());
+                queryBuilder.set("account_id", "" + accounts.get(cmbAccount.getSelectedItem().toString()));
+                queryBuilder.setString("notes", taNotes.getText());
+                queryBuilder.set("last_updated_by", "" + parentFrame.currentUser.getUserID());
+                queryBuilder.set("last_update_time", "NOW()");
+
+                txnID = database.insert(queryBuilder.insert("employee_salary_transaction"));
+
+            } else if (cmbTransactionType.getSelectedIndex() == 2) {
+
+                queryBuilder.clear();
+                queryBuilder.set("employee_id", "" + employee.getCustomerID());
+                queryBuilder.setString("voucher_no", "" + txfVoucherNo.getText());
+                queryBuilder.set("amount", "" + spAmount.getValue());
+                queryBuilder.setString("txn_date", "" + Utilities.dateForDB(dcTxnDate.getSelectedDate().getTime()));
+                queryBuilder.setString("clear_on", "" + Utilities.dateForDB(dcClearOn.getSelectedDate().getTime()));
+                queryBuilder.set("is_clear", "" + rbClear.isSelected());
+                queryBuilder.setString("notes", taNotes.getText());
+                queryBuilder.set("account_id", "" + accounts.get(cmbAccount.getSelectedItem().toString()));
+                queryBuilder.set("last_updated_by", "" + parentFrame.currentUser.getUserID());
+                queryBuilder.set("last_updated_time", "NOW()");
+
+                txnID = database.insert(queryBuilder.insert("employee_general_transaction"));
+            }
 
             if (txnID == -1) {
                 database.rollback();
@@ -1073,12 +1093,13 @@ public class UIEmployeeTransaction extends javax.swing.JPanel {
                 query.innerJoin("person", "person.person_id = employee.person_id");
                 query.innerJoin("employee_salary", "employee_salary.employee_salary_id = employee.salary_id");
                 query.where("employee.department_id = " + departmentID);
-                
+
                 ResultSet resultSet = database.get(query.get());
-                
+
                 while (resultSet.next()) {
 
                     Employee employee = new Employee();
+                    employee.setCustomerID(resultSet.getInt("employee.employee_id"));
                     employee.setFirstName(resultSet.getString("person.first_name"));
                     employee.setLastName(resultSet.getString("person.last_name"));
                     employee.setContactNo(resultSet.getString("person.contact_no"));
