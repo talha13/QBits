@@ -20,8 +20,8 @@ public class Message {
         return JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
     }
 
-    public static int warning(String message) {
-        return confirm(message, "Warning");
+    public static void warning(String message) {
+        JOptionPane.showMessageDialog(null, message);
     }
 }
 

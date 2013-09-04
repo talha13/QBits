@@ -31,6 +31,7 @@ import qbits.gui.purchase.product.UIProduct;
 import qbits.gui.purchase.product.UIProductBarcode;
 import qbits.gui.purchase.product.UIProductDamage;
 import qbits.gui.purchase.product.UIProductPurchaseReturn;
+import qbits.gui.purchase.product.UIProductStock;
 import qbits.gui.sales.UICustomer;
 import qbits.gui.sales.UICustomerCRUD;
 import qbits.gui.sales.UICustomerTransaction;
@@ -291,5 +292,11 @@ public class UIParentFrame extends JFrame implements WindowListener {
         
         UIEmployeeTransaction employeeTransaction = new UIEmployeeTransaction(this);
         addPanel(employeeTransaction, "new_employee_transaction");
+    }
+
+    public void productStocks() {
+        
+        UIProductStock productStock = new UIProductStock(this);
+        addPanel(productStock, "product_stock");
     }
 }

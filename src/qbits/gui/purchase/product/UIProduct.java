@@ -466,7 +466,7 @@ public class UIProduct extends javax.swing.JPanel {
             return false;
         }
 
-        if (Double.parseDouble(spCostPerUnit.getValue().toString()) <= 0.00 && Message.warning("Cost per unit: " + spCostPerUnit.getValue() + ". Do you want to continue?") == 1) {
+        if (Double.parseDouble(spCostPerUnit.getValue().toString()) <= 0.00 && Message.confirm("Cost per unit: " + spCostPerUnit.getValue() + ". Do you want to continue?", "Warning") == 1) {
             return false;
         }
 

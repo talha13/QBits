@@ -4,8 +4,10 @@
  */
 package qbits.entity;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import qbits.db.MySQLDatabase;
@@ -44,6 +46,6 @@ public class ProductSearch {
         } else {
             return -1;
         }
-
-    }
+    }          
+    
 }

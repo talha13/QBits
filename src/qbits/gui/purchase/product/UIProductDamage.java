@@ -296,7 +296,7 @@ public class UIProductDamage extends javax.swing.JPanel {
         cmbStatus.setEnabled(status);
         btnReset.setEnabled(status);
         btnSave.setEnabled(status);
-        
+
     }
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
@@ -476,7 +476,7 @@ public class UIProductDamage extends javax.swing.JPanel {
 
             query = "INSERT INTO product_damage VALUES(null, "
                     + "" + products.get(cmbName.getSelectedItem().toString()).getId() + ", " + spRPU.getValue() + ", " + spQuantity.getValue() + ","
-                    + "\"" + cmbStatus.getSelectedItem().toString() + "\", \"" + taNotes.getText() + "\", " + parentFrame.currentUser.getUserID() + ", NOW()"
+                    + "\"" + cmbStatus.getSelectedItem().toString() + "\", CURDATE(), \"" + taNotes.getText() + "\", " + parentFrame.currentUser.getUserID() + ", NOW()"
                     + ")";
 
             long damageProductID = database.insert(query);

@@ -4,6 +4,8 @@
  */
 package qbits.gui.common.crud;
 
+import javax.swing.JTable;
+
 /**
  *
  * @author Topu

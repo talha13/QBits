@@ -22,7 +22,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
     private JMenuItem itemNewSupplier, itemSupplierList, itemNewSupplierInvoice, itemNewSupplierTransaction, itemPurchaseReturn, itemsupplierInvoiceCRUD;
     private JMenuItem itemNewAccount, itemNewAccountTxn, itemNewAccountHead, itemNewGeneralTransaction;
     private JMenuItem itemNewEmployee, itemEmployeeCRUD, itemEmployeeTransaction;
-    private JMenuItem itemNewProduct, itemNewDamageProduct, itemGenerateBarcode;
+    private JMenuItem itemNewProduct, itemNewDamageProduct, itemGenerateBarcode, itemStocks;
     private JMenuItem itemReportProductStock;
     private JMenuItem itemNewCustomer, itemCustomerList, itemSalesInvoice, itemSalesInvoiceCRUD, itemCustomerTransaction, itemCustomerReceivable;
 
@@ -68,6 +68,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         itemNewProduct = new JMenuItem("New Product");
         itemNewDamageProduct = new JMenuItem("New Damage Product");
         itemGenerateBarcode = new JMenuItem("Generate Barcode");
+        itemStocks = new JMenuItem("Stocks");
 
         itemReportProductStock = new JMenuItem("Product Stock");
 
@@ -100,6 +101,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         itemNewProduct.addActionListener(this);
         itemNewDamageProduct.addActionListener(this);
         itemGenerateBarcode.addActionListener(this);
+        itemStocks.addActionListener(this);
 
         itemReportProductStock.addActionListener(this);
 
@@ -142,6 +144,8 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         menuProduct.add(itemNewDamageProduct);
         menuProduct.addSeparator();
         menuProduct.add(itemGenerateBarcode);
+        menuProduct.addSeparator();
+        menuProduct.add(itemStocks);
 
         menuReport.add(itemReportProductStock);
 
@@ -207,6 +211,8 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
             parentFrame.employeeCRUD();
         } else if (itemEmployeeTransaction == e.getSource()) {
             parentFrame.employeeTransaction();
+        }else if (itemStocks == e.getSource()) {
+            parentFrame.productStocks();
         }
 
     }

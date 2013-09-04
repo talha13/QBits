@@ -1934,6 +1934,7 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
                     queryBuilder.set("product_id", "" + product.getId());
                     queryBuilder.set("quantity", "" + product.getQuantity());
                     queryBuilder.set("rate_per_unit", "" + product.getRpu());
+                    queryBuilder.set("entry_date", "CURDATE()");
 
                     salesProductID = database.insert(queryBuilder.insert("sales_invoice_product"));
 

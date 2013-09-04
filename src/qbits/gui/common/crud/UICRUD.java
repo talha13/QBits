@@ -33,6 +33,7 @@ import qbits.db.QueryBuilder;
 public class UICRUD extends javax.swing.JPanel {
 
     private CRUDListener cRUDListener;
+    private CRUDDataLoaderListener cRUDDataLoaderListener;
     private QueryBuilder queryBuilder;
     private Vector columnNames;
     private TableRowSorter rowSorter;
@@ -60,6 +61,10 @@ public class UICRUD extends javax.swing.JPanel {
 
     public void addCRUDListener(CRUDListener listener) {
         cRUDListener = listener;
+    }
+
+    public void addCRUDDataLoaderListener(CRUDDataLoaderListener dataLoaderListener) {
+        cRUDDataLoaderListener = dataLoaderListener;
     }
 
     public void setTitle(String title) {
@@ -100,6 +105,10 @@ public class UICRUD extends javax.swing.JPanel {
                 }
             });
         }
+    }
+
+    public void populateRecords() {
+        cRUDDataLoaderListener.load(tableRecords);
     }
 
     public void setQueryBuilder(QueryBuilder queryBuilder) {
@@ -161,6 +170,11 @@ public class UICRUD extends javax.swing.JPanel {
             }
         }
 
+//        lblStatus.setText("Showing records " + count);
+        changeStatusMessage(count);
+    }
+
+    public void changeStatusMessage(int count) {
         lblStatus.setText("Showing records " + count);
     }
 
@@ -234,9 +248,9 @@ public class UICRUD extends javax.swing.JPanel {
         btnAdd = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Title", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Title", 2, 0));
 
-        pnlSubPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "SubTitle"));
+        pnlSubPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Records"));
 
         tableRecords.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

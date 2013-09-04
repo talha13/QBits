@@ -46,7 +46,7 @@ public class UISupplierCRUD extends UICRUD implements CRUDListener {
 
     public void removeRecord(int recordID) {
        
-        if(Message.warning("Realy want to remove Supplier?")==0){
+        if(Message.confirm("Realy want to remove Supplier?", "")==0){
             
             QueryBuilder builder = new QueryBuilder();
             builder.where("supplier_id ="+ recordID);
