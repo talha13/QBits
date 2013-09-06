@@ -7,6 +7,7 @@ package qbits.report.common;
 import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.sf.dynamicreports.examples.Templates;
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 import static net.sf.dynamicreports.report.builder.DynamicReports.cmp;
 import static net.sf.dynamicreports.report.builder.DynamicReports.stl;
@@ -66,8 +67,10 @@ public class Report extends JasperReportBuilder {
 
     private void buildReport() {
 
-        setColumnTitleStyle(columnTitleStyle).highlightDetailOddRows();
-
+        setTemplate(Templates.reportTemplate);
+        
+       
+        reportListener.pageFormat(this);
         title(reportBanner.get());
         reportListener.addColumns(this);
         reportListener.loadDataSource(this);

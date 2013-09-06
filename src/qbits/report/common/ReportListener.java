@@ -15,4 +15,5 @@ public interface ReportListener {
     
     public void loadDataSource(JasperReportBuilder reportBuilder);
     public void addColumns(JasperReportBuilder reportBuilder);
+    public void pageFormat(JasperReportBuilder reportBuilder);
 }

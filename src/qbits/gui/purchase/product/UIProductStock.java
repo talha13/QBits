@@ -4,21 +4,22 @@
  */
 package qbits.gui.purchase.product;
 
-import com.lowagie.text.pdf.hyphenation.TernaryTree;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import net.sf.dynamicreports.examples.DataSource;
+import net.sf.dynamicreports.examples.Templates;
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 import static net.sf.dynamicreports.report.builder.DynamicReports.col;
 import static net.sf.dynamicreports.report.builder.DynamicReports.type;
 import net.sf.dynamicreports.report.builder.column.TextColumnBuilder;
+import net.sf.dynamicreports.report.constant.PageOrientation;
+import net.sf.dynamicreports.report.constant.PageType;
 import qbits.entity.ProductStock;
 import qbits.gui.common.UIParentFrame;
 import qbits.gui.common.crud.CRUDDataLoaderListener;
@@ -123,10 +124,10 @@ public class UIProductStock extends UICRUD implements CRUDDataLoaderListener, CR
 
         DataSource dataSource = new DataSource("sl", "name", "category", "brand", "qty", "cpu", "rpu");
         int count = 0;
-        
+
         ArrayList<ProductStock> sortedStocks = sortProductStock(productStocks.values());
 
-        for (ProductStock productStock:sortedStocks) {
+        for (ProductStock productStock : sortedStocks) {
 
             count++;
             dataSource.add(count, productStock.getProduct().getName(), productStock.getProduct().getCategory(),
@@ -147,7 +148,7 @@ public class UIProductStock extends UICRUD implements CRUDDataLoaderListener, CR
                 return p1.getProduct().getCategory().compareTo(p2.getProduct().getCategory());
             }
         };
-        
+
         Collections.sort(sortedStocks, comparator);
 
         return sortedStocks;
@@ -167,5 +168,11 @@ public class UIProductStock extends UICRUD implements CRUDDataLoaderListener, CR
 
         reportBuilder.columns(slCol, nameCol, categoryCol, brandCol, quantityCol, cpuCol, rpuCol);
         reportBuilder.groupBy(categoryCol);
+
+    }
+
+    @Override
+    public void pageFormat(JasperReportBuilder reportBuilder) {
+        reportBuilder.setPageFormat(PageType.A4, PageOrientation.PORTRAIT);
     }
 }
