@@ -19,6 +19,25 @@ public class Product {
     private int categoryID;
     private double quantity;
     private String category;
+    private double notifyQuantity;
+
+    /**
+     * Get the value of notifyQuantity
+     *
+     * @return the value of notifyQuantity
+     */
+    public double getNotifyQuantity() {
+        return notifyQuantity;
+    }
+
+    /**
+     * Set the value of notifyQuantity
+     *
+     * @param notifyQuantity new value of notifyQuantity
+     */
+    public void setNotifyQuantity(double notifyQuantity) {
+        this.notifyQuantity = notifyQuantity;
+    }
 
     /**
      * Get the value of category

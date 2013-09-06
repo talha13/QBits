@@ -27,6 +27,7 @@ import qbits.gui.purchase.UISupplierCRUD;
 import qbits.gui.purchase.UISupplierInvoice;
 import qbits.gui.purchase.UISupplierInvoiceCRUD;
 import qbits.gui.purchase.UISupplierTransaction;
+import qbits.gui.purchase.product.UILowProductNotify;
 import qbits.gui.purchase.product.UIProduct;
 import qbits.gui.purchase.product.UIProductBarcode;
 import qbits.gui.purchase.product.UIProductDamage;
@@ -71,6 +72,7 @@ public class UIParentFrame extends JFrame implements WindowListener {
 
         setJMenuBar(new UIMenuBar(this));
 
+        home();
         showWindow();
     }
 
@@ -298,5 +300,11 @@ public class UIParentFrame extends JFrame implements WindowListener {
         
         UIProductStock productStock = new UIProductStock(this);
         addPanel(productStock, "product_stock");
+    }
+
+    public void home() {
+        
+        UILowProductNotify uILowProductNotify = new UILowProductNotify(this);
+        addPanel(uILowProductNotify, "low_quantity_product");
     }
 }

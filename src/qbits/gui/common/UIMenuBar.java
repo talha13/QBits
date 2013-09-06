@@ -18,7 +18,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
 
     private UIParentFrame parentFrame;
     private JMenu menuFile, menuPurchase, menuEmployee, menuSale, menuAccount, menuProduct, menuReport;
-    private JMenuItem itemExit, itemChangePass;
+    private JMenuItem itemExit, itemChangePass, itemHome;
     private JMenuItem itemNewSupplier, itemSupplierList, itemNewSupplierInvoice, itemNewSupplierTransaction, itemPurchaseReturn, itemsupplierInvoiceCRUD;
     private JMenuItem itemNewAccount, itemNewAccountTxn, itemNewAccountHead, itemNewGeneralTransaction;
     private JMenuItem itemNewEmployee, itemEmployeeCRUD, itemEmployeeTransaction;
@@ -39,6 +39,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         menuProduct = new JMenu("Product");
         menuReport = new JMenu("Report");
 
+        itemHome = new JMenuItem("Home");
         itemChangePass = new JMenuItem("Change Password");
         itemExit = new JMenuItem("Exit");
 
@@ -72,6 +73,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
 
         itemReportProductStock = new JMenuItem("Product Stock");
 
+        itemHome.addActionListener(this);
         itemChangePass.addActionListener(this);
         itemExit.addActionListener(this);
 
@@ -105,6 +107,8 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
 
         itemReportProductStock.addActionListener(this);
 
+        menuFile.add(itemHome);
+        menuFile.addSeparator();
         menuFile.add(itemChangePass);
         menuFile.addSeparator();
         menuFile.add(itemExit);
@@ -211,8 +215,10 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
             parentFrame.employeeCRUD();
         } else if (itemEmployeeTransaction == e.getSource()) {
             parentFrame.employeeTransaction();
-        }else if (itemStocks == e.getSource()) {
+        } else if (itemStocks == e.getSource()) {
             parentFrame.productStocks();
+        } else if (itemHome == e.getSource()) {
+            parentFrame.home();
         }
 
     }

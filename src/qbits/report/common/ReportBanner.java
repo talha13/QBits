@@ -13,6 +13,7 @@ import net.sf.dynamicreports.report.builder.component.TextFieldBuilder;
 import net.sf.dynamicreports.report.builder.component.VerticalListBuilder;
 import net.sf.dynamicreports.report.constant.HorizontalAlignment;
 import net.sf.dynamicreports.report.constant.VerticalAlignment;
+import qbits.configuration.Configuration;
 import qbits.configuration.Utilities;
 
 /**
@@ -35,7 +36,7 @@ public class ReportBanner extends HorizontalListBuilder {
 
         titleStyle = stl.style();
         titleStyle.setFontName("Times New Roman");
-        titleStyle.setFontSize(25);
+        titleStyle.setFontSize(16);
         titleStyle.bold();
         titleStyle.setVerticalAlignment(VerticalAlignment.MIDDLE);
         titleStyle.setHorizontalAlignment(HorizontalAlignment.LEFT);
@@ -56,7 +57,7 @@ public class ReportBanner extends HorizontalListBuilder {
 
     public HorizontalListBuilder get() {
 
-        TextFieldBuilder<String> title = cmp.text(strTitle);
+        TextFieldBuilder<String> title = cmp.text(Configuration.APP_TITLE);
         title.setStyle(titleStyle);
 
         TextFieldBuilder<String> subTitle = cmp.text(strSubTitle);
@@ -68,7 +69,7 @@ public class ReportBanner extends HorizontalListBuilder {
         HorizontalListBuilder horizontalListBuilder = cmp.horizontalList();
         horizontalListBuilder.add(subTitle, reportDateTitle);
 
-        add(logo);
+//        add(logo);
         add(title);
         newRow();
         add(cmp.verticalList().add(cmp.filler().setStyle(stl.style().setTopBorder(stl.pen2Point()))).add(3, cmp.filler().setStyle(stl.style().setTopBorder(stl.pen1Point()))));

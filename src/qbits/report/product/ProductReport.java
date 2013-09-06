@@ -319,7 +319,7 @@ public class ProductReport {
 
         productStocks.clear();
 
-        queryBuilder.select("product.product_id, product.title, product_category.title, product_brand.title, product_unit.title, product.rate_per_unit");
+        queryBuilder.select("product.product_id, product.title, product_category.title, product_brand.title, product_unit.title, product.rate_per_unit, product.notify_quantity");
         queryBuilder.innerJoin("product_category", "product_category.category_id = product.product_category_id");
         queryBuilder.leftJoin("product_brand", "product_brand.brand_id = product.product_brand_id");
         queryBuilder.leftJoin("product_unit", "product_unit.unit_id = product.product_unit_id");
@@ -339,6 +339,7 @@ public class ProductReport {
                     product.setName(resultSet.getString("product.title"));
                     product.setUnit(resultSet.getString("product_unit.title"));
                     product.setRpu(resultSet.getDouble("product.rate_per_unit"));
+                    product.setNotifyQuantity(resultSet.getDouble("product.notify_quantity"));
 
                     ProductStock productStock = new ProductStock();
                     productStock.setProduct(product);

@@ -59,7 +59,7 @@ public class Report extends JasperReportBuilder {
         buildReport();
 
         try {
-            show(true);
+            show(false);
         } catch (DRException ex) {
             Logger.getLogger(Report.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -68,13 +68,13 @@ public class Report extends JasperReportBuilder {
     private void buildReport() {
 
         setTemplate(Templates.reportTemplate);
-        
-       
+               
         reportListener.pageFormat(this);
         title(reportBanner.get());
         reportListener.addColumns(this);
         reportListener.loadDataSource(this);
         pageFooter(cmp.pageXofY());
         pageFooter(cmp.text(Configuration.COPYRIGHT_TEXT).setStyle(copyrightStyle).setHorizontalAlignment(HorizontalAlignment.RIGHT));
+        
     }
 }
