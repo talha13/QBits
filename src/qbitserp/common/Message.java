@@ -26,6 +26,5 @@ public class Message {
 }
 
 enum Gender {
-
     MALE, FEMALE;
 }

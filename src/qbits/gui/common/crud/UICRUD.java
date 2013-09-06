@@ -269,6 +269,11 @@ public class UICRUD extends javax.swing.JPanel {
         btnPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/qbits/resources/image/hp_printer (2).png"))); // NOI18N
         btnPrint.setText("Print");
         btnPrint.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        btnPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlSubPanelLayout = new javax.swing.GroupLayout(pnlSubPanel);
         pnlSubPanel.setLayout(pnlSubPanelLayout);
@@ -384,6 +389,12 @@ public class UICRUD extends javax.swing.JPanel {
         // TODO add your handling code here:
         filter();
     }//GEN-LAST:event_cmbSearchByActionPerformed
+
+    private void btnPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintActionPerformed
+        // TODO add your handling code here:
+        cRUDListener.printRecords();
+    }//GEN-LAST:event_btnPrintActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnPrint;

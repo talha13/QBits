@@ -5,9 +5,11 @@
 package qbits.gui.purchase;
 
 import java.util.Calendar;
+import qbits.entity.ProductStock;
 import qbits.gui.common.UIParentFrame;
 import qbits.gui.common.daterangepicker.DateRangeListener;
 import qbits.gui.common.daterangepicker.UIDateRangePicker;
+import qbits.report.product.ProductReport;
 
 /**
  *
@@ -27,7 +29,9 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
 
     @Override
     public void processDateRange(Calendar fromDate, Calendar toDate) {
-        System.out.println("FROM: " + fromDate.getTime());
-        System.out.println("TO: " + toDate.getTime());
+//        System.out.println("FROM: " + fromDate.getTime());
+//        System.out.println("TO: " + toDate.getTime());
+        ProductReport productReport = new ProductReport();
+        
     }
 }

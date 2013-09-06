@@ -5,16 +5,27 @@
 package qbits.gui.purchase.product;
 
 import com.lowagie.text.pdf.hyphenation.TernaryTree;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import net.sf.dynamicreports.examples.DataSource;
+import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
+import static net.sf.dynamicreports.report.builder.DynamicReports.col;
+import static net.sf.dynamicreports.report.builder.DynamicReports.type;
+import net.sf.dynamicreports.report.builder.column.TextColumnBuilder;
 import qbits.entity.ProductStock;
 import qbits.gui.common.UIParentFrame;
 import qbits.gui.common.crud.CRUDDataLoaderListener;
 import qbits.gui.common.crud.CRUDListener;
 import qbits.gui.common.crud.UICRUD;
+import qbits.report.common.Report;
+import qbits.report.common.ReportListener;
 import qbits.report.product.ProductReport;
 import qbitserp.common.Message;
 
@@ -22,10 +33,11 @@ import qbitserp.common.Message;
  *
  * @author Pipilika
  */
-public class UIProductStock extends UICRUD implements CRUDDataLoaderListener, CRUDListener {
+public class UIProductStock extends UICRUD implements CRUDDataLoaderListener, CRUDListener, ReportListener {
 
     private UIParentFrame parentFrame;
     private HashMap<Integer, ProductStock> productStocks;
+    private Report report;
 
     public UIProductStock(UIParentFrame frame) {
 
@@ -53,6 +65,10 @@ public class UIProductStock extends UICRUD implements CRUDDataLoaderListener, CR
 
         setColumns(columns);
         populateRecords();
+
+        report = new Report();
+        report.getReportBanner().setSubTitle("Product Stock Report");
+        report.addReportListener(this);
     }
 
     @Override
@@ -75,10 +91,10 @@ public class UIProductStock extends UICRUD implements CRUDDataLoaderListener, CR
             rowData.add(productStock.getQuantityLeft());
             rowData.add(productStock.getPurchaseProduct().getRpu());
             rowData.add(productStock.getProduct().getRpu());
-            
+
             tableModel.addRow(rowData);
         }
-        
+
         changeStatusMessage(count);
     }
 
@@ -89,7 +105,7 @@ public class UIProductStock extends UICRUD implements CRUDDataLoaderListener, CR
 
     @Override
     public void printRecords() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        report.showReport();
     }
 
     @Override
@@ -100,5 +116,56 @@ public class UIProductStock extends UICRUD implements CRUDDataLoaderListener, CR
     @Override
     public void addRecord() {
         Message.warning("Action not supported");
+    }
+
+    @Override
+    public void loadDataSource(JasperReportBuilder reportBuilder) {
+
+        DataSource dataSource = new DataSource("sl", "name", "category", "brand", "qty", "cpu", "rpu");
+        int count = 0;
+        
+        ArrayList<ProductStock> sortedStocks = sortProductStock(productStocks.values());
+
+        for (ProductStock productStock:sortedStocks) {
+
+            count++;
+            dataSource.add(count, productStock.getProduct().getName(), productStock.getProduct().getCategory(),
+                    productStock.getProduct().getBrand(), productStock.getQuantityLeft(), productStock.getPurchaseProduct().getRpu(),
+                    productStock.getProduct().getRpu());
+
+        }
+        reportBuilder.setDataSource(dataSource);
+    }
+
+    private ArrayList<ProductStock> sortProductStock(Collection<ProductStock> stocks) {
+
+        ArrayList<ProductStock> sortedStocks = new ArrayList<>(stocks);
+
+        Comparator<ProductStock> comparator = new Comparator<ProductStock>() {
+            @Override
+            public int compare(ProductStock p1, ProductStock p2) {
+                return p1.getProduct().getCategory().compareTo(p2.getProduct().getCategory());
+            }
+        };
+        
+        Collections.sort(sortedStocks, comparator);
+
+        return sortedStocks;
+
+    }
+
+    @Override
+    public void addColumns(JasperReportBuilder reportBuilder) {
+
+        TextColumnBuilder<Integer> slCol = col.column("SL#", "sl", type.integerType());
+        TextColumnBuilder<String> nameCol = col.column("Name", "name", type.stringType());
+        TextColumnBuilder<String> categoryCol = col.column("Category", "category", type.stringType());
+        TextColumnBuilder<String> brandCol = col.column("Brand", "brand", type.stringType());
+        TextColumnBuilder<Double> quantityCol = col.column("Quantity", "qty", type.doubleType());
+        TextColumnBuilder<Double> cpuCol = col.column("Cost Per Unit", "cpu", type.doubleType());
+        TextColumnBuilder<Double> rpuCol = col.column("Rate Per Unit", "rpu", type.doubleType());
+
+        reportBuilder.columns(slCol, nameCol, categoryCol, brandCol, quantityCol, cpuCol, rpuCol);
+        reportBuilder.groupBy(categoryCol);
     }
 }

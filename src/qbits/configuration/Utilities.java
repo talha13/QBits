@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  * @author Topu
  */
 public class Utilities {
-
+    
     public static String round(double thisValue) {
 
         DecimalFormat decimalFormat = new DecimalFormat("#.###");

@@ -127,6 +127,9 @@
             <Property name="text" type="java.lang.String" value="Print"/>
             <Property name="horizontalAlignment" type="int" value="11"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrintActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
