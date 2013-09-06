@@ -19,7 +19,7 @@ import qbits.db.MySQLDatabase;
 import qbits.db.QueryBuilder;
 import qbits.entity.Employee;
 import qbits.gui.common.UIParentFrame;
-import qbitserp.common.Message;
+import qbits.common.Message;
 
 /**
  *

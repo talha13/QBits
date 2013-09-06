@@ -43,7 +43,7 @@ import qbits.gui.common.UIParentFrame;
 import qbits.gui.common.searcher.SearcherListener;
 import qbits.gui.common.searcher.UISearcher;
 import qbits.gui.purchase.product.UIProductDamage;
-import qbitserp.common.Message;
+import qbits.common.Message;
 
 /**
  *

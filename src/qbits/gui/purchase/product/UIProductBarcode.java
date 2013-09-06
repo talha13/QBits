@@ -27,7 +27,7 @@ import qbits.entity.Product;
 import qbits.entity.ProductSearch;
 import qbits.gui.common.UIParentFrame;
 import qbits.report.product.ReportBarcode;
-import qbitserp.common.Message;
+import qbits.common.Message;
 
 /**
  *

@@ -15,7 +15,7 @@ import qbits.configuration.Utilities;
 import qbits.db.MySQLDatabase;
 import qbits.entity.Supplier;
 import qbits.gui.common.UIParentFrame;
-import qbitserp.common.Message;
+import qbits.common.Message;
 
 /**
  *

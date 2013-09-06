@@ -17,7 +17,7 @@ import qbits.db.QueryBuilder;
 import qbits.entity.Measurement;
 import qbits.entity.Product;
 import qbits.entity.ProductStock;
-import qbitserp.common.Message;
+import qbits.common.Message;
 
 /**
  *

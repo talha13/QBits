@@ -9,7 +9,7 @@ import qbits.gui.common.crud.CRUDListener;
 import java.util.Vector;
 import qbits.db.QueryBuilder;
 import qbits.gui.common.UIParentFrame;
-import qbitserp.common.Message;
+import qbits.common.Message;
 
 /**
  *

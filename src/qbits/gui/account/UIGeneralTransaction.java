@@ -19,7 +19,7 @@ import javax.swing.SwingWorker;
 import qbits.configuration.Utilities;
 import qbits.db.MySQLDatabase;
 import qbits.gui.common.UIParentFrame;
-import qbitserp.common.Message;
+import qbits.common.Message;
 
 /**
  *

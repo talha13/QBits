@@ -23,7 +23,7 @@ import qbits.db.QueryBuilder;
 import qbits.entity.Employee;
 import qbits.entity.Salary;
 import qbits.gui.common.UIParentFrame;
-import qbitserp.common.Message;
+import qbits.common.Message;
 
 /**
  *

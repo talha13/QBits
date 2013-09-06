@@ -24,7 +24,7 @@ import qbits.entity.Person;
 import qbits.entity.Supplier;
 import qbits.entity.Invoice;
 import qbits.gui.common.UIParentFrame;
-import qbitserp.common.Message;
+import qbits.common.Message;
 
 /**
  *

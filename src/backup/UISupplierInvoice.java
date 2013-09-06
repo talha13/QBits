@@ -28,7 +28,7 @@ import qbits.entity.Supplier;
 import qbits.gui.account.UIGeneralTransaction;
 import qbits.gui.common.UIParentFrame;
 import qbits.gui.purchase.product.UIProductDamage;
-import qbitserp.common.Message;
+import qbits.common.Message;
 
 /**
  *

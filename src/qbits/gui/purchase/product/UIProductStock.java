@@ -28,7 +28,7 @@ import qbits.gui.common.crud.UICRUD;
 import qbits.report.common.Report;
 import qbits.report.common.ReportListener;
 import qbits.report.product.ProductReport;
-import qbitserp.common.Message;
+import qbits.common.Message;
 
 /**
  *

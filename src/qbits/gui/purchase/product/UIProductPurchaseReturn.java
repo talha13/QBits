@@ -20,7 +20,7 @@ import qbits.entity.ProductSearch;
 import qbits.entity.Supplier;
 import qbits.gui.common.UIParentFrame;
 import qbits.gui.purchase.UISupplierInvoice;
-import qbitserp.common.Message;
+import qbits.common.Message;
 
 /**
  *
