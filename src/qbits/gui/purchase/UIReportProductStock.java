@@ -6,7 +6,6 @@ package qbits.gui.purchase;
 
 import java.util.Calendar;
 import net.sf.dynamicreports.examples.DataSource;
-import net.sf.dynamicreports.examples.Templates;
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 import static net.sf.dynamicreports.report.builder.DynamicReports.col;
 import static net.sf.dynamicreports.report.builder.DynamicReports.grid;
@@ -15,19 +14,16 @@ import net.sf.dynamicreports.report.builder.column.TextColumnBuilder;
 import net.sf.dynamicreports.report.builder.grid.ColumnTitleGroupBuilder;
 import net.sf.dynamicreports.report.constant.PageOrientation;
 import net.sf.dynamicreports.report.constant.PageType;
-import net.sf.jasperreports.data.cache.DataSnapshot;
-import org.bouncycastle.asn1.cmp.CMPCertificate;
-import qbits.entity.ProductStock;
 import qbits.gui.common.UIParentFrame;
 import qbits.gui.common.daterangepicker.DateRangeListener;
 import qbits.gui.common.daterangepicker.UIDateRangePicker;
 import qbits.report.common.Report;
 import qbits.report.common.ReportListener;
-import qbits.report.product.ProductReport;
 import static net.sf.dynamicreports.report.builder.DynamicReports.stl;
 import net.sf.dynamicreports.report.builder.style.StyleBuilder;
 import net.sf.dynamicreports.report.constant.HorizontalAlignment;
 import net.sf.dynamicreports.report.constant.VerticalAlignment;
+import qbits.configuration.Utilities;
 
 /**
  *
@@ -43,7 +39,6 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
         super();
         this.parentFrame = frame;
         report = new Report();
-
         report.addReportListener(this);
         setTitle("Product Stock");
         addDateRangeListener(this);
@@ -55,9 +50,9 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
 //        System.out.println("FROM: " + fromDate.getTime());
 //        System.out.println("TO: " + toDate.getTime());
 //        ProductReport productReport = new ProductReport();
+        report.getReportBanner().setSubTitle("Product Stock From Date: " + Utilities.getFormattedDate(fromDate.getTime())
+                + " To Date: " + Utilities.getFormattedDate(toDate.getTime()));
         report.showReport();
-
-
     }
 
     @Override
@@ -84,7 +79,7 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 
         StyleBuilder coloumnData = stl.style().setFontSize(8).setVerticalAlignment(VerticalAlignment.MIDDLE).setHorizontalAlignment(HorizontalAlignment.CENTER);
-        
+
         TextColumnBuilder<Integer> sl = col.column("SL#", "sl", type.integerType());
         TextColumnBuilder<String> productDesp = col.column("Product Description", "desp", type.stringType()).setFixedWidth(100);
         TextColumnBuilder<String> productUnit = col.column("Unit", "punit", type.stringType());
@@ -108,13 +103,13 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
         TextColumnBuilder<Double> closeCPU = col.column("CPU", "closecpu", type.doubleType());
         TextColumnBuilder<Double> closeQty = col.column("QTY", "closeqty", type.doubleType());
         TextColumnBuilder<Double> closeTotal = col.column("Total", "closetotal", type.doubleType());
-      
+
         ColumnTitleGroupBuilder openGroup = grid.titleGroup("Opening", opCPU, opQty, opTotal);
         ColumnTitleGroupBuilder inGroup = grid.titleGroup("Inward", inCPU, inQty, inTotal);
         ColumnTitleGroupBuilder outGroup = grid.titleGroup("Outward", outCPU, outQty, outTotal);
         ColumnTitleGroupBuilder wstgGroup = grid.titleGroup("Wastage", wstgCPU, wstgQty, wstgTotal);
         ColumnTitleGroupBuilder closeGroup = grid.titleGroup("Closing", closeCPU, closeQty, closeTotal);
-        
+
         sl.setStyle(coloumnData);
         productDesp.setStyle(coloumnData);
         productUnit.setStyle(coloumnData);
@@ -133,7 +128,7 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
         wstgCPU.setStyle(coloumnData);
         wstgQty.setStyle(coloumnData);
         wstgTotal.setStyle(coloumnData);
-           
+
         reportBuilder.columnGrid(sl, productDesp, productUnit, openGroup, inGroup, outGroup, wstgGroup, closeGroup);
         reportBuilder.columns(sl, productDesp, productUnit, opCPU, opQty, opTotal, inCPU, inQty, inTotal,
                 outCPU, outQty, outTotal, wstgCPU, wstgQty, wstgTotal, closeCPU, closeQty, closeTotal);

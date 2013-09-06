@@ -4,13 +4,16 @@
  */
 package qbits.report.common;
 
+import java.util.Calendar;
 import net.sf.dynamicreports.report.builder.component.HorizontalListBuilder;
 import net.sf.dynamicreports.report.builder.component.ImageBuilder;
 import net.sf.dynamicreports.report.builder.style.StyleBuilder;
 import static net.sf.dynamicreports.report.builder.DynamicReports.*;
 import net.sf.dynamicreports.report.builder.component.TextFieldBuilder;
+import net.sf.dynamicreports.report.builder.component.VerticalListBuilder;
 import net.sf.dynamicreports.report.constant.HorizontalAlignment;
 import net.sf.dynamicreports.report.constant.VerticalAlignment;
+import qbits.configuration.Utilities;
 
 /**
  *
@@ -40,7 +43,7 @@ public class ReportBanner extends HorizontalListBuilder {
         subTitleStyle = stl.style();
         subTitleStyle.setFontName("Times New Roman");
         subTitleStyle.setFontSize(12);
-        subTitleStyle.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        subTitleStyle.setHorizontalAlignment(HorizontalAlignment.LEFT);
     }
 
     public void setTitle(String strTitle) {
@@ -58,13 +61,19 @@ public class ReportBanner extends HorizontalListBuilder {
 
         TextFieldBuilder<String> subTitle = cmp.text(strSubTitle);
         subTitle.setStyle(subTitleStyle);
+        
+        TextFieldBuilder<String> reportDateTitle = cmp.text("Reporting Date: "+ Utilities.getFormattedDate(Calendar.getInstance().getTime()));
+        reportDateTitle.setStyle(stl.style().setHorizontalAlignment(HorizontalAlignment.RIGHT));
+        
+        HorizontalListBuilder horizontalListBuilder = cmp.horizontalList();
+        horizontalListBuilder.add(subTitle, reportDateTitle);
 
         add(logo);
         add(title);
         newRow();
         add(cmp.verticalList().add(cmp.filler().setStyle(stl.style().setTopBorder(stl.pen2Point()))).add(3, cmp.filler().setStyle(stl.style().setTopBorder(stl.pen1Point()))));
         newRow();
-        add(subTitle);
+        add(horizontalListBuilder);
 
         return this;
     }
