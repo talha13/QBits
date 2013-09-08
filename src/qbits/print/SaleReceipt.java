@@ -13,7 +13,9 @@ import java.awt.print.Paper;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.util.ArrayList;
 import qbits.configuration.Utilities;
+import qbits.entity.Product;
 
 /**
  *
@@ -21,8 +23,43 @@ import qbits.configuration.Utilities;
  */
 public class SaleReceipt implements Printable {
 
-    int pageWidth = 288;
-    int margin = 15;
+    private int pageWidth = 288;
+    private int margin = 15;
+    private double total;
+    private double vat;
+    private double discount;
+    private double payable;
+    private double paid;
+    private double change;
+    private ArrayList<Product> selectedProducts;
+
+    public void setSelectedProducts(ArrayList<Product> selectedProducts) {
+        this.selectedProducts = selectedProducts;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public void setVat(double vat) {
+        this.vat = vat;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
+    }
+
+    public void setPayable(double payable) {
+        this.payable = payable;
+    }
+
+    public void setPaid(double paid) {
+        this.paid = paid;
+    }
+
+    public void setChange(double change) {
+        this.change = change;
+    }
 
     public int print(Graphics g, PageFormat pf, int page)
             throws PrinterException {
@@ -58,17 +95,28 @@ public class SaleReceipt implements Printable {
 //        y = drawLeft("SL#  ITEMS           QTY   PRICE     Total     ", font, g, y + 5);
         y = drawItem("SL#", "ITEMS", "QTY", "PRICE", "TOTAL", g, y + 15);
         y = drawLine(g, y + 5);
-        y = drawItem("1", "Bangladesh ItemASSSSSSSSSSS", "25.00", "1250.00", "125987.00", g, y + 15);
-        y = drawItem("1", "Bangladesh Item", "25.00", "1250.00", "125987", g, y);
+//        y = drawItem("1", "Bangladesh ItemASSSSSSSSSSS", "25.00", "1250.00", "125987.00", g, y + 15);
+//        y = drawItem("1", "Bangladesh Item", "25.00", "1250.00", "125987", g, y);
+
+        for (int count = 0; count < selectedProducts.size(); count++) {
+
+            if (count == 0) {
+                y = drawItem("" + (count + 1), selectedProducts.get(count).getName() + "-" + selectedProducts.get(count).getCategory(), "" + selectedProducts.get(count).getQuantity(), "" + selectedProducts.get(count).getRpu(), "" + (selectedProducts.get(count).getQuantity() * selectedProducts.get(count).getRpu()), g, y + 15);
+            } else {
+                y = drawItem("" + (count + 1), selectedProducts.get(count).getName() + "-" + selectedProducts.get(count).getCategory(), "" + selectedProducts.get(count).getQuantity(), "" + selectedProducts.get(count).getRpu(), "" + (selectedProducts.get(count).getQuantity() * selectedProducts.get(count).getRpu()), g, y);
+            }
+        }
+
         y = drawLine(g, y);
-        y = drawItem("", "", "", "Total", "12005987", g, y + 10);
-        y = drawItem("", "", "", "Vat", "12005987", g, y);
-        y = drawItem("", "", "", "Discount", "12005987", g, y);
+        y = drawItem("", "", "", "Total", "" + total, g, y + 10);
+        y = drawItem("", "", "", "Vat", "" + vat, g, y);
+        y = drawItem("", "", "", "Discount", "" + discount, g, y);
         y = drawLine(g, y);
-        y = drawItem("", "", "", "Payable", "12005987", g, y + 10);
+        y = drawItem("", "", "", "Payable", "" + payable, g, y + 10);
         y = drawLine(g, y);
-        y = drawItem("", "", "", "Paid", "12005987", g, y + 10);
-        y = drawItem("", "", "", "Return", "12005987", g, y);
+        y = drawItem("", "", "", "Paid", "" + paid, g, y + 10);
+        y = drawItem("", "", "", (change > 0 ? "Due" : "Return"), "" + change, g, y);
+        
         return PAGE_EXISTS;
     }
 

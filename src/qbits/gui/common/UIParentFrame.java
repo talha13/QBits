@@ -72,8 +72,13 @@ public class UIParentFrame extends JFrame implements WindowListener {
 
         setJMenuBar(new UIMenuBar(this));
 
+        scheduleTasks();
         home();
         showWindow();
+    }
+    
+    private void scheduleTasks(){
+        
     }
 
     public void showWindow() {

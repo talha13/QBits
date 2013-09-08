@@ -44,6 +44,7 @@ import qbits.gui.common.searcher.SearcherListener;
 import qbits.gui.common.searcher.UISearcher;
 import qbits.gui.purchase.product.UIProductDamage;
 import qbits.common.Message;
+import qbits.print.SaleReceipt;
 
 /**
  *
@@ -69,6 +70,7 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
     private boolean isUpdate;
     private ButtonGroup clearButtonGroup;
     private Invoice customerInvoice;
+    private boolean isPrint;
 
     /**
      * Creates new form UICustomerInvoice
@@ -361,8 +363,9 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
         jPanel7 = new javax.swing.JPanel();
         btnReset = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
+        btnSave1 = new javax.swing.JButton();
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Sales Invoice", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Sales Invoice", 2, 0));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Product"));
 
@@ -830,16 +833,27 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
             }
         });
 
+        btnSave1.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        btnSave1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/qbits/resources/image/Save-icon.png"))); // NOI18N
+        btnSave1.setText("Save & Print");
+        btnSave1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSave1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(183, 183, 183)
                 .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSave1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnReset)
-                .addGap(252, 252, 252))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -847,7 +861,8 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSave)
-                    .addComponent(btnReset))
+                    .addComponent(btnReset)
+                    .addComponent(btnSave1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1067,8 +1082,7 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
         }
     }//GEN-LAST:event_txfCodeActionPerformed
 
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        // TODO add your handling code here:
+    private void saveInvoice() {
 
         if (!check()) {
             return;
@@ -1107,6 +1121,18 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
                             changeStatusPaymentPanel(true);
                         }
 
+                        if (isPrint) {
+                            SaleReceipt receipt = new SaleReceipt();
+                            receipt.setTotal(subtotal);
+                            receipt.setDiscount(discount);
+                            receipt.setVat(vat);
+                            receipt.setPayable(netPayable);
+                            receipt.setPaid(paid);
+                            receipt.setChange(netPayable - paid);
+                            receipt.setSelectedProducts(selectedProducts);
+                            receipt.printReport();
+                        }
+
                         reset();
                         parentFrame.showMessage("Sales invoice saved");
                     } else if (get() == -1) {
@@ -1119,7 +1145,12 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
                 }
             }
         }.execute();
+    }
 
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+        isPrint = false;
+        saveInvoice();
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
@@ -1189,10 +1220,17 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
 
 
     }//GEN-LAST:event_txfDiscountActionPerformed
+
+    private void btnSave1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSave1ActionPerformed
+        // TODO add your handling code here:
+        isPrint = true;
+        saveInvoice();
+    }//GEN-LAST:event_btnSave1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnSave1;
     private javax.swing.JButton btnSearch;
     private javax.swing.JComboBox cmbAccounts;
     private javax.swing.JComboBox cmbCategory;
@@ -1752,6 +1790,7 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
                     queryBuilder.set("product_id", "" + product.getId());
                     queryBuilder.set("quantity", "" + product.getQuantity());
                     queryBuilder.set("rate_per_unit", "" + product.getRpu());
+                    queryBuilder.set("entry_date", "CURDATE()");
 
                     salesLProductID = database.insert(queryBuilder.insert("sales_invoice_product"));
 
