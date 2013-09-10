@@ -38,8 +38,6 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
 
         super();
         this.parentFrame = frame;
-        report = new Report();
-        report.addReportListener(this);
         setTitle("Product Stock");
         addDateRangeListener(this);
 
@@ -50,6 +48,8 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
 //        System.out.println("FROM: " + fromDate.getTime());
 //        System.out.println("TO: " + toDate.getTime());
 //        ProductReport productReport = new ProductReport();
+        report = new Report();
+        report.addReportListener(this);
         report.getReportBanner().setSubTitle("Product Stock From Date: " + Utilities.getFormattedDate(fromDate.getTime())
                 + " To Date: " + Utilities.getFormattedDate(toDate.getTime()));
         report.showReport();

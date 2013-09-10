@@ -26,12 +26,23 @@ import qbits.common.Message;
 public class ProductReport {
 
     public HashMap<Integer, ProductStock> getCurrentStocks() {
+        return getStocks(null, null);
+    }
+
+    public HashMap<Integer, ProductStock> getStocks(Date startDate, Date endDate) {
+
+        ArrayList<Measurement> wastageProducts = getWastagedProduct(startDate, endDate);
+        ArrayList<Measurement> returnedProducts = getReturnedProduct(startDate, endDate);
+        ArrayList<Measurement> purchasedProducts = getPurchasedProduct(startDate, endDate);
+        ArrayList<Measurement> soldProducts = getSoldProduct(startDate, endDate);
+
+        return mergeMeasurments(wastageProducts, returnedProducts, purchasedProducts, soldProducts);
+    }
+
+    public HashMap<Integer, ProductStock> mergeMeasurments(ArrayList<Measurement> wastageProducts, ArrayList<Measurement> returnedProducts,
+            ArrayList<Measurement> purchasedProducts, ArrayList<Measurement> soldProducts) {
 
         HashMap<Integer, ProductStock> productStocks = getProducts();
-        ArrayList<Measurement> wastageProducts = getWastagedProduct(null, null);
-        ArrayList<Measurement> returnedProducts = getReturnedProduct(null, null);
-        ArrayList<Measurement> purchasedProducts = getPurchasedProduct(null, null);
-        ArrayList<Measurement> soldProducts = getSoldProduct(null, null);
 
         // populate wastaged products
         for (Measurement m : wastageProducts) {
@@ -96,7 +107,7 @@ public class ProductReport {
                 System.err.println("Sold Product Not Found " + m.getProductID());
             }
         }
-        
+
         return productStocks;
     }
 

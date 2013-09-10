@@ -115,7 +115,7 @@ public class SaleReceipt implements Printable {
         y = drawItem("", "", "", "Payable", "" + payable, g, y + 10);
         y = drawLine(g, y);
         y = drawItem("", "", "", "Paid", "" + paid, g, y + 10);
-        y = drawItem("", "", "", (change > 0 ? "Due" : "Return"), "" + change, g, y);
+        y = drawItem("", "", "", (change > 0 ? "Due" : "Return"), "" + Math.abs(change), g, y);
         
         return PAGE_EXISTS;
     }
