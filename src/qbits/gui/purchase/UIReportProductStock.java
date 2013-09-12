@@ -4,7 +4,12 @@
  */
 package qbits.gui.purchase;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import net.sf.dynamicreports.examples.DataSource;
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
 import static net.sf.dynamicreports.report.builder.DynamicReports.col;
@@ -24,6 +29,8 @@ import net.sf.dynamicreports.report.builder.style.StyleBuilder;
 import net.sf.dynamicreports.report.constant.HorizontalAlignment;
 import net.sf.dynamicreports.report.constant.VerticalAlignment;
 import qbits.configuration.Utilities;
+import qbits.entity.ProductStock;
+import qbits.report.product.ProductReport;
 
 /**
  *
@@ -33,6 +40,8 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
 
     private UIParentFrame parentFrame;
     private Report report;
+    private HashMap<Integer, ProductStock> openingStocks;
+    private HashMap<Integer, ProductStock> currentStock;
 
     public UIReportProductStock(UIParentFrame frame) {
 
@@ -40,14 +49,15 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
         this.parentFrame = frame;
         setTitle("Product Stock");
         addDateRangeListener(this);
-
     }
 
     @Override
     public void processDateRange(Calendar fromDate, Calendar toDate) {
-//        System.out.println("FROM: " + fromDate.getTime());
-//        System.out.println("TO: " + toDate.getTime());
-//        ProductReport productReport = new ProductReport();
+        ProductReport productReport = new ProductReport();
+
+        openingStocks = productReport.getStocks(null, fromDate.getTime());
+        currentStock = productReport.getStocks(fromDate.getTime(), toDate.getTime());
+
         report = new Report();
         report.addReportListener(this);
         report.getReportBanner().setSubTitle("Product Stock From Date: " + Utilities.getFormattedDate(fromDate.getTime())
@@ -55,21 +65,85 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
         report.showReport();
     }
 
+    private ArrayList<ProductStock> sortProductStock(Collection<ProductStock> stocks) {
+
+        ArrayList<ProductStock> sortedStocks = new ArrayList<>(stocks);
+
+        Comparator<ProductStock> comparator = new Comparator<ProductStock>() {
+            @Override
+            public int compare(ProductStock p1, ProductStock p2) {
+                return p1.getProduct().getCategory().compareTo(p2.getProduct().getCategory());
+            }
+        };
+
+        Collections.sort(sortedStocks, comparator);
+
+        return sortedStocks;
+
+    }
+
     @Override
     public void loadDataSource(JasperReportBuilder reportBuilder) {
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 
-        DataSource dataSource = new DataSource("sl", "desp", "punit", "opcpu", "opqty", "optotal", "incpu", "inqty", "intotal", "outcpu", "outqty", "outtotal", "wstgcpu", "wstgqty", "wstgtotal", "closecpu", "closeqty", "closetotal");
+        DataSource dataSource = new DataSource("category", "sl", "desp", "punit", "opcpu", "opqty", "optotal", "incpu", "inqty", "intotal", "outcpu", "outqty", "outtotal", "wstgcpu", "wstgqty", "wstgtotal", "closecpu", "closeqty", "closetotal");
 
-        dataSource.add(1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
-        dataSource.add(1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
-        dataSource.add(1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
-        dataSource.add(1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
-        dataSource.add(1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
-        dataSource.add(1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
-        dataSource.add(1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
-        dataSource.add(1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
-        dataSource.add(1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
+        ArrayList<ProductStock> productStocks = sortProductStock(currentStock.values());
+        ArrayList<Object> row = new ArrayList<>();
+        int count = 1;
+        double closingQty = 0;
+        ProductStock openingStock = null;
+
+        for (ProductStock productStock : productStocks) {
+
+            row.clear();
+            row.add(productStock.getProduct().getCategory());
+            row.add(count);
+            row.add(productStock.getProduct().getName() + "-" + productStock.getProduct().getBrand());
+            row.add(productStock.getProduct().getUnit());
+
+            if (openingStocks.containsKey(productStock.getProduct().getId())) {
+                openingStock = openingStocks.get(productStock.getProduct().getId());
+                row.add(openingStock.getProduct().getRpu());
+                row.add(openingStock.getQuantityLeft());
+                row.add(openingStock.getProduct().getRpu() * openingStock.getQuantityLeft());
+            } else {
+                openingStock = null;
+                row.add(0.0);
+                row.add(0);
+                row.add(0.0);
+            }
+
+            row.add(productStock.getPurchaseProduct().getRpu());
+            row.add(productStock.getPurchaseProduct().getQuantity());
+            row.add(productStock.getPurchaseProduct().getTotal());
+
+            row.add(productStock.getSaleProduct().getRpu());
+            row.add(productStock.getSaleProduct().getQuantity());
+            row.add(productStock.getSaleProduct().getTotal());
+
+            row.add(productStock.getWastageProduct().getRpu());
+            row.add(productStock.getWastageProduct().getQuantity());
+            row.add(productStock.getWastageProduct().getTotal());
+
+            closingQty = ((openingStock == null) ? 0 : openingStock.getQuantityLeft()) + productStock.getPurchaseProduct().getQuantity() - productStock.getWastageProduct().getQuantity() - productStock.getSaleProduct().getQuantity() - productStock.getReturnProduct().getQuantity();
+            row.add(productStock.getPurchaseProduct().getRpu());
+            row.add(closingQty);
+            row.add(productStock.getPurchaseProduct().getRpu() * closingQty);
+
+            dataSource.add(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5), row.get(6), row.get(7), row.get(8), row.get(9), row.get(10), row.get(11), row.get(12), row.get(13), row.get(14), row.get(15), row.get(16), row.get(17), row.get(18));
+            count++;
+        }
+
+//        dataSource.add("Cat", 1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
+//        dataSource.add(1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
+//        dataSource.add(1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
+//        dataSource.add(1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
+//        dataSource.add(1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
+//        dataSource.add(1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
+//        dataSource.add(1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
+//        dataSource.add(1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
+//        dataSource.add(1, "Product Description", "unit", 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5, 12145897.5);
 
         reportBuilder.setDataSource(dataSource);
     }
@@ -80,6 +154,7 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
 
         StyleBuilder coloumnData = stl.style().setFontSize(8).setVerticalAlignment(VerticalAlignment.MIDDLE).setHorizontalAlignment(HorizontalAlignment.CENTER);
 
+        TextColumnBuilder<String> category = col.column("Category", "category", type.stringType());
         TextColumnBuilder<Integer> sl = col.column("SL#", "sl", type.integerType());
         TextColumnBuilder<String> productDesp = col.column("Product Description", "desp", type.stringType()).setFixedWidth(100);
         TextColumnBuilder<String> productUnit = col.column("Unit", "punit", type.stringType());
@@ -110,6 +185,7 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
         ColumnTitleGroupBuilder wstgGroup = grid.titleGroup("Wastage", wstgCPU, wstgQty, wstgTotal);
         ColumnTitleGroupBuilder closeGroup = grid.titleGroup("Closing", closeCPU, closeQty, closeTotal);
 
+        category.setStyle(coloumnData);
         sl.setStyle(coloumnData);
         productDesp.setStyle(coloumnData);
         productUnit.setStyle(coloumnData);
@@ -129,9 +205,11 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
         wstgQty.setStyle(coloumnData);
         wstgTotal.setStyle(coloumnData);
 
-        reportBuilder.columnGrid(sl, productDesp, productUnit, openGroup, inGroup, outGroup, wstgGroup, closeGroup);
-        reportBuilder.columns(sl, productDesp, productUnit, opCPU, opQty, opTotal, inCPU, inQty, inTotal,
+        reportBuilder.columnGrid(category, sl, productDesp, productUnit, openGroup, inGroup, outGroup, wstgGroup, closeGroup);
+        reportBuilder.columns(category, sl, productDesp, productUnit, opCPU, opQty, opTotal, inCPU, inQty, inTotal,
                 outCPU, outQty, outTotal, wstgCPU, wstgQty, wstgTotal, closeCPU, closeQty, closeTotal);
+
+        reportBuilder.groupBy(category);
 
     }
 

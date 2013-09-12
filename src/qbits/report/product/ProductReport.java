@@ -54,11 +54,15 @@ public class ProductReport {
                 productStock.getWastageProduct().setRpu(m.getRpu());
                 productStock.getWastageProduct().setTotal(m.getTotal());
                 productStock.setQuantityLeft(productStock.getQuantityLeft() - m.getQuantity());
-
+//                productStocks.put(m.getProductID(), productStock);
+//                productStocks.get(m.getProductID()).setQuantityLeft(productStock.getQuantityLeft() - m.getQuantity());
+                System.out.println("WCount: " + productStocks.get(m.getProductID()).getQuantityLeft());
             } else {
                 System.err.println("Wastage Product Not Found " + m.getProductID());
             }
         }
+
+
 
         // populate returned products
         for (Measurement m : returnedProducts) {
@@ -70,7 +74,9 @@ public class ProductReport {
                 productStock.getReturnProduct().setRpu(m.getRpu());
                 productStock.getReturnProduct().setTotal(m.getTotal());
                 productStock.setQuantityLeft(productStock.getQuantityLeft() - m.getQuantity());
-
+//                productStocks.put(m.getProductID(), productStock);
+//                productStocks.get(m.getProductID()).setQuantityLeft(productStock.getQuantityLeft() - m.getQuantity());
+//                System.out.println("RCount: " + productStocks.get(m.getProductID()).getQuantityLeft());
             } else {
                 System.err.println("Returned Product Not Found " + m.getProductID());
             }
@@ -86,7 +92,9 @@ public class ProductReport {
                 productStock.getPurchaseProduct().setRpu(m.getRpu());
                 productStock.getPurchaseProduct().setTotal(m.getTotal());
                 productStock.setQuantityLeft(productStock.getQuantityLeft() + m.getQuantity());
-
+//                productStocks.put(m.getProductID(), productStock);
+//                productStocks.get(m.getProductID()).setQuantityLeft(productStock.getQuantityLeft() + m.getQuantity());
+//                System.out.println("PCount: " + productStocks.get(m.getProductID()).getQuantityLeft());
             } else {
                 System.err.println("Purchased Product Not Found " + m.getProductID());
             }
@@ -102,7 +110,9 @@ public class ProductReport {
                 productStock.getSaleProduct().setRpu(m.getRpu());
                 productStock.getSaleProduct().setTotal(m.getTotal());
                 productStock.setQuantityLeft(productStock.getQuantityLeft() - m.getQuantity());
-
+//                productStocks.put(m.getProductID(), productStock);
+//                productStocks.get(m.getProductID()).setQuantityLeft(productStock.getQuantityLeft() - m.getQuantity());
+//                System.out.println("SCount: " + productStocks.get(m.getProductID()).getQuantityLeft());
             } else {
                 System.err.println("Sold Product Not Found " + m.getProductID());
             }
@@ -123,16 +133,16 @@ public class ProductReport {
 
         queryBuilder.clear();
 
-        queryBuilder.select("product_id, SUM(rate_per_unit) AS total_rate, SUM(quantity) AS total_qty");
+        queryBuilder.select("product_id, SUM(rate_per_unit * quantity) AS total_rate, SUM(quantity) AS total_qty");
         queryBuilder.from("product_damage");
 
         if (startDate != null && endDate != null) { // between tow dates
-            queryBuilder.where("entry_date >= " + Utilities.dateForDB(startDate));
-            queryBuilder.where("entry_date <= " + Utilities.dateForDB(endDate));
+            queryBuilder.where("entry_date >= '" + Utilities.dateForDB(startDate) + "'");
+            queryBuilder.where("entry_date <= '" + Utilities.dateForDB(endDate) + "'");
         } else if (startDate != null && endDate == null) { // defore start date
-            queryBuilder.where("entry_date < " + Utilities.dateForDB(startDate));
+            queryBuilder.where("entry_date > '" + Utilities.dateForDB(startDate) + "'");
         } else if (startDate == null && endDate != null) { // after end date
-            queryBuilder.where("entry_date > " + Utilities.dateForDB(endDate));
+            queryBuilder.where("entry_date < '" + Utilities.dateForDB(endDate) + "'");
         }
 
         queryBuilder.groupBy("product_id");
@@ -175,16 +185,16 @@ public class ProductReport {
 
         queryBuilder.clear();
 
-        queryBuilder.select("product_id, SUM(rate_per_unit) AS total_rate, SUM(quantity) AS total_qty");
+        queryBuilder.select("product_id, SUM(rate_per_unit * quantity) AS total_rate, SUM(quantity) AS total_qty");
         queryBuilder.from("product_return_to_supplier");
 
         if (startDate != null && endDate != null) { // between tow dates
-            queryBuilder.where("entry_date >= " + Utilities.dateForDB(startDate));
-            queryBuilder.where("entry_date <= " + Utilities.dateForDB(endDate));
+            queryBuilder.where("entry_date >= '" + Utilities.dateForDB(startDate) + "'");
+            queryBuilder.where("entry_date <= '" + Utilities.dateForDB(endDate) + "'");
         } else if (startDate != null && endDate == null) { // defore start date
-            queryBuilder.where("entry_date < " + Utilities.dateForDB(startDate));
+            queryBuilder.where("entry_date > '" + Utilities.dateForDB(startDate) + "'");
         } else if (startDate == null && endDate != null) { // after end date
-            queryBuilder.where("entry_date > " + Utilities.dateForDB(endDate));
+            queryBuilder.where("entry_date < '" + Utilities.dateForDB(endDate) + "'");
         }
 
         queryBuilder.groupBy("product_id");
@@ -227,17 +237,18 @@ public class ProductReport {
 
         queryBuilder.clear();
 
-        queryBuilder.select("product_id, SUM(cost_per_unit) AS total_rate, SUM(quantity) AS total_qty");
+        queryBuilder.select("product_id, SUM(cost_per_unit * quantity) AS total_rate, SUM(quantity) AS total_qty");
         queryBuilder.from("product_stock");
 
         if (startDate != null && endDate != null) { // between tow dates
-            queryBuilder.where("entry_date >= " + Utilities.dateForDB(startDate));
-            queryBuilder.where("entry_date <= " + Utilities.dateForDB(endDate));
+            queryBuilder.where("entry_date >= '" + Utilities.dateForDB(startDate) + "'");
+            queryBuilder.where("entry_date <= '" + Utilities.dateForDB(endDate) + "'");
         } else if (startDate != null && endDate == null) { // defore start date
-            queryBuilder.where("entry_date < " + Utilities.dateForDB(startDate));
+            queryBuilder.where("entry_date > '" + Utilities.dateForDB(startDate) + "'");
         } else if (startDate == null && endDate != null) { // after end date
-            queryBuilder.where("entry_date > " + Utilities.dateForDB(endDate));
+            queryBuilder.where("entry_date < '" + Utilities.dateForDB(endDate) + "'");
         }
+
 
         queryBuilder.groupBy("product_id");
 
@@ -279,18 +290,19 @@ public class ProductReport {
 
         queryBuilder.clear();
 
-        queryBuilder.select("product_id, SUM(cost_per_unit) AS total_rate, SUM(quantity) AS total_qty");
-        queryBuilder.from("product_stock");
+        queryBuilder.select("product_id, SUM(rate_per_unit * quantity) AS total_rate, SUM(quantity) AS total_qty");
+        queryBuilder.from("sales_invoice_product");
 
         if (startDate != null && endDate != null) { // between tow dates
-            queryBuilder.where("entry_date >= " + Utilities.dateForDB(startDate));
-            queryBuilder.where("entry_date <= " + Utilities.dateForDB(endDate));
+            queryBuilder.where("entry_date >= '" + Utilities.dateForDB(startDate) + "'");
+            queryBuilder.where("entry_date <= '" + Utilities.dateForDB(endDate) + "'");
         } else if (startDate != null && endDate == null) { // defore start date
-            queryBuilder.where("entry_date < " + Utilities.dateForDB(startDate));
+            queryBuilder.where("entry_date > '" + Utilities.dateForDB(startDate) + "'");
         } else if (startDate == null && endDate != null) { // after end date
-            queryBuilder.where("entry_date > " + Utilities.dateForDB(endDate));
+            queryBuilder.where("entry_date < '" + Utilities.dateForDB(endDate) + "'");
         }
 
+        
         queryBuilder.groupBy("product_id");
 
         if (database.connect()) {
