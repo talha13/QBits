@@ -15,7 +15,7 @@ import javax.swing.table.DefaultTableModel;
 import net.sf.dynamicreports.examples.DataSource;
 import net.sf.dynamicreports.examples.Templates;
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
-import static net.sf.dynamicreports.report.builder.DynamicReports.col;
+import static net.sf.dynamicreports.report.builder.DynamicReports.*;
 import static net.sf.dynamicreports.report.builder.DynamicReports.type;
 import net.sf.dynamicreports.report.builder.column.TextColumnBuilder;
 import net.sf.dynamicreports.report.constant.PageOrientation;
@@ -168,6 +168,7 @@ public class UIProductStock extends UICRUD implements CRUDDataLoaderListener, CR
 
         reportBuilder.columns(slCol, nameCol, categoryCol, brandCol, quantityCol, cpuCol, rpuCol);
         reportBuilder.groupBy(categoryCol);
+         
 
     }
 

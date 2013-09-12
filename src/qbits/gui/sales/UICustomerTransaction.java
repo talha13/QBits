@@ -732,7 +732,7 @@ public class UICustomerTransaction extends javax.swing.JPanel {
             queryBuilder.set("account_id", "" + spAmount.getValue());
             queryBuilder.setString("transaction_type", "Deposit");
             queryBuilder.setString("notes", taNotes.getText());
-              queryBuilder.set("last_update_by", "" + parentFrame.currentUser.getUserID());
+            queryBuilder.set("last_update_by", "" + parentFrame.currentUser.getUserID());
             queryBuilder.set("last_update_time", "NOW()");
 
             long txnID = database.insert(queryBuilder.insert("sale_invoice_transaction"));
@@ -986,7 +986,7 @@ public class UICustomerTransaction extends javax.swing.JPanel {
                 query.select("sales_invoice.id, sales_invoice.invoice_no");
                 query.select("sales_invoice.payable, SUM(sale_invoice_transaction.paid_amount) AS total_paid");
                 query.from("sales_invoice");
-                query.innerJoin("sale_invoice_transaction", "sale_invoice_transaction.sale_invoice_id = sales_invoice.id");
+                query.leftJoin("sale_invoice_transaction", "sale_invoice_transaction.sale_invoice_id = sales_invoice.id");
                 query.groupBy("sale_invoice_transaction.sale_invoice_id");
                 query.where("sales_invoice.customer_id = " + customerID);
 

@@ -36,6 +36,7 @@ import qbits.gui.purchase.product.UIProductStock;
 import qbits.gui.sales.UICustomer;
 import qbits.gui.sales.UICustomerCRUD;
 import qbits.gui.sales.UICustomerTransaction;
+import qbits.gui.sales.UIReceivableCRUD;
 import qbits.gui.sales.UISalesInvoice;
 import qbits.gui.sales.UISalesInvoiceCRUD;
 
@@ -275,7 +276,9 @@ public class UIParentFrame extends JFrame implements WindowListener {
     }
 
     public void customerReceivable() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       
+        UIReceivableCRUD receivableCRUD = new UIReceivableCRUD(this);
+        addPanel(receivableCRUD, "receivable_crud");
     }
 
     public void customerTransaction() {

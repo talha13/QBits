@@ -12,7 +12,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import net.sf.dynamicreports.examples.DataSource;
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
-import static net.sf.dynamicreports.report.builder.DynamicReports.col;
+import static net.sf.dynamicreports.report.builder.DynamicReports.*;
 import static net.sf.dynamicreports.report.builder.DynamicReports.grid;
 import static net.sf.dynamicreports.report.builder.DynamicReports.type;
 import net.sf.dynamicreports.report.builder.column.TextColumnBuilder;
@@ -93,10 +93,12 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
         int count = 1;
         double closingQty = 0;
         ProductStock openingStock = null;
+        double productPrice = 0.0;
 
         for (ProductStock productStock : productStocks) {
 
             row.clear();
+            productPrice = 0.0;
             row.add(productStock.getProduct().getCategory());
             row.add(count);
             row.add(productStock.getProduct().getName() + "-" + productStock.getProduct().getBrand());
@@ -107,6 +109,7 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
                 row.add(openingStock.getProduct().getRpu());
                 row.add(openingStock.getQuantityLeft());
                 row.add(openingStock.getProduct().getRpu() * openingStock.getQuantityLeft());
+                productPrice = openingStock.getProduct().getRpu();
             } else {
                 openingStock = null;
                 row.add(0.0);
@@ -118,6 +121,10 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
             row.add(productStock.getPurchaseProduct().getQuantity());
             row.add(productStock.getPurchaseProduct().getTotal());
 
+            if (productStock.getPurchaseProduct().getQuantity() != 0) {
+                productPrice = productStock.getPurchaseProduct().getRpu();
+            }
+
             row.add(productStock.getSaleProduct().getRpu());
             row.add(productStock.getSaleProduct().getQuantity());
             row.add(productStock.getSaleProduct().getTotal());
@@ -127,9 +134,9 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
             row.add(productStock.getWastageProduct().getTotal());
 
             closingQty = ((openingStock == null) ? 0 : openingStock.getQuantityLeft()) + productStock.getPurchaseProduct().getQuantity() - productStock.getWastageProduct().getQuantity() - productStock.getSaleProduct().getQuantity() - productStock.getReturnProduct().getQuantity();
-            row.add(productStock.getPurchaseProduct().getRpu());
+            row.add(productPrice);
             row.add(closingQty);
-            row.add(productStock.getPurchaseProduct().getRpu() * closingQty);
+            row.add(productPrice * closingQty);
 
             dataSource.add(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4), row.get(5), row.get(6), row.get(7), row.get(8), row.get(9), row.get(10), row.get(11), row.get(12), row.get(13), row.get(14), row.get(15), row.get(16), row.get(17), row.get(18));
             count++;
@@ -210,6 +217,8 @@ public class UIReportProductStock extends UIDateRangePicker implements DateRange
                 outCPU, outQty, outTotal, wstgCPU, wstgQty, wstgTotal, closeCPU, closeQty, closeTotal);
 
         reportBuilder.groupBy(category);
+        reportBuilder.subtotalsAtSummary(sbt.sum(closeTotal));
+        reportBuilder.subtotalsAtFirstGroupFooter(sbt.sum(closeQty), sbt.sum(closeTotal));
 
     }
 

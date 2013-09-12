@@ -995,7 +995,7 @@ public class UISupplierTransaction extends javax.swing.JPanel {
                 query.select("supplier_invoice.invoice_id, supplier_invoice.supplier_invoice_no");
                 query.select("supplier_invoice.payable, SUM(supplier_invoice_transaction.paid_amount) AS total_paid");
                 query.from("supplier_invoice");
-                query.innerJoin("supplier_invoice_transaction", "supplier_invoice_transaction.supplier_invoice_id = supplier_invoice.invoice_id");
+                query.leftJoin("supplier_invoice_transaction", "supplier_invoice_transaction.supplier_invoice_id = supplier_invoice.invoice_id");
                 query.groupBy("supplier_invoice_transaction.supplier_invoice_id");
                 query.where("supplier_invoice.supplier_id = " + supplierID);
 
