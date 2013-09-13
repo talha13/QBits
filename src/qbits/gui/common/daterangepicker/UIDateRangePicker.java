@@ -204,7 +204,7 @@ public class UIDateRangePicker extends javax.swing.JPanel {
             case 5: // last month
                 calendarTo.add(Calendar.DAY_OF_MONTH, (-1 * calendarTo.get(Calendar.DAY_OF_MONTH)));
                 calendarFrom.add(Calendar.DAY_OF_MONTH, (-1 * calendarFrom.get(Calendar.DAY_OF_MONTH)) - (calendarTo.get(Calendar.DAY_OF_MONTH)) + 1);
-                break;
+                break;                
         }
 
         dcFrom.setSelectedDate(calendarFrom);
@@ -219,7 +219,13 @@ public class UIDateRangePicker extends javax.swing.JPanel {
 
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
         // TODO add your handling code here:
-        dateRangeListener.processDateRange(calendarFrom, calendarTo);
+        
+        if(cmbDateRangeType.getSelectedIndex() == 6){
+            dateRangeListener.processDateRange(dcFrom.getSelectedDate(), dcTo.getSelectedDate());
+        }else{
+            dateRangeListener.processDateRange(calendarFrom, calendarTo);
+        }        
+        
     }//GEN-LAST:event_btnSubmitActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed

@@ -18,6 +18,7 @@ import qbits.gui.account.UIAccount;
 import qbits.gui.account.UIAccountHead;
 import qbits.gui.account.UIAccountTransaction;
 import qbits.gui.account.UIGeneralTransaction;
+import qbits.gui.account.UIReceivePayment;
 import qbits.gui.employee.UIEmployee;
 import qbits.gui.employee.UIEmployeeCRUD;
 import qbits.gui.employee.UIEmployeeTransaction;
@@ -321,5 +322,11 @@ public class UIParentFrame extends JFrame implements WindowListener {
         
         UIPayableCRUD payableCRUD = new UIPayableCRUD(this);
         addPanel(payableCRUD, "paybel_crud");
+    }
+
+    public void receivePayment() {
+       
+        UIReceivePayment receivePayment = new UIReceivePayment(this);
+        addPanel(receivePayment, "receive_payment");
     }
 }

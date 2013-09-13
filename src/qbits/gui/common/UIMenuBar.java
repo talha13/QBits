@@ -23,7 +23,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
     private JMenuItem itemNewAccount, itemNewAccountTxn, itemNewAccountHead, itemNewGeneralTransaction;
     private JMenuItem itemNewEmployee, itemEmployeeCRUD, itemEmployeeTransaction;
     private JMenuItem itemNewProduct, itemNewDamageProduct, itemGenerateBarcode, itemStocks;
-    private JMenuItem itemReportProductStock;
+    private JMenuItem itemReportProductStock, itemReportReceivePayment;
     private JMenuItem itemNewCustomer, itemCustomerList, itemSalesInvoice, itemSalesInvoiceCRUD, itemCustomerTransaction, itemCustomerReceivable;
 
     public UIMenuBar(UIParentFrame pf) {
@@ -73,6 +73,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         itemStocks = new JMenuItem("Stocks");
 
         itemReportProductStock = new JMenuItem("Product Stock");
+        itemReportReceivePayment = new JMenuItem("Receive/Payment");
 
         itemHome.addActionListener(this);
         itemChangePass.addActionListener(this);
@@ -108,6 +109,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         itemStocks.addActionListener(this);
 
         itemReportProductStock.addActionListener(this);
+        itemReportReceivePayment.addActionListener(this);
 
         menuFile.add(itemHome);
         menuFile.addSeparator();
@@ -156,6 +158,8 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         menuProduct.add(itemStocks);
 
         menuReport.add(itemReportProductStock);
+        menuReport.addSeparator();
+        menuReport.add(itemReportReceivePayment);
 
         add(menuFile);
         add(menuPurchase);
@@ -225,6 +229,8 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
             parentFrame.home();
         }else if(itemPayable == e.getSource()){
             parentFrame.payable();
+        }else if(itemReportReceivePayment == e.getSource()){
+            parentFrame.receivePayment();
         }
 
     }
