@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package qbits.gui.sales;
+package qbits.gui.purchase;
 
+import qbits.gui.sales.*;
 import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.JTable;
@@ -21,6 +22,7 @@ import qbits.gui.common.UIParentFrame;
 import qbits.gui.common.crud.CRUDDataLoaderListener;
 import qbits.gui.common.crud.CRUDListener;
 import qbits.gui.common.crud.UICRUD;
+import qbits.report.account.ReportPayable;
 import qbits.report.account.ReportReceivable;
 import qbits.report.common.Report;
 import qbits.report.common.ReportListener;
@@ -29,23 +31,23 @@ import qbits.report.common.ReportListener;
  *
  * @author Pipilika
  */
-public class UIReceivableCRUD extends UICRUD implements CRUDDataLoaderListener, CRUDListener, ReportListener {
+public class UIPayableCRUD extends UICRUD implements CRUDDataLoaderListener, CRUDListener, ReportListener {
 
     private UIParentFrame parentFrame;
     private Report report;
-    private ArrayList<Receivable> receivables;
+    private ArrayList<Receivable> payables;
 
-    public UIReceivableCRUD(UIParentFrame frame) {
+    public UIPayableCRUD(UIParentFrame frame) {
 
         super();
         parentFrame = frame;
 
-        setTitle("Receivable");
+        setTitle("Payables");
         setShowPopup(false);
 
         Vector<String> columns = new Vector<>();
         columns.add("All");
-        columns.add("Customer Name");
+        columns.add("Supplier Name");
         columns.add("Phone");
         columns.add("Amount");
 
@@ -54,11 +56,11 @@ public class UIReceivableCRUD extends UICRUD implements CRUDDataLoaderListener, 
         setColumns(columns);
 
 
-        receivables = (new ReportReceivable()).get();
+        payables = (new ReportPayable()).get();
         populateRecords();
 
         report = new Report();
-        report.getReportBanner().setSubTitle("Receivable");
+        report.getReportBanner().setSubTitle("Payables");
         report.addReportListener(this);
     }
 
@@ -68,12 +70,12 @@ public class UIReceivableCRUD extends UICRUD implements CRUDDataLoaderListener, 
         Vector rowData = new Vector();
         DefaultTableModel tableModel = (DefaultTableModel) recordTable.getModel();
 
-        for (Receivable receivable : receivables) {
+        for (Receivable payable : payables) {
 
             rowData.add(rowData.size() + 1);
-            rowData.add(receivable.getCustomerName());
-            rowData.add(receivable.getPhone());
-            rowData.add(receivable.getPayable() - receivable.getPaid());
+            rowData.add(payable.getCustomerName());
+            rowData.add(payable.getPhone());
+            rowData.add(payable.getPayable() - payable.getPaid());
         }
 
         tableModel.addRow(rowData);
@@ -110,8 +112,8 @@ public class UIReceivableCRUD extends UICRUD implements CRUDDataLoaderListener, 
         DataSource dataSource = new DataSource("sl", "name", "phone", "amount");
         int count = 1;
 
-        for (Receivable receivable : receivables) {
-            dataSource.add(count++, receivable.getCustomerName(), receivable.getPhone(), receivable.getPayable()-receivable.getPaid());
+        for (Receivable payable : payables) {
+            dataSource.add(count++, payable.getCustomerName(), payable.getPhone(), payable.getPayable()-payable.getPaid());
         }
         
         reportBuilder.setDataSource(dataSource);
@@ -120,7 +122,7 @@ public class UIReceivableCRUD extends UICRUD implements CRUDDataLoaderListener, 
     @Override
     public void addColumns(JasperReportBuilder reportBuilder) {
         TextColumnBuilder<Integer> slCol = col.column("SL#", "sl", type.integerType());
-        TextColumnBuilder<String> nameCol = col.column("Name", "name", type.stringType());
+        TextColumnBuilder<String> nameCol = col.column("Supplier Name", "name", type.stringType());
         TextColumnBuilder<String> phoneCol = col.column("Phone", "phone", type.stringType());
         TextColumnBuilder<Double> amountCol = col.column("Amount", "amount", type.doubleType());
 

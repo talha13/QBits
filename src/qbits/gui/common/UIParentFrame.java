@@ -21,6 +21,7 @@ import qbits.gui.account.UIGeneralTransaction;
 import qbits.gui.employee.UIEmployee;
 import qbits.gui.employee.UIEmployeeCRUD;
 import qbits.gui.employee.UIEmployeeTransaction;
+import qbits.gui.purchase.UIPayableCRUD;
 import qbits.gui.purchase.UIReportProductStock;
 import qbits.gui.purchase.UISupplier;
 import qbits.gui.purchase.UISupplierCRUD;
@@ -314,5 +315,11 @@ public class UIParentFrame extends JFrame implements WindowListener {
         
         UILowProductNotify uILowProductNotify = new UILowProductNotify(this);
         addPanel(uILowProductNotify, "low_quantity_product");
+    }
+
+    public void payable() {
+        
+        UIPayableCRUD payableCRUD = new UIPayableCRUD(this);
+        addPanel(payableCRUD, "paybel_crud");
     }
 }

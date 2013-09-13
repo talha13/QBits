@@ -56,6 +56,8 @@ public class ReportReceivable {
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ReportReceivable.class.getName()).log(Level.SEVERE, null, ex);
+            }finally{
+                database.disconnect();
             }
             
         }else{
@@ -67,7 +69,35 @@ public class ReportReceivable {
     
     public double getTotalPayment(int customerID){
         
-        return 0.00;
+        QueryBuilder queryBuilder = new QueryBuilder();
+        MySQLDatabase database = new MySQLDatabase();
+        double totalPaid = 0.0;
+        
+        if(database.connect()){
+            try {
+                
+                queryBuilder.select("SUM(sale_invoice_transaction.paid_amount) AS total");
+                queryBuilder.from("sales_invoice");
+                queryBuilder.leftJoin("sale_invoice_transaction", "sale_invoice_transaction.sale_invoice_id = sales_invoice.id");
+                queryBuilder.where("sales_invoice.customer_id = "+ customerID);
+                ResultSet resultSet = database.get(queryBuilder.get());
+                
+                if(resultSet.next()){
+                     totalPaid += resultSet.getDouble("total");                                        
+                }
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(ReportReceivable.class.getName()).log(Level.SEVERE, null, ex);
+            }finally{
+                database.disconnect();
+            }
+            
+        }else{
+            Message.dbConnectFailed();
+            return 0.00;
+        }
+        
+        return totalPaid;
         
     }
     

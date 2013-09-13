@@ -19,7 +19,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
     private UIParentFrame parentFrame;
     private JMenu menuFile, menuPurchase, menuEmployee, menuSale, menuAccount, menuProduct, menuReport;
     private JMenuItem itemExit, itemChangePass, itemHome;
-    private JMenuItem itemNewSupplier, itemSupplierList, itemNewSupplierInvoice, itemNewSupplierTransaction, itemPurchaseReturn, itemsupplierInvoiceCRUD;
+    private JMenuItem itemNewSupplier, itemSupplierList, itemNewSupplierInvoice, itemNewSupplierTransaction, itemPurchaseReturn, itemsupplierInvoiceCRUD, itemPayable;
     private JMenuItem itemNewAccount, itemNewAccountTxn, itemNewAccountHead, itemNewGeneralTransaction;
     private JMenuItem itemNewEmployee, itemEmployeeCRUD, itemEmployeeTransaction;
     private JMenuItem itemNewProduct, itemNewDamageProduct, itemGenerateBarcode, itemStocks;
@@ -49,6 +49,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         itemNewSupplierTransaction = new JMenuItem("New Supplier Transaction");
         itemPurchaseReturn = new JMenuItem("Purchase Return");
         itemsupplierInvoiceCRUD = new JMenuItem("Supplier Invoice List");
+        itemPayable = new JMenuItem("Payable");
 
         itemNewCustomer = new JMenuItem("New Customer");
         itemCustomerList = new JMenuItem("Customer List");
@@ -83,6 +84,7 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         itemNewSupplierTransaction.addActionListener(this);
         itemPurchaseReturn.addActionListener(this);
         itemsupplierInvoiceCRUD.addActionListener(this);
+        itemPayable.addActionListener(this);
 
         itemNewCustomer.addActionListener(this);
         itemCustomerList.addActionListener(this);
@@ -117,6 +119,8 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
         menuPurchase.add(itemNewSupplierInvoice);
         menuPurchase.addSeparator();
         menuPurchase.add(itemNewSupplierTransaction);
+        menuPurchase.addSeparator();
+        menuPurchase.add(itemPayable);
         menuPurchase.addSeparator();
         menuPurchase.add(itemSupplierList);
         menuPurchase.add(itemsupplierInvoiceCRUD);
@@ -219,6 +223,8 @@ public class UIMenuBar extends JMenuBar implements ActionListener {
             parentFrame.productStocks();
         } else if (itemHome == e.getSource()) {
             parentFrame.home();
+        }else if(itemPayable == e.getSource()){
+            parentFrame.payable();
         }
 
     }
