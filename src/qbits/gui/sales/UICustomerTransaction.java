@@ -729,7 +729,7 @@ public class UICustomerTransaction extends javax.swing.JPanel {
             queryBuilder.setString("clear_on", Utilities.dateForDB(dcClearOn.getSelectedDate().getTime()));
             queryBuilder.set("is_clear", "" + rbClear.isSelected());
             queryBuilder.set("paid_amount", "" + spAmount.getValue());
-            queryBuilder.set("account_id", "" + spAmount.getValue());
+            queryBuilder.set("account_id", "" + accounts.get(cmbAccount.getSelectedItem().toString()));
             queryBuilder.setString("transaction_type", "Deposit");
             queryBuilder.setString("notes", taNotes.getText());
             queryBuilder.set("last_update_by", "" + parentFrame.currentUser.getUserID());

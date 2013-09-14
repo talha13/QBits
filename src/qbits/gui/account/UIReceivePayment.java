@@ -54,7 +54,14 @@ public class UIReceivePayment extends UIDateRangePicker implements DateRangeList
 
         transactions.clear();
         ReportReceivePayments receivePayments = new ReportReceivePayments();
+        
         transactions.addAll(receivePayments.getAccountTransaction(fromDate.getTime(), toDate.getTime()));
+        transactions.addAll(receivePayments.getGeneralTransaction(fromDate.getTime(), toDate.getTime()));
+        transactions.addAll(receivePayments.getEmployeeSalaries(fromDate.getTime(), toDate.getTime()));
+        transactions.addAll(receivePayments.getEmployeeGeneralTransaction(fromDate.getTime(), toDate.getTime()));
+        transactions.addAll(receivePayments.getSalesTransaction(fromDate.getTime(), toDate.getTime()));
+        transactions.addAll(receivePayments.getSupplierTransaction(fromDate.getTime(), toDate.getTime()));
+        
         report = new Report();
         report.addReportListener(this);
         report.getReportBanner().setSubTitle("Receive Payment From Date: " + Utilities.getFormattedDate(fromDate.getTime())
