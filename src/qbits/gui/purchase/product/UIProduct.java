@@ -34,6 +34,7 @@ public class UIProduct extends javax.swing.JPanel {
     private HashMap<String, Integer> categories;
     private HashMap<String, Integer> brands;
     private HashMap<String, Integer> units;
+    private HashMap<String, Integer> genres;
 
     /**
      * Creates new form UIProduct
@@ -46,6 +47,7 @@ public class UIProduct extends javax.swing.JPanel {
         categories = new HashMap<>();
         brands = new HashMap<>();
         units = new HashMap<>();
+        genres = new HashMap<>();
         reset();
     }
 
@@ -75,6 +77,8 @@ public class UIProduct extends javax.swing.JPanel {
         jLabel7 = new javax.swing.JLabel();
         spNotifyQuantity = new javax.swing.JSpinner();
         chkAvgCost = new javax.swing.JCheckBox();
+        cmbGenre = new javax.swing.JComboBox();
+        jLabel10 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         spOpeningQuantity = new javax.swing.JSpinner();
@@ -84,7 +88,7 @@ public class UIProduct extends javax.swing.JPanel {
         btnSave = new javax.swing.JButton();
         btnReset = new javax.swing.JButton();
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Product", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
+        setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Product", 2, 0));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Product Information"));
 
@@ -159,23 +163,45 @@ public class UIProduct extends javax.swing.JPanel {
         chkAvgCost.setSelected(true);
         chkAvgCost.setText("Use Average Cost");
 
+        cmbGenre.setEditable(true);
+        cmbGenre.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        cmbGenre.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel10.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(102, 0, 0));
+        jLabel10.setText("Product Genre*");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(60, 60, 60)
+                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spNotifyQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(193, 193, 193))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(42, 42, 42)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(spRPU, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(chkAvgCost)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel10))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(cmbGenre, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmbUnit, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmbBrand, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmbCategory, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -183,18 +209,7 @@ public class UIProduct extends javax.swing.JPanel {
                             .addComponent(txfName))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnGenerateProductCode, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(56, 56, 56))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(spRPU, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(chkAvgCost)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spNotifyQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(193, 193, 193))
+                        .addGap(56, 56, 56))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -222,10 +237,14 @@ public class UIProduct extends javax.swing.JPanel {
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbGenre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(spRPU, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(chkAvgCost))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(spNotifyQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
@@ -332,12 +351,12 @@ public class UIProduct extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -429,8 +448,10 @@ public class UIProduct extends javax.swing.JPanel {
     private javax.swing.JCheckBox chkAvgCost;
     private javax.swing.JComboBox cmbBrand;
     private javax.swing.JComboBox cmbCategory;
+    private javax.swing.JComboBox cmbGenre;
     private javax.swing.JComboBox cmbUnit;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -479,7 +500,7 @@ public class UIProduct extends javax.swing.JPanel {
         MySQLDatabase database = new MySQLDatabase();
         String query;
         int status = -1;
-        long catID = 0, brandID = 0, unitID = 0;
+        long catID = 0, brandID = 0, unitID = 0, genreID = 0;
         String productCode;
 
         if (database.connect()) {
@@ -522,6 +543,21 @@ public class UIProduct extends javax.swing.JPanel {
 
                 query = "INSERT INTO product_unit VALUES(null, \"" + cmbUnit.getSelectedItem().toString() + "\", 1)";
                 unitID = database.insert(query);
+
+                if (unitID == -1) {
+                    database.rollback();
+                    database.setAutoCommit(true);
+                    database.disconnect();
+                    return -1;
+                }
+            }
+            
+            if (genres.containsKey(cmbGenre.getSelectedItem().toString())) {
+                genreID = genres.get(cmbGenre.getSelectedItem().toString());
+            } else {
+
+                query = "INSERT INTO product_genre VALUES(null, \"" + cmbGenre.getSelectedItem().toString() + "\", 1)";
+                genreID = database.insert(query);
 
                 if (unitID == -1) {
                     database.rollback();
@@ -619,7 +655,7 @@ public class UIProduct extends javax.swing.JPanel {
             }
 
             query = "INSERT INTO product VALUES("
-                    + "null, \"" + txfName.getText() + "\", \"" + productCode + "\", \"" + catID + "\", \"" + brandID + "\", \"" + unitID + "\""
+                    + "null, \"" + txfName.getText() + "\", \"" + productCode + "\", " + catID + ", " + brandID + ", " + unitID + ", "+ genreID +""
                     + ", \"" + spRPU.getValue() + "\", \"" + spNotifyQuantity.getValue() + "\", " + chkAvgCost.isSelected() + ", " + parentFrame.currentUser.getUserID() + ", NOW()"
                     + ")";
 
@@ -676,6 +712,7 @@ public class UIProduct extends javax.swing.JPanel {
         loadCategory();
         loadBrand();
         loadUnit();
+        loadGenre();
     }
 
     private void load(int productID) {
@@ -757,6 +794,34 @@ public class UIProduct extends javax.swing.JPanel {
                 }
 
                 cmbUnit.setModel(new DefaultComboBoxModel(unitTitles));
+
+            } catch (SQLException ex) {
+                Logger.getLogger(UIProduct.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                database.disconnect();
+            }
+        }
+    }
+
+    private void loadGenre() {
+
+        MySQLDatabase database = new MySQLDatabase();
+        String query;
+        Vector<String> genreTitles = new Vector<>();
+        genres.clear();
+        genreTitles.add("Select Genre");
+
+        if (database.connect()) {
+            try {
+                query = "SELECT * FROM product_genre WHERE status = 1";
+                ResultSet resultSet = database.get(query);
+
+                while (resultSet.next()) {
+                    genres.put(resultSet.getString("title"), resultSet.getInt("id"));
+                    genreTitles.add(resultSet.getString("title"));
+                }
+
+                cmbGenre.setModel(new DefaultComboBoxModel(genreTitles));
 
             } catch (SQLException ex) {
                 Logger.getLogger(UIProduct.class.getName()).log(Level.SEVERE, null, ex);

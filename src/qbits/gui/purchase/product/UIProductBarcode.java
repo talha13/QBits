@@ -280,7 +280,7 @@ public class UIProductBarcode extends javax.swing.JPanel {
             return;
         }
 
-        ReportBarcode reportBarcode = new ReportBarcode(txfCode.getText(), "TK: " + txfRPU.getText(), Integer.parseInt(spQuantity.getValue().toString()));
+        ReportBarcode reportBarcode = new ReportBarcode(txfCode.getText(), "TK: " + txfRPU.getText(), Integer.parseInt(spQuantity.getValue().toString()), "Genre");
 
     }//GEN-LAST:event_btnPrintActionPerformed
 

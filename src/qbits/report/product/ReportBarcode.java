@@ -29,11 +29,11 @@ public class ReportBarcode {
 
     private JasperReportBuilder reportBuilder;
 
-    public ReportBarcode(String barcode, String label, int quantity) {
+    public ReportBarcode(String barcode, String label, int quantity, String genre) {
         try {
             reportBuilder = new JasperReportBuilder();
             reportBuilder.setTemplate(template().setBarcodeHeight(50));
-            reportBuilder.title(getBarcode(barcode, label, quantity));
+            reportBuilder.title(getBarcode(barcode, label, quantity, genre));
             reportBuilder.setPageFormat(PageType.A4);
             reportBuilder.setTitleSplitType(SplitType.IMMEDIATE);
             reportBuilder.show();
@@ -42,18 +42,18 @@ public class ReportBarcode {
         }
     }
 
-    private ComponentBuilder<?, ?> getBarcode(String barcode, String label, int quantity) {
+    private ComponentBuilder<?, ?> getBarcode(String barcode, String label, int quantity, String genre) {
 
         HorizontalListBuilder builder = cmp.horizontalFlowList();
 
         for (int i = 0; i < quantity; i++) {
-            builder.add(cmp.hListCell(barcode(label, bcode.code128(barcode))));
+            builder.add(cmp.hListCell(barcode(label, bcode.code128(barcode), genre)));
         }
 
         return builder;
     }
 
-    private ComponentBuilder<?, ?> barcode(String label, ComponentBuilder<?, ?> barcode) {
+    private ComponentBuilder<?, ?> barcode(String label, ComponentBuilder<?, ?> barcode, String genre) {
 
         VerticalListBuilder verticalListBuilder = cmp.verticalList();
 
@@ -61,7 +61,7 @@ public class ReportBarcode {
         labelStyle.setAlignment(HorizontalAlignment.CENTER, VerticalAlignment.TOP);
         verticalListBuilder.add(cmp.vListCell(cmp.text("Taradin Super Shop").setStyle(labelStyle)));
         verticalListBuilder.add(cmp.verticalGap(1));
-        verticalListBuilder.add(cmp.vListCell(cmp.text(label).setStyle(labelStyle)));
+        verticalListBuilder.add(cmp.vListCell(cmp.text(label + "-" + genre).setStyle(labelStyle)));
         verticalListBuilder.add(cmp.verticalGap(1));
         verticalListBuilder.add(barcode.setStyle(labelStyle));
         verticalListBuilder.add(cmp.verticalGap(5));
@@ -70,6 +70,6 @@ public class ReportBarcode {
     }
 
     public static void main(String[] args) {
-        new ReportBarcode("123456789012345", "Windows Seven", 100);
+        new ReportBarcode("123456789012345", "Windows Seven", 100, "test");
     }
 }
