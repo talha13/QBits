@@ -82,8 +82,8 @@ public class UISupplier extends javax.swing.JPanel {
                         + " person.person_id, person.first_name, person.last_name, person.gender, person.date_of_birth, person.contact_no,"
                         + " address.address_id, address.address, address.city, address.district"
                         + " FROM supplier"
-                        + " INNER JOIN person ON person.person_id = supplier.contact_person_id"
-                        + " INNER JOIN address ON address.address_id = supplier.address_id"
+                        + " LEFT JOIN person ON person.person_id = supplier.contact_person_id"
+                        + " LEFT JOIN address ON address.address_id = supplier.address_id"
                         + " WHERE supplier.supplier_id = " + supplier.getSupplierID();
 
                 ResultSet resultSet = database.get(query);
@@ -101,9 +101,13 @@ public class UISupplier extends javax.swing.JPanel {
 
                     taAddress.setText(resultSet.getString("address.address"));
 
-                    cmbGender.setSelectedIndex(resultSet.getString("person.gender").compareTo("Male") == 0 ? 1 : 2);
-                    dcDOB.setSelectedDate(Utilities.getDateChosserDate(resultSet.getDate("person.date_of_birth")));
+                    if (resultSet.getString("person.gender") != null) {
+                        cmbGender.setSelectedIndex(resultSet.getString("person.gender").compareTo("Male") == 0 ? 1 : 2);
+                    }
 
+                    if (resultSet.getDate("person.date_of_birth") != null) {
+                        dcDOB.setSelectedDate(Utilities.getDateChosserDate(resultSet.getDate("person.date_of_birth")));
+                    }
                     supplier.setAddressID(resultSet.getInt("address.address_id"));
                     supplier.setContactPersonID(resultSet.getInt("person.person_id"));
 
@@ -148,6 +152,8 @@ public class UISupplier extends javax.swing.JPanel {
         jLabel10 = new javax.swing.JLabel();
         txfContactNo = new javax.swing.JTextField();
         dcDOB = new datechooser.beans.DateChooserCombo();
+        spOpeningBalance = new javax.swing.JSpinner();
+        jLabel13 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         taAddress = new javax.swing.JTextArea();
@@ -171,7 +177,7 @@ public class UISupplier extends javax.swing.JPanel {
 
         jLabel2.setText("jLabel2");
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Supplier", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Times New Roman", 0, 12), new java.awt.Color(0, 0, 102))); // NOI18N
+        setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Supplier", 2, 0, new java.awt.Font("Times New Roman", 0, 12), new java.awt.Color(0, 0, 102))); // NOI18N
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 255), 1, true), "Contact Person"));
 
@@ -203,6 +209,12 @@ public class UISupplier extends javax.swing.JPanel {
 
         dcDOB.setFieldFont(new java.awt.Font("Times New Roman", java.awt.Font.PLAIN, 14));
 
+        spOpeningBalance.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        spOpeningBalance.setModel(new javax.swing.SpinnerNumberModel(Double.valueOf(0.0d), Double.valueOf(0.0d), null, Double.valueOf(1.0d)));
+
+        jLabel13.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jLabel13.setText("Opening Balance:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -210,12 +222,6 @@ public class UISupplier extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txfContactNo)
-                        .addGap(35, 35, 35))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel6)
@@ -233,7 +239,19 @@ public class UISupplier extends javax.swing.JPanel {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(dcDOB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(cmbGender, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                .addContainerGap(67, Short.MAX_VALUE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txfContactNo, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(67, Short.MAX_VALUE))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spOpeningBalance, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -258,6 +276,10 @@ public class UISupplier extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txfContactNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(spOpeningBalance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -423,6 +445,8 @@ public class UISupplier extends javax.swing.JPanel {
             return;
         }
 
+
+
         new SwingWorker<Object, Object>() {
             @Override
             protected Object doInBackground() throws Exception {
@@ -461,8 +485,8 @@ public class UISupplier extends javax.swing.JPanel {
         reset();
     }//GEN-LAST:event_btnResetActionPerformed
 
-    private void changeStatus(boolean status){
-                
+    private void changeStatus(boolean status) {
+
         txfCity.setEnabled(status);
         txfContactNo.setEnabled(status);
         txfDistrict.setEnabled(status);
@@ -477,7 +501,7 @@ public class UISupplier extends javax.swing.JPanel {
         btnSave.setEnabled(status);
         taAddress.setEnabled(status);
     }
-    
+
     private void reset() {
 
         taAddress.setText("");
@@ -499,17 +523,75 @@ public class UISupplier extends javax.swing.JPanel {
         MySQLDatabase database = new MySQLDatabase();
         String query;
         int status = -1;
+        long affactedRows, personID = -1, addressId = -1;
 
         if (database.connect()) {
 
             database.setAutoCommit(false);
 
-            query = "UPDATE person SET first_name = \"" + txfFirstName.getText() + "\", last_name = \"" + txfLastName.getText() + "\""
-                    + ", gender = \"" + cmbGender.getSelectedItem().toString() + "\", date_of_birth = \"" + Utilities.dateForDB(dcDOB.getSelectedDate().getTime()) + "\""
-                    + ", contact_no = \"" + txfContactNo.getText() + "\""
-                    + " WHERE person_id = " + supplier.getContactPersonID();
+            if (supplier.getContactPersonID() > 0) {
+                query = "UPDATE person SET first_name = \"" + txfFirstName.getText() + "\", last_name = \"" + txfLastName.getText() + "\""
+                        + ", gender = \"" + cmbGender.getSelectedItem().toString() + "\", date_of_birth = \"" + Utilities.dateForDB(dcDOB.getSelectedDate().getTime()) + "\""
+                        + ", contact_no = \"" + txfContactNo.getText() + "\""
+                        + " WHERE person_id = " + supplier.getContactPersonID();
 
-            long affactedRows = database.update(query);
+                affactedRows = database.update(query);
+
+                if (affactedRows <= 0) {
+                    database.rollback();
+                    database.setAutoCommit(true);
+                    database.disconnect();
+                    return -1;
+                }
+
+            } else {
+                query = "INSERT INTO person VALUES("
+                        + "null, \"" + txfFirstName.getText() + "\", \"" + txfLastName.getText() + "\", \"" + cmbGender.getSelectedItem().toString() + "\", "
+                        + "\"" + Utilities.dateForDB(dcDOB.getSelectedDate().getTime()) + "\", \"" + txfContactNo.getText() + "\", -1"
+                        + ")";
+
+                personID = database.insert(query);
+
+                if (personID <= 0) {
+                    database.rollback();
+                    database.setAutoCommit(true);
+                    database.disconnect();
+                    return -1;
+                } else {
+                    supplier.setContactPersonID((int) personID);
+                }
+            }
+
+            if (supplier.getAddressID() > 0) {
+                query = "UPDATE address SET address = \"" + taAddress.getText() + "\", city = \"" + txfCity.getText() + "\", district = \"" + txfDistrict.getText() + "\""
+                        + " WHERE address.address_id = " + supplier.getAddressID();
+
+                affactedRows = database.update(query);
+
+                if (affactedRows <= 0) {
+                    database.rollback();
+                    database.setAutoCommit(true);
+                    database.disconnect();
+                    return -1;
+                }
+            } else {
+                query = "INSERT INTO address VALUES("
+                        + "null, \"" + taAddress.getText() + "\", \"" + txfCity.getText() + "\", \"" + txfDistrict.getText() + "\""
+                        + ")";
+
+                addressId = database.insert(query);
+
+                if (addressId <= 0) {
+                    database.rollback();
+                    database.setAutoCommit(true);
+                    database.disconnect();
+                    return -1;
+                } else {
+                    supplier.setAddressID((int) addressId);
+                }
+            }
+
+            affactedRows = database.update(query);
 
             if (affactedRows <= 0) {
                 database.rollback();
@@ -518,8 +600,8 @@ public class UISupplier extends javax.swing.JPanel {
                 return -1;
             }
 
-            query = "UPDATE address SET address = \"" + taAddress.getText() + "\", city = \"" + txfCity.getText() + "\", district = \"" + txfDistrict.getText() + "\""
-                    + " WHERE address.address_id = " + supplier.getAddressID();
+            query = "UPDATE supplier_invoice SET subtotal = " + spOpeningBalance.getValue() + ", payable = " + spOpeningBalance.getValue() + ""
+                    + " WHERE supplier_invoice_no = 'open' AND supplier_id = " + supplier.getSupplierID();
 
             affactedRows = database.update(query);
 
@@ -531,7 +613,7 @@ public class UISupplier extends javax.swing.JPanel {
             }
 
             query = "UPDATE supplier SET name = \"" + txfSupplierName.getText() + "\", phone = \"" + txfPhone.getText() + "\", email = \"" + txfEmail.getText() + "\""
-                    + ", last_updated_by = " + parentFrame.currentUser.getUserID() + ", last_updated_time = NOW()"
+                    + ", last_updated_by = " + parentFrame.currentUser.getUserID() + ", last_updated_time = NOW(), contact_person_id = " + supplier.getContactPersonID() + ", address_id = " + supplier.getAddressID()
                     + " WHERE supplier.supplier_id = " + supplier.getSupplierID();
 
             affactedRows = database.update(query);
@@ -543,6 +625,7 @@ public class UISupplier extends javax.swing.JPanel {
                 status = 1;
             }
 
+            database.commit();
             database.setAutoCommit(true);
             database.disconnect();
 
@@ -597,11 +680,26 @@ public class UISupplier extends javax.swing.JPanel {
             long supplierID = database.insert(query);
 
             if (supplierID != -1) {
-                database.commit();
-            } else {
                 database.rollback();
+                database.setAutoCommit(true);
+                database.disconnect();
+                return -1;
             }
 
+            query = "INSERT INTO supplier_invoice VALUES(null, "
+                    + "" + supplierID + ", \"open\", CURDATE(), " + 0.00 + ""
+                    + ", " + spOpeningBalance.getValue() + ", " + spOpeningBalance.getValue() + ", " + parentFrame.currentUser.getUserID() + ", NOW())";
+
+            long invoiceID = database.insert(query);
+
+            if (invoiceID == -1) {
+                database.rollback();
+                database.setAutoCommit(true);
+                database.disconnect();
+                return -1;
+            }
+
+            database.commit();
             database.setAutoCommit(true);
             database.disconnect();
 
@@ -622,6 +720,7 @@ public class UISupplier extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -635,6 +734,7 @@ public class UISupplier extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JSpinner spOpeningBalance;
     private javax.swing.JTextArea taAddress;
     private javax.swing.JTextField txfCity;
     private javax.swing.JTextField txfContactNo;

@@ -1762,6 +1762,19 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                     return -1;
                 }
 
+                query = "INSERT INTO supplier_invoice VALUES(null, "
+                        + "" + supplierID + ", \"open\", CURDATE(), " + 0.00 + ""
+                        + ", " + 0.00 + ", " + 0.00 + ", " + parentFrame.currentUser.getUserID() + ", NOW())";
+
+                long invoiceID = database.insert(query);
+
+                if (invoiceID == -1) {
+                    database.rollback();
+                    database.setAutoCommit(true);
+                    database.disconnect();
+                    return -1;
+                }
+
             } else {
                 supplierID = suppliers.get(cmbSupplier.getSelectedIndex()).getSupplierID();
             }
