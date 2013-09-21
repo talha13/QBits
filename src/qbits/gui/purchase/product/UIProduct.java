@@ -486,6 +486,11 @@ public class UIProduct extends javax.swing.JPanel {
             parentFrame.showMessage("Please select product unit");
             return false;
         }
+        
+        if (cmbGenre.getSelectedIndex() == 0) {
+            parentFrame.showMessage("Please select product genre");
+            return false;
+        }
 
         if (Double.parseDouble(spCostPerUnit.getValue().toString()) <= 0.00 && Message.confirm("Cost per unit: " + spCostPerUnit.getValue() + ". Do you want to continue?", "Warning") == 1) {
             return false;

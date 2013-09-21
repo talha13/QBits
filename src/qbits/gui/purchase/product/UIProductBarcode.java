@@ -280,7 +280,8 @@ public class UIProductBarcode extends javax.swing.JPanel {
             return;
         }
 
-        ReportBarcode reportBarcode = new ReportBarcode(txfCode.getText(), "TK: " + txfRPU.getText(), Integer.parseInt(spQuantity.getValue().toString()), "Genre");
+        Product product = products.get(cmbName.getSelectedIndex());
+        ReportBarcode reportBarcode = new ReportBarcode(txfCode.getText(), "TK: " + txfRPU.getText(), Integer.parseInt(spQuantity.getValue().toString()), product.getGenre());
 
     }//GEN-LAST:event_btnPrintActionPerformed
 
@@ -442,10 +443,11 @@ public class UIProductBarcode extends javax.swing.JPanel {
 
         if (database.connect()) {
             try {
-                query = "SELECT product.product_id, product.title, product.product_code, product_brand.title, product_unit.title, product.rate_per_unit "
+                query = "SELECT product.product_id, product.title, product.product_code, product_brand.title, product_unit.title, product_genre.title, product.rate_per_unit "
                         + " FROM product"
-                        + " INNER JOIN product_brand ON product_brand.brand_id = product.product_brand_id"
+                        + " LEFT JOIN product_brand ON product_brand.brand_id = product.product_brand_id"
                         + " INNER JOIN product_unit ON product_unit.unit_id = product.product_unit_id"
+                        + " INNER JOIN product_genre ON product_genre.id = product.product_genre_id"
                         + " WHERE product.product_category_id = " + catID;
 
                 ResultSet resultSet = database.get(query);
@@ -459,6 +461,7 @@ public class UIProductBarcode extends javax.swing.JPanel {
                     product.setRpu(resultSet.getDouble("product.rate_per_unit"));
                     product.setUnit(resultSet.getString("product_unit.title"));
                     product.setCode(resultSet.getString("product.product_code"));
+                    product.setGenre(resultSet.getString("product_genre.title"));
 
                     String productName = resultSet.getString("product.title") + "-" + resultSet.getString("product_brand.title");
                     productTitle.add(productName);

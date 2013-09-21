@@ -61,7 +61,9 @@ public class ReportBarcode {
         labelStyle.setAlignment(HorizontalAlignment.CENTER, VerticalAlignment.TOP);
         verticalListBuilder.add(cmp.vListCell(cmp.text("Taradin Super Shop").setStyle(labelStyle)));
         verticalListBuilder.add(cmp.verticalGap(1));
-        verticalListBuilder.add(cmp.vListCell(cmp.text(label + "-" + genre).setStyle(labelStyle)));
+        verticalListBuilder.add(cmp.vListCell(cmp.text(genre).setStyle(labelStyle)));
+        verticalListBuilder.add(cmp.verticalGap(1));
+        verticalListBuilder.add(cmp.vListCell(cmp.text(label).setStyle(labelStyle)));
         verticalListBuilder.add(cmp.verticalGap(1));
         verticalListBuilder.add(barcode.setStyle(labelStyle));
         verticalListBuilder.add(cmp.verticalGap(5));

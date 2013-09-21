@@ -20,6 +20,25 @@ public class Product {
     private double quantity;
     private String category;
     private double notifyQuantity;
+    private String genre;
+
+    /**
+     * Get the value of genre
+     *
+     * @return the value of genre
+     */
+    public String getGenre() {
+        return genre;
+    }
+
+    /**
+     * Set the value of genre
+     *
+     * @param genre new value of genre
+     */
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
 
     /**
      * Get the value of notifyQuantity
