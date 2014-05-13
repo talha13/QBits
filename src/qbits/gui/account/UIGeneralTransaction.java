@@ -365,12 +365,12 @@ public class UIGeneralTransaction extends javax.swing.JPanel {
                 try {
 
                     parentFrame.stausBar.stopLoading();
-                    if (get() == 1) {
+                    if (Integer.parseInt(get().toString()) == 1) {
                         parentFrame.showMessage("Account transaction saved");
                         reset();
-                    } else if (get() == -1) {
+                    } else if (Integer.parseInt(get().toString()) == -1) {
                         parentFrame.showMessage("Unable to save accout transaction");
-                    } else if (get() == -2) {
+                    } else if (Integer.parseInt(get().toString()) == -2) {
                         Message.dbConnectFailed();
                     }
                 } catch (InterruptedException ex) {
@@ -421,12 +421,12 @@ public class UIGeneralTransaction extends javax.swing.JPanel {
                 try {
                     parentFrame.stausBar.stopLoading();
 
-                    if (get() == 1) {
-                    } else if (get() == -1) {
+                    if (Integer.parseInt(get().toString()) == 1) {
+                    } else if (Integer.parseInt(get().toString()) == -1) {
                         cmbPaymentMode.setSelectedIndex(0);
                         cmbAccount.removeAllItems();
                         parentFrame.showMessage("Unable to load accounts");
-                    } else if (get() == -2) {
+                    } else if (Integer.parseInt(get().toString()) == -2) {
                         cmbPaymentMode.setSelectedIndex(0);
                         cmbAccount.removeAllItems();
                         Message.dbConnectFailed();
@@ -462,12 +462,12 @@ public class UIGeneralTransaction extends javax.swing.JPanel {
                 try {
                     parentFrame.stausBar.stopLoading();
 
-                    if (get() == 1) {
-                    } else if (get() == -1) {
+                    if (Integer.parseInt(get().toString()) == 1) {
+                    } else if (Integer.parseInt(get().toString()) == -1) {
                         cmbPrinciple.setSelectedIndex(0);
                         cmbAccountHead.removeAllItems();
                         parentFrame.showMessage("Unable to load account head");
-                    } else if (get() == -2) {
+                    } else if (Integer.parseInt(get().toString()) == -2) {
                         cmbPrinciple.setSelectedIndex(0);
                         cmbAccountHead.removeAllItems();
                         Message.dbConnectFailed();

@@ -985,12 +985,12 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                 try {
                     parentFrame.stausBar.stopLoading();
 
-                    if (get() == 1) {
-                    } else if (get() == -1) {
+                    if (Integer.parseInt(get().toString()) == 1) {
+                    } else if (Integer.parseInt(get().toString()) == -1) {
                         cmbPaymentMode.setSelectedIndex(0);
                         cmbAccounts.removeAllItems();
                         parentFrame.showMessage("Unable to load accounts");
-                    } else if (get() == -2) {
+                    } else if (Integer.parseInt(get().toString()) == -2) {
                         cmbPaymentMode.setSelectedIndex(0);
                         cmbAccounts.removeAllItems();
                         Message.dbConnectFailed();
@@ -1060,7 +1060,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
                     parentFrame.stausBar.stopLoading();
                     changeStatus(true);
 
-                    if (get() == 1) {
+                    if (Integer.parseInt(get().toString()) == 1) {
 
                         if (isUpdate) {
                             changeStatusPaymentPanel(true);
@@ -1068,7 +1068,7 @@ public class UISupplierInvoice extends javax.swing.JPanel implements SearcherLis
 
                         reset();
                         parentFrame.showMessage("Supplier invoice saved");
-                    } else if (get() == -1) {
+                    } else if (Integer.parseInt(get().toString()) == -1) {
                         parentFrame.showMessage("Unable to save invoice info");
                     }
                 } catch (InterruptedException ex) {

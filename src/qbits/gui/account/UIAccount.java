@@ -221,7 +221,7 @@ public class UIAccount extends javax.swing.JPanel {
                 try {
                     parentFrame.stausBar.stopLoading();
                     changeStatus(true);
-                    if (get() == 1) {
+                    if (Integer.parseInt(get().toString()) == 1) {
                         parentFrame.showMessage("Account saved");
                         reset();
                     } else {

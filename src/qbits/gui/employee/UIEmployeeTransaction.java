@@ -578,12 +578,12 @@ public class UIEmployeeTransaction extends javax.swing.JPanel {
                     parentFrame.stausBar.stopLoading();
                     changeStatus(true);
 
-                    if (get() == 1) {
+                    if (Integer.parseInt(get().toString()) == 1) {
                         parentFrame.showMessage("Employee transaction saved");
                         reset();
-                    } else if (get() == -1) {
+                    } else if (Integer.parseInt(get().toString()) == -1) {
                         parentFrame.showMessage("Unable to save transaction");
-                    } else if (get() == -2) {
+                    } else if (Integer.parseInt(get().toString()) == -2) {
                         Message.dbConnectFailed();
                     }
                 } catch (InterruptedException ex) {
@@ -618,12 +618,12 @@ public class UIEmployeeTransaction extends javax.swing.JPanel {
                 try {
                     parentFrame.stausBar.stopLoading();
 
-                    if (get() == 1) {
-                    } else if (get() == -1) {
+                    if (Integer.parseInt(get().toString()) == 1) {
+                    } else if (Integer.parseInt(get().toString()) == -1) {
                         cmbPaymentMode.setSelectedIndex(0);
                         cmbAccount.removeAllItems();
                         parentFrame.showMessage("Unable to load accounts");
-                    } else if (get() == -2) {
+                    } else if (Integer.parseInt(get().toString()) == -2) {
                         cmbPaymentMode.setSelectedIndex(0);
                         cmbAccount.removeAllItems();
                         Message.dbConnectFailed();
@@ -661,10 +661,10 @@ public class UIEmployeeTransaction extends javax.swing.JPanel {
                         parentFrame.stausBar.stopLoading();
                         changeStatus(true);
 
-                        if (get() == 1) {
-                        } else if (get() == -1) {
+                        if (Integer.parseInt(get().toString()) == 1) {
+                        } else if (Integer.parseInt(get().toString()) == -1) {
                             parentFrame.showMessage("Unable to load accounts");
-                        } else if (get() == -2) {
+                        } else if (Integer.parseInt(get().toString()) == -2) {
                             Message.dbConnectFailed();
                         }
 

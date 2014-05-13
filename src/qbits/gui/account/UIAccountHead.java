@@ -213,13 +213,13 @@ public class UIAccountHead extends javax.swing.JPanel {
                 try {
                     parentFrame.stausBar.stopLoading();
                     changeStatus(true);
-                    if (get() == 1) {
+                    if (Integer.parseInt(get().toString()) == 1) {
                         parentFrame.showMessage("Account Head saved");
                         reset();
-                    } else if (get() == -1) {
+                    } else if (Integer.parseInt(get().toString()) == -1) {
                         parentFrame.showMessage("Unable to save accout head");
 
-                    } else if (get() == -2) {
+                    } else if (Integer.parseInt(get().toString()) == -2) {
                         parentFrame.showMessage("Unable to connect with database");
                     }
                 } catch (InterruptedException ex) {

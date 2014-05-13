@@ -1041,12 +1041,12 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
                 try {
                     parentFrame.stausBar.stopLoading();
 
-                    if (get() == 1) {
-                    } else if (get() == -1) {
+                    if (Integer.parseInt(get().toString()) == 1) {
+                    } else if (Integer.parseInt(get().toString()) == -1) {
                         cmbPaymentMode.setSelectedIndex(0);
                         cmbAccounts.removeAllItems();
                         parentFrame.showMessage("Unable to load accounts");
-                    } else if (get() == -2) {
+                    } else if (Integer.parseInt(get().toString()) == -2) {
                         cmbPaymentMode.setSelectedIndex(0);
                         cmbAccounts.removeAllItems();
                         Message.dbConnectFailed();
@@ -1115,7 +1115,7 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
                     parentFrame.stausBar.stopLoading();
                     changeStatus(true);
 
-                    if (get() == 1) {
+                    if (Integer.parseInt(get().toString()) == 1) {
 
                         if (isUpdate) {
                             changeStatusPaymentPanel(true);
@@ -1135,7 +1135,7 @@ public class UISalesInvoice extends javax.swing.JPanel implements SearcherListen
 
                         reset();
                         parentFrame.showMessage("Sales invoice saved");
-                    } else if (get() == -1) {
+                    } else if (Integer.parseInt(get().toString()) == -1) {
                         parentFrame.showMessage("Unable to save invoice info");
                     }
                 } catch (InterruptedException ex) {

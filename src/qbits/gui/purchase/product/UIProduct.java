@@ -401,10 +401,10 @@ public class UIProduct extends javax.swing.JPanel {
                     parentFrame.stausBar.stopLoading();
                     changeStatus(true);
 
-                    if (get() == 1) {
+                    if (Integer.parseInt(get().toString()) == 1) {
                         reset();
                         parentFrame.showMessage("Product information saved");
-                    } else if (get() == -1) {
+                    } else if (Integer.parseInt(get().toString()) == -1) {
                         parentFrame.showMessage("Unable to save Product information");
                     }
                 } catch (InterruptedException ex) {

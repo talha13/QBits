@@ -364,10 +364,10 @@ public class UIProductPurchaseReturn extends javax.swing.JPanel {
                     parentFrame.stausBar.stopLoading();
                     changeStatus(true);
 
-                    if (get() == 1) {
+                    if (Integer.parseInt(get().toString()) == 1) {
                         reset();
                         parentFrame.showMessage("Product information saved");
-                    } else if (get() == -1) {
+                    } else if (Integer.parseInt(get().toString()) == -1) {
                         parentFrame.showMessage("Unable to save Product information");
                     }
                 } catch (InterruptedException ex) {
@@ -406,10 +406,10 @@ public class UIProductPurchaseReturn extends javax.swing.JPanel {
             protected void done() {
                 parentFrame.stausBar.stopLoading();
                 try {
-                    if (get() == 1) {
-                    } else if (get() == -1) {
+                    if (Integer.parseInt(get().toString()) == 1) {
+                    } else if (Integer.parseInt(get().toString()) == -1) {
                         parentFrame.showMessage("Unable to load products");
-                    } else if (get() == -2) {
+                    } else if (Integer.parseInt(get().toString()) == -2) {
                         Message.dbConnectFailed();
                     }
                 } catch (InterruptedException ex) {

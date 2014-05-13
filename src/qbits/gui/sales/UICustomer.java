@@ -55,12 +55,12 @@ public class UICustomer extends javax.swing.JPanel {
                 try {
                     parentFrame.stausBar.stopLoading();
 
-                    if (get() == 1) {
-                    } else if (get() == -1) {
+                    if (Integer.parseInt(get().toString()) == 1) {
+                    } else if (Integer.parseInt(get().toString()) == -1) {
                         reset();
                         parentFrame.showMessage("Unable to load customer information");
 
-                    } else if (get() == -2) {
+                    } else if (Integer.parseInt(get().toString()) == -2) {
                         Message.dbConnectFailed();
                     }
                 } catch (InterruptedException ex) {
@@ -417,10 +417,10 @@ public class UICustomer extends javax.swing.JPanel {
                 try {
                     parentFrame.stausBar.stopLoading();
                     changeStatus(true);
-                    if (get() == 1) {
+                    if (Integer.parseInt(get().toString()) == 1) {
                         reset();
                         parentFrame.showMessage("Customer information saved");
-                    } else if (get() == -1) {
+                    } else if (Integer.parseInt(get().toString()) == -1) {
                         parentFrame.showMessage("Unable to save Customer info");
                     }
                 } catch (InterruptedException ex) {

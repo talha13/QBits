@@ -22,7 +22,7 @@ public class Configuration {
     public final static String CURRENCY_FORMAT_DEFAULT = "###,##,##,###.##";
     public final static String DATE_FORMAT_DEFAULT = "dd-MM-yyyy";
     public final static String DATE_FORMAT_DB = "yyyy-MM-dd";
-    public final static String APP_TITLE = "Taradin Super Shop";
+    public final static String APP_TITLE = "ERP";
     public final static int FRAME_WIDTH = 970;
     public final static int FRAME_HEIGHT = 670;
     public final static Date DATE_START = new Date(24L * 60L * 60L * 1000);
